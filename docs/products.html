@@ -198,27 +198,121 @@ window.onload = async function () {
 <script id="product-details-template" type="text/x-handlebars-template">
   <div id="product-details-content">
     <span id="product-details-close">&times;</span>
-    <h3>{{this.name}}</h3>
-    <div>{{this.description}}</div>
+	 <h3>{{this.name}}</h3>
+	 <span>Description: {{this.description}}</span>
+	{{#if this.brand}}
+		 <br>
+		 <span><strong>Brand:  </strong> {{this.brand}}</span>
+	{{/if}}
+	{{#if this.brandName}}
+		<br>
+		<span><strong>BrandName: </strong>{{this.brandName}}</span>
+	{{/if}}
+	{{#if this.applicationUri}}
+		<br>
+		<span><a href="{{this.applicationUri}}">Apply</a></span>
+	{{/if}}
+	
+	{{#if this.cardArt}}
+		<br><span><strong>Card Art:</strong><br>
+		{{#each this.cardArt}}
+		<img src="{{this.imageUri}}" alt="{{this.title}}" style="padding:10px;">
+		{{/each}}
+		<br>
+	{{/if}}
+	
+	{{#if this.additionalInformation}}
+		<h4>Additional Information</h4>
+		<ul>
+		{{#if this.additionalInformation.overviewUri}}
+			<li><span><a href="{{this.additionalInformation.overviewUri}}">Overview</a></span></li>
+		{{/if}}
+		{{#if this.additionalInformation.termsUri}}
+			<li><span><a href="{{this.additionalInformation.termsUri}}">Terms and Conditions</a></span></li>
+		{{/if}}
+		{{#if this.additionalInformation.eligibilityUri}}
+			<li><span><a href="{{this.additionalInformation.eligibilityUri}}">Eligibility Criteria</a></span></li>
+		{{/if}}
+		{{#if this.additionalInformation.feesAndPricingUri}}
+			<li><span><a href="{{this.additionalInformation.feesAndPricingUri}}">Fees And Pricing</a></span></li>
+		{{/if}}
 
-    {{#if this.overviewUri}}
-      <span><a href="{{this.overviewUri}}">Overview</a></span>
-    {{/if}}
-    {{#if this.applicationUri}}
-      <span><a href="{{this.applicationUri}}">Apply</a></span>
-    {{/if}}
+		{{#if this.bundleUri}}
+			<span><a href="{{this.bundleUri}}">Bundles</a></span>
+		{{/if}}
+		</ul>
+	{{/if}}
+	{{#if this.bundles}}
+		<h4>Bundles</h4>
+		<table>
+      		<tr>
+        	<th>Name</th>
+        	<th>Description</th>
+        	<th>Additional Information</th>
+      		</tr>
+       		{{#each this.bundles}}
+			<tr>		
+			<td>{{this.name}}</td>
+			<td>{{#if this.description}} {{this.description}} {{/if}}</td>
+			<td><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a></td>
+			</tr>
+		{{/each}}
+    		</table>
+    	{{/if}}
+	
+	{{#if this.constraints}}
+		<h4>Constraints</h4>
+		<table>
+      		<tr>
+        	<th>Type</th>
+        	<th>Additional Value</th>
+      		</tr>
+       		{{#each this.constraints}}
+			<tr>		
+			<td>{{this.constraintType}}</td>
+			<td>{{this.additionalValue}}</td>
+			</tr>
+		{{/each}}
+    		</table>
+    	{{/if}}
 
+
+	{{#if this.eligibility}}
+		<h4>Eligibility Criteria</h4>
+		<table>
+      		<tr>
+        	<th>Type</th>
+        	<th>Additional Value</th>
+        	<th>Additional Information</th>
+      		</tr>
+       		{{#each this.eligibility}}
+			<tr>		
+			<td>{{this.eligibilityType}}</td>
+			<td>{{#if this.additionalValue}} {{this.additionalValue}} {{/if}}</td>
+			<td>
+			{{#if this.additionalInfoUri}}<span><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a><span>{{else}}{{this.additionalInfo}}{{/if}}
+			</td>
+			</tr>
+		{{/each}}
+    		</table>
+    	{{/if}}
+    
     {{#if this.features}}
     <h4>Features</h4>
     <table>
       <tr>
         <th>Description</th>
         <th>Type</th>
+        <th>Additional Information</th>
       </tr>
       {{#each this.features}}
         <tr>
-          <td><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a></td>
           <td>{{this.featureType}}</td>
+          <td>{{this.additionalValue}}</td>
+          <td>
+	  {{#if this.additionalInfoUri}}<span><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a><span>{{else}}{{this.additionalInfo}}{{/if}}
+	  </td>
+
         </tr>
       {{/each}}
     </table>
@@ -231,12 +325,21 @@ window.onload = async function () {
         <th>Name</th>
         <th>Type</th>
         <th>Amount</th>
+        <th>Additional Information</th>
       </tr>
       {{#each this.fees}}
         <tr>
-          <td><a href="{{this.additionalInfoUri}}">{{this.name}}</a></td>
+          <td>{{this.name}}</td>
           <td>{{this.feeType}}</td>
-          <td>{{this.amount}}</td>
+          <td>
+	  {{#if this.amount}} {{this.amount}} {{/if}}
+	  {{#if this.transactionRate}} {{this.transactionRate}} {{/if}}
+	  {{#if this.balanceRate}} {{this.balanceRate}} {{/if}}
+	  {{#if this.accruedRate}} {{this.accruedRate}} {{/if}}
+	</td>
+        <td>
+	  {{#if this.additionalInfoUri}}<span><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a><span>{{else}}{{this.additionalInfo}}{{/if}}
+	 </td>
         </tr>
       {{/each}}
     </table>
@@ -247,12 +350,30 @@ window.onload = async function () {
     <table>
       <tr>
         <th>Type</th>
+	<th>Calculated</th>
+	<th>Applied</th>
+        <th>Tiers</th>
         <th>Rate</th>
+	<th>Additional Information</th>
       </tr>
       {{#each this.depositRates}}
         <tr>
-          <td title="{{this.additionalInfo}}. {{this.additionalValue}}"><a href="{{this.additionalInfoUri}}">{{this.depositRateType}}</a></td>
+          <td>{{this.depositRateType}}</td>
+	  <td>{{this.calculationFrequency}}</td>
+	  <td>{{this.applicationFrequency}}</td>
+	 <td> 
+	      {{#each this.tiers}}
+		  <p>{{this.name}} </p>	      
+		  <p>Unit of Measure: {{this.unitOfMeasure}}</p> 
+		  <p>Min Value: {{this.minimumValue}}</p> 
+		  <p>Max Value: {{this.maximumValue}}</p>
+		  <p>Rate Applicable Method: {{this.rateApplicationMethod}} </p>
+	      {{/each}}
+	  </td> 
           <td>{{this.rate}}</td>
+         <td>
+	 {{#if this.additionalInfoUri}}<span><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a><span>{{else}}{{this.additionalInfo}}{{/if}}
+	 </td>
         </tr>
       {{/each}}
     </table>
@@ -262,19 +383,43 @@ window.onload = async function () {
     <h4>Lending Rates</h4>
     <table>
       <tr>
-        <th>Type</th>
+        <th>Loan Purpose</th>
+        <th>Rate Type</th>
+	<th>Calculated</th>
+	<th>Applied</th>
+	<th>Tiers</th>
         <th>Rate</th>
+        <th>Comparison Rate</th>
+        <th>Repayment Type</th>
+        <th>Additional Value</th>
+        <th>Additional Information</th>
       </tr>
       {{#each this.lendingRates}}
         <tr>
-          <td title="{{this.additionalInfo}}. {{this.additionalValue}}"><a href="{{this.additionalInfoUri}}">{{this.lendingRateType}}</a></td>
-          <td>{{this.rate}}</td>
+          <td>{{this.loanPurpose}}</td>
+          <td>{{this.lendingRateType}}</td>
+          <td>{{this.calculationFrequency}}</td>
+          <td>{{this.applicationFrequency}}</td>
+          <td> 
+	      {{#each this.tiers}}
+		  <p>{{this.name}} </p>	      
+		  <p>Unit of Measure: {{this.unitOfMeasure}}</p> 
+		  <p>Min Value: {{this.minimumValue}}</p> 
+		  <p>Max Value: {{this.maximumValue}}</p>
+	      {{/each}}
+	  </td> 
+	  <td>{{this.rate}}</td>
+          <td>{{this.comparisonRate}}</td>
+          <td>{{this.repaymentType}}</td>
+          <td>{{this.additionalValue}}</td>
+         <td>
+	 {{#if this.additionalInfoUri}}<span><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a><span>{{else}}{{this.additionalInfo}}{{/if}}
+	 </td>
         </tr>
       {{/each}}
     </table>
     {{/if}}
-
-    <p>More info coming soon...</p>
+    
   </div>
 </script>
 
