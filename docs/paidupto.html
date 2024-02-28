@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paid Up Date Calculator</title>
+  <link rel="stylesheet" href="style.css"> </head>
+<body>
+  <h1>Paid Up Date Calculator </h1>
+  <div class="form-container">
+    <label for="startDate">Subscription Start Date:</label>
+    <input type="date" id="startDate" required>
+    <br><br>
+    <label for="billingFrequency">Billing Frequency:</label>
+    <select id="billingFrequency">
+      <option value="monthly">Monthly</option>
+      <option value="quarterly">Quarterly</option>
+      <option value="annually">Annually</option>
+    </select>
+    <br><br>
+    <button onclick="calculatePaidUpDate()">Calculate Paid Up Date</button>
+  </div>
+  <p id="result"></p>
+  <script src="js/paidupto.js"></script>
+</body>
+</html>
+

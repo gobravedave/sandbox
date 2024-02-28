@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subscription Lifecycle Simulation</title>
+  <link rel="stylesheet" type="text/css" href="subscription.css">
+</head>
+<body>
+  <div id="subscription">
+    <h1>Subscription Lifecycle Simulation</h1>
+    <input type="date" id="datePicker" onchange="updateDate()">
+    <span id="currentDate">Processing Date: </span>
+    <br><br>
+    <button onclick="startSubscription()" id="startButton">Start Subscription</button>
+    <button onclick="endSubscription()" id="endButton" disabled>End Subscription</button>
+    <button onclick="restartSubscription()" id="restartButton" disabled>Restart Subscription</button>
+    <button onclick="resetSubscription()">Reset</button>
+    <br><br>
+    <div class="docket">
+      <h2 class="docket-title">Subscription Details</h2>
+      <div class="docket-item">
+        <span class="docket-label">State:</span>
+        <span id="subscriptionState">-</span>
+      </div>
+      <div class="docket-item">
+        <span class="docket-label">Subscription ID:</span>
+        <span id="subscriptionID">-</span>
+      </div>
+      <div class="docket-item">
+        <span class="docket-label">Start Date:</span>
+        <span id="startDate">-</span>
+      </div>
+      <div class="docket-item">
+        <span class="docket-label">End Date:</span>
+        <span id="endDate">-</span>
+      </div>
+      <div class="docket-item">
+        <span class="docket-label">Customer IDs:</span>
+        <span input type="text" id="customerIDs">-</span>
+      </div>
+    </div>
+    <div class="docket">
+      <h2 class="docket-title">Audit Log</h2>
+      <textarea id="auditLog" rows="5" cols="50" readonly></textarea>
+    </div>
+  </div>
+
+  <script>
+    const SubscriptionState = {
+      ACTIVE: 'Active',
+      ENDING: 'Ending',
+      ENDED: 'Ended'
+    };
+
+    let processingDate = formatDate(new Date()); // Initial processing date
+    let subscription = {
+      id: '',
+      state: SubscriptionState.ACTIVE,
+      startDate: null,
+      endDate: null,
+      customerIDs: []
+    };
+
+    function startSubscription() {
+      subscription.state = SubscriptionState.ACTIVE;
+      subscription.startDate = processingDate;
+      subscription.id = generateSubscriptionID();
+      addToAuditLog('Start Subscription');
+      updateUI();
+    }
+
+    function endSubscription() {
+        subscription.state = SubscriptionState.ENDING;
+        subscription.endDate = processingDate;
+        addToAuditLog('End Subscription');
+        updateUI();
+        
+        // Disable the "End" button and enable the "Restart" button
+        document.getElementById('endButton').disabled = true;
+        document.getElementById('restartButton').disabled = false;
+    }
+
+
+    function restartSubscription() {
+    const previousSubscriptionID = subscription.id;
+    
+    if (subscription.state === SubscriptionState.ENDING) {
+        subscription.endDate = null;
+    }
+
+    if (subscription.endDate && processingDate > subscription.endDate) {
+        subscription.id = generateSubscriptionID();
+    }
+
+    subscription.state = SubscriptionState.ACTIVE;
+
+    const action = previousSubscriptionID ? `Restart Subscription (New ID: ${subscription.id})` : 'Restart Subscription';
+    addToAuditLog(action);
+    updateUI();
+    }
+
+
+    function updateDate() {
+    processingDate = formatDate(new Date(document.getElementById('datePicker').value));
+    document.getElementById('currentDate').textContent = 'Processing Date: ' + processingDate;
+
+    if (subscription.endDate) {
+        if (processingDate >= subscription.endDate) {
+        subscription.state = SubscriptionState.ENDING;
+        addToAuditLog('Subscription Ending due to processing date');
+        } else {
+        subscription.state = SubscriptionState.ACTIVE;
+        }
+
+        if (processingDate > subscription.endDate) {
+        subscription.state = SubscriptionState.ENDED;
+        addToAuditLog('Subscription Ended due to processing date');
+        }
+        
+        updateUI();
+    }
+    }
+
+    function formatDate(date) {
+      const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+      return date.toLocaleDateString('en-AU', options);
+    }
+
+    function generateSubscriptionID() {
+      // Example: Generate a unique subscription ID (not implemented)
+      return Math.floor(Math.random() * 1000);
+    }
+
+    function updateUI() {
+    document.getElementById('subscriptionState').textContent = subscription.state;
+    document.getElementById('subscriptionID').textContent = subscription.id || '-';
+    document.getElementById('startDate').textContent = subscription.startDate || '-';
+    document.getElementById('endDate').textContent = subscription.endDate || '-';
+    document.getElementById('customerIDs').textContent = subscription.customerIDs.join(', ');
+    
+    const startButton = document.getElementById('startButton');
+    const endButton = document.getElementById('endButton');
+    const restartButton = document.getElementById('restartButton');
+
+    if (subscription.id === '') {
+        startButton.disabled = false;
+        endButton.disabled = true;
+        restartButton.disabled = true;
+    } else {
+        startButton.disabled = true;
+        endButton.disabled = subscription.state === SubscriptionState.ENDED;
+        restartButton.disabled = subscription.state !== SubscriptionState.ENDED;
+    }
+    }
+
+
+    function updateStartButton() {
+      const startButton = document.getElementById('startButton');
+      const endButton = document.getElementById('endButton');
+      const restartButton = document.getElementById('restartButton');
+
+      if (subscription.id === '') {
+        startButton.disabled = false;
+        endButton.disabled = true;
+        restartButton.disabled = true;
+      } else {
+        startButton.disabled = true;
+        endButton.disabled = false;
+        restartButton.disabled = false;
+      }
+    }
+
+    function addToAuditLog(action) {
+    const auditLog = document.getElementById('auditLog');
+    const timestamp = document.getElementById('datePicker').value ? processingDate : formatDate(new Date());
+    const logEntry = `${timestamp} - Subscription ID: ${subscription.id} - ${action}\n`;
+    auditLog.value += logEntry;
+    }
+
+
+    function clearAuditLog() {
+      document.getElementById('auditLog').value = '';
+    }
+
+    function resetSubscription() {
+    const previousSubscriptionID = subscription.id;
+    subscription.id = '';
+    subscription.state = SubscriptionState.ACTIVE;
+    subscription.startDate = null;
+    subscription.endDate = null;
+    subscription.customerIDs = [];
+    
+    const action = previousSubscriptionID ? `Subscription Reset (Previous ID: ${previousSubscriptionID})` : 'Subscription Reset';
+    addToAuditLog(action);
+    clearAuditLog();
+    updateUI();
+    }
+
+  </script>
+</body>
+</html>
