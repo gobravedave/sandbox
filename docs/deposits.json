@@ -1,0 +1,38 @@
+[
+    {
+        "bank": "ANZ",
+        "code": "1111",
+        "product": "Deposit Product 1",
+        "description": "Deposit Product 1 Description",
+        "bundles": "0;#0085ff;ANZ Plus",
+        "features": "0;#0085ff;Feature1,1;#99FFFF;Feature2,2;#0085ff;Feature3,3;#99FFFF;Feature4,4;#0085ff;Feature5",
+        "eligibility": "",
+        "conditions": "",
+        "rate": "0.01500",
+        "fees": ""
+    },
+    {
+        "bank": "ANZ",
+        "code": "1112",
+        "product": "Deposit Product 2",
+        "description": "Deposit Product 2 Description",
+        "bundles": "0;#0085ff;ANZ Plus",
+        "features": "",
+        "eligibility": "",
+        "conditions": "",
+        "rate": "0.01500",
+        "fees": ""
+    },
+    {
+        "bank": "NAB",
+        "code": "2112",
+        "product": "Deposit Product 2",
+        "description": "Deposit Product 2 Description",
+        "bundles": "0;#0085ff;NAB Plus",
+        "features": "",
+        "eligibility": "",
+        "conditions": "",
+        "rate": "0.01500",
+        "fees": ""
+    }
+]

@@ -1,0 +1,551 @@
+<html>
+<head>
+<title>Open Banking Product Comparison</title>
+<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+</head>
+<body>
+<script>
+let logConsole
+const commonOpts = {
+  headers: { 'x-v': 4, 'x-min-v': 3 },
+}
+const BANKS = {
+  anz: { name: 'ANZ', host: 'https://api.anz' },
+  anzx: { name: 'ANZ Plus', host: 'https://cdr.apix.anz' },
+  nab: { name: 'NAB', host: 'https://openbank.api.nab.com.au' },
+  wes: { name: 'Westpac', host: 'https://digital-api.westpac.com.au' },
+  com: { name: 'Comm Bank', host: 'https://api.commbank.com.au/public' },
+//  cwc: { name: 'Central West CUL', host: 'https://ib.cwcu.com.au/openbanking' },
+}
+
+const PRODUCTS = {
+  TRANS_AND_SAVINGS_ACCOUNTS: {
+    name: 'Transactions and Savings',
+  },
+	TERM_DEPOSITS: {
+    name: 'Term Deposits',
+  },
+	CRED_AND_CHRG_CARDS: {
+    name: 'Credit and Charge Cards',
+  },
+	TRAVEL_CARDS: {
+    name: 'Travel Cards',
+  },
+	RESIDENTIAL_MORTGAGES: {
+    name: 'Residential Mortgages',
+  },
+	PERS_LOANS: {
+    name: 'Personal Loans',
+  },
+	BUSINESS_LOANS: {
+    name: 'Business Loans',
+  },
+	MARGIN_LOANS: {
+    name: 'Margin Loans',
+  },
+	LEASES: {
+    name: 'Leases',
+  },
+	REGULATED_TRUST_ACCOUNTS: {
+    name: 'Regulated Trust',
+  },
+	TRADE_FINANCE: {
+    name: 'Trade Finance',
+  },
+	OVERDRAFTS: {
+    name: 'Overdraft',
+  },
+}
+
+function logToConsole(msg) {
+  console.log(msg)
+  logConsole.value += msg + '\n'
+}
+
+async function getProducts(bank, category) {
+  let apiUrl = `${bank.host}/cds-au/v1/banking/products?page-size=999`
+  if (category) apiUrl = `${apiUrl}&product-category=${category}`
+  try {
+    logToConsole(`Getting products from ${bank.name}`)
+    const start = new Date()
+    let { data = {}, meta = {} } = await fetch(apiUrl, commonOpts).then(resp => resp.json())
+    const duration = (new Date() - start) / 1000
+
+    const res = { count: meta.totalRecords, products: data.products }
+    logToConsole(`Got products from ${bank.name} in ${duration}s`)
+    console.log(res)
+    return res
+  } catch (err) {
+    logToConsole(`Error getting data for ${bank.name}`)
+    console.error(err)
+    return { products: [], count: 0 }
+  }
+}
+async function getProductDetails(bank, productId) {
+  let apiUrl = `${bank.host}/cds-au/v1/banking/products/${productId}`
+
+  logToConsole(`Getting product details for ${productId} from ${bank.name}`)
+  let productDetails = await fetch(apiUrl, commonOpts).then(resp => resp.json())
+  logToConsole(`Got product details for ${productId} from ${bank.name}`)
+  console.log(productDetails)
+
+  return productDetails
+}
+
+function processProducts(products) {
+  const byCategory = {}
+  for (let prodCat in PRODUCTS) {
+    byCategory[prodCat] = { count: 0, products: [] }
+  }
+
+  products.forEach((p) => {
+    byCategory[p.productCategory].count++
+    byCategory[p.productCategory].products.push(p)
+  })
+  return byCategory
+}
+
+window.onload = async function () {
+  let productListTpl = Handlebars.compile(document.getElementById('products-list-template').innerHTML)
+  const $productsList = document.getElementById('products-list')
+
+  $productsList.innerHTML = productListTpl({})
+
+
+  let productDetailsTpl = Handlebars.compile(document.getElementById('product-details-template').innerHTML)
+
+  logConsole = document.getElementById('log-console')
+
+  await Promise.all(Object.entries(BANKS).map(async ([id, bank]) => {
+    BANKS[id].id = id
+    for (let prodCat in PRODUCTS) {
+      PRODUCTS[prodCat].banks = PRODUCTS[prodCat].banks || {}
+      PRODUCTS[prodCat].banks[id] = {
+        bankId: id,
+      }
+    }
+
+    const { count, products } = await getProducts(bank)
+    BANKS[bank.id].productsRaw = products
+    BANKS[bank.id].totalCount = count
+
+    // add banks product count and list to PRODUCTS
+    const byCategory = processProducts(products)
+    for (let prodCat in PRODUCTS) {
+      PRODUCTS[prodCat].banks[bank.id].count = byCategory[prodCat].count
+      PRODUCTS[prodCat].banks[bank.id].products = byCategory[prodCat].products
+    }
+
+    $productsList.innerHTML = productListTpl({ BANKS, PRODUCTS })
+  }))
+  logToConsole('Processed products from all banks')
+  console.log({ BANKS, PRODUCTS })
+
+  $productsList.innerHTML = productListTpl({ BANKS, PRODUCTS })
+
+  let $catRows = document.querySelectorAll('.category-row')
+  for (let $catRow of $catRows) {
+    // clicking on category row will show all products of that category
+    $catRow.addEventListener('click', function (e) {
+      let { catId } = e.target.parentNode.dataset
+      let $catProdsEl = document.querySelector(`#products-${catId}`)
+      $catRow.classList.toggle('expanded')
+      $catProdsEl.classList.toggle('hidden')
+    })
+  }
+
+
+  let $prodNames = document.querySelectorAll('.product-name')
+  for (let $prodName of $prodNames) {
+    // clicking on product name will show product details
+    $prodName.addEventListener('click', async function (e) {
+      let { bankId, productId } = e.target.dataset
+
+      document.getElementById('product-details').innerHTML = '<div id="product-details-content">Fetching product details...<span id="product-details-close">&times;</span></div>'
+      document.getElementById('product-details').style.display = 'block'
+      document.getElementById('product-details-close').addEventListener('click', function (e) {
+        document.getElementById('product-details').style.display = 'none'
+        document.getElementById('product-details').innerHTML = ''
+      })
+
+      let productDetails = await getProductDetails(BANKS[bankId], productId)
+      console.log(productDetails)
+
+      document.getElementById('product-details').innerHTML = productDetailsTpl(productDetails.data)
+
+      document.getElementById('product-details-close').addEventListener('click', function (e) {
+        document.getElementById('product-details').style.display = 'none'
+        document.getElementById('product-details').innerHTML = ''
+      })
+    })
+  }
+}
+</script>
+
+
+
+<h2>AU Open Banking Products Comparison</h2>
+<p>
+- Wait for the table to load.<br />
+- Click on a product category to show products offered by each bank.<br />
+- Click on a product title to show details of the product.<br />
+</p>
+
+<textarea id="log-console" style="height: 100px; width: 500px;"></textarea>
+
+<div id="products-list"></div>
+<div id="product-details"></div>
+
+<script id="product-details-template" type="text/x-handlebars-template">
+  <div id="product-details-content">
+    <span id="product-details-close">&times;</span>
+	 <h3>{{this.name}}</h3>
+	 <span>Description: {{this.description}}</span>
+	{{#if this.brand}}
+		 <br>
+		 <span><strong>Brand:  </strong> {{this.brand}}</span>
+	{{/if}}
+	{{#if this.brandName}}
+		<br>
+		<span><strong>BrandName: </strong>{{this.brandName}}</span>
+	{{/if}}
+	{{#if this.applicationUri}}
+		<br>
+		<span><a href="{{this.applicationUri}}">Apply</a></span>
+	{{/if}}
+	
+	{{#if this.cardArt}}
+		<br><span><strong>Card Art:</strong><br>
+		{{#each this.cardArt}}
+		<img src="{{this.imageUri}}" alt="{{this.title}}" style="padding:10px;">
+		{{/each}}
+		<br>
+	{{/if}}
+	
+	{{#if this.additionalInformation}}
+		<h4>Additional Information</h4>
+		<ul>
+		{{#if this.additionalInformation.overviewUri}}
+			<li><span><a href="{{this.additionalInformation.overviewUri}}">Overview</a></span></li>
+		{{/if}}
+		{{#if this.additionalInformation.termsUri}}
+			<li><span><a href="{{this.additionalInformation.termsUri}}">Terms and Conditions</a></span></li>
+		{{/if}}
+		{{#if this.additionalInformation.eligibilityUri}}
+			<li><span><a href="{{this.additionalInformation.eligibilityUri}}">Eligibility Criteria</a></span></li>
+		{{/if}}
+		{{#if this.additionalInformation.feesAndPricingUri}}
+			<li><span><a href="{{this.additionalInformation.feesAndPricingUri}}">Fees And Pricing</a></span></li>
+		{{/if}}
+
+		{{#if this.bundleUri}}
+			<span><a href="{{this.bundleUri}}">Bundles</a></span>
+		{{/if}}
+		</ul>
+	{{/if}}
+	{{#if this.bundles}}
+		<h4>Bundles</h4>
+		<table>
+      		<tr>
+        	<th>Name</th>
+        	<th>Description</th>
+        	<th>Additional Information</th>
+      		</tr>
+       		{{#each this.bundles}}
+			<tr>		
+			<td>{{this.name}}</td>
+			<td>{{#if this.description}} {{this.description}} {{/if}}</td>
+			<td><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a></td>
+			</tr>
+		{{/each}}
+    		</table>
+    	{{/if}}
+	
+	{{#if this.constraints}}
+		<h4>Constraints</h4>
+		<table>
+      		<tr>
+        	<th>Type</th>
+        	<th>Additional Value</th>
+      		</tr>
+       		{{#each this.constraints}}
+			<tr>		
+			<td>{{this.constraintType}}</td>
+			<td>{{this.additionalValue}}</td>
+			</tr>
+		{{/each}}
+    		</table>
+    	{{/if}}
+
+
+	{{#if this.eligibility}}
+		<h4>Eligibility Criteria</h4>
+		<table>
+      		<tr>
+        	<th>Type</th>
+        	<th>Additional Value</th>
+        	<th>Additional Information</th>
+      		</tr>
+       		{{#each this.eligibility}}
+			<tr>		
+			<td>{{this.eligibilityType}}</td>
+			<td>{{#if this.additionalValue}} {{this.additionalValue}} {{/if}}</td>
+			<td>
+			{{#if this.additionalInfoUri}}<span><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a><span>{{else}}{{this.additionalInfo}}{{/if}}
+			</td>
+			</tr>
+		{{/each}}
+    		</table>
+    	{{/if}}
+    
+    {{#if this.features}}
+    <h4>Features</h4>
+    <table>
+      <tr>
+        <th>Description</th>
+        <th>Type</th>
+        <th>Additional Information</th>
+      </tr>
+      {{#each this.features}}
+        <tr>
+          <td>{{this.featureType}}</td>
+          <td>{{this.additionalValue}}</td>
+          <td>
+	  {{#if this.additionalInfoUri}}<span><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a><span>{{else}}{{this.additionalInfo}}{{/if}}
+	  </td>
+
+        </tr>
+      {{/each}}
+    </table>
+    {{/if}}
+
+    {{#if this.fees}}
+    <h4>Fees</h4>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Additional Information</th>
+      </tr>
+      {{#each this.fees}}
+        <tr>
+          <td>{{this.name}}</td>
+          <td>{{this.feeType}}</td>
+          <td>
+	  {{#if this.amount}} {{this.amount}} {{/if}}
+	  {{#if this.transactionRate}} {{this.transactionRate}} {{/if}}
+	  {{#if this.balanceRate}} {{this.balanceRate}} {{/if}}
+	  {{#if this.accruedRate}} {{this.accruedRate}} {{/if}}
+	</td>
+        <td>
+	  {{#if this.additionalInfoUri}}<span><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a><span>{{else}}{{this.additionalInfo}}{{/if}}
+	 </td>
+        </tr>
+      {{/each}}
+    </table>
+    {{/if}}
+
+    {{#if this.depositRates}}
+    <h4>Deposit Rates</h4>
+    <table>
+      <tr>
+        <th>Type</th>
+	<th>Calculated</th>
+	<th>Applied</th>
+        <th>Tiers</th>
+        <th>Rate</th>
+	<th>Additional Information</th>
+      </tr>
+      {{#each this.depositRates}}
+        <tr>
+          <td>{{this.depositRateType}}</td>
+	  <td>{{this.calculationFrequency}}</td>
+	  <td>{{this.applicationFrequency}}</td>
+	 <td> 
+	      {{#each this.tiers}}
+		  <p>{{this.name}} </p>	      
+		  <p>Unit of Measure: {{this.unitOfMeasure}}</p> 
+		  <p>Min Value: {{this.minimumValue}}</p> 
+		  <p>Max Value: {{this.maximumValue}}</p>
+		  <p>Rate Applicable Method: {{this.rateApplicationMethod}} </p>
+	      {{/each}}
+	  </td> 
+          <td>{{this.rate}}</td>
+         <td>
+	 {{#if this.additionalInfoUri}}<span><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a><span>{{else}}{{this.additionalInfo}}{{/if}}
+	 </td>
+        </tr>
+      {{/each}}
+    </table>
+    {{/if}}
+
+    {{#if this.lendingRates}}
+    <h4>Lending Rates</h4>
+    <table>
+      <tr>
+        <th>Loan Purpose</th>
+        <th>Rate Type</th>
+	<th>Calculated</th>
+	<th>Applied</th>
+	<th>Tiers</th>
+        <th>Rate</th>
+        <th>Comparison Rate</th>
+        <th>Repayment Type</th>
+        <th>Additional Value</th>
+        <th>Additional Information</th>
+      </tr>
+      {{#each this.lendingRates}}
+        <tr>
+          <td>{{this.loanPurpose}}</td>
+          <td>{{this.lendingRateType}}</td>
+          <td>{{this.calculationFrequency}}</td>
+          <td>{{this.applicationFrequency}}</td>
+          <td> 
+	      {{#each this.tiers}}
+		  <p>{{this.name}} </p>	      
+		  <p>Unit of Measure: {{this.unitOfMeasure}}</p> 
+		  <p>Min Value: {{this.minimumValue}}</p> 
+		  <p>Max Value: {{this.maximumValue}}</p>
+	      {{/each}}
+	  </td> 
+	  <td>{{this.rate}}</td>
+          <td>{{this.comparisonRate}}</td>
+          <td>{{this.repaymentType}}</td>
+          <td>{{this.additionalValue}}</td>
+         <td>
+	 {{#if this.additionalInfoUri}}<span><a href="{{this.additionalInfoUri}}">{{this.additionalInfo}}</a><span>{{else}}{{this.additionalInfo}}{{/if}}
+	 </td>
+        </tr>
+      {{/each}}
+    </table>
+    {{/if}}
+    
+  </div>
+</script>
+
+
+<script id="products-list-template" type="text/x-handlebars-template">
+  <table style="width: 100%">
+    <tr>
+      <th>Banks</th>
+      {{#each BANKS}}
+        <th>{{this.name}}</th>
+      {{/each}}
+    </tr>
+    <tr>
+      <td>Total Products</td>
+      {{#each BANKS}}
+        <td>{{this.totalCount}}</td>
+      {{/each}}
+    </tr>
+    {{#each PRODUCTS}}
+      <tr class="category-row" data-cat-id="{{@key}}">
+        <td class="category-title">{{this.name}}</td>
+        {{#each this.banks}}
+          <td>{{this.count}}</td>
+        {{/each}}
+      </tr>
+      <tr class="category-products-list hidden" id="products-{{@key}}">
+        <td></td>
+        {{#each this.banks}}
+          <td class="category-products-main">
+            <table>
+              {{#each this.products}}
+                <tr>
+                  <td class="product-name" data-bank-id="{{../bankId}}" data-product-id="{{this.productId}}" title="{{this.description}}">{{this.name}}</td>
+                </tr>
+              {{/each}}
+            </table>
+          </td>
+        {{/each}}
+      </tr>
+    {{/each}}
+</table>
+</script>
+
+
+
+<style>
+  body {
+    font-family: Arial;
+  }
+  table {
+    border-collapse: collapse;
+  }
+  
+  th {
+    background: #eee;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    /* text-align: center; */
+    vertical-align: top;
+    font-size: 14px;
+  }
+  
+  .category-row.expanded {
+    background-color: #eee;
+  }
+  .category-row:hover {
+    background-color: #eee;
+  }
+  .category-title {
+    cursor: pointer;
+    width: 200px;
+  }
+  
+  .product-name {
+    cursor: pointer;
+  }
+  .category-products-main {
+    padding: 0;
+  }
+  .category-products-main table {
+    width: 100%;
+  }
+  .category-products-main table td {
+    border: 0;
+  }
+  .category-products-list.hidden {
+    display: none;
+  }
+  
+  
+  #product-details {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  #product-details-content {
+    background-color: #fefefe;
+    margin: 50px auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+  }
+  #product-details-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  #product-details-close:hover,
+  #product-details-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+</style>
+  
+</body>
+</html>
