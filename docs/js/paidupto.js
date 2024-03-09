@@ -34,11 +34,10 @@ function calculatePaidUpDate() {
   const paidUpDate = new Date(startDate.getTime());
   paidUpDate.setMonth(paidUpDate.getMonth() + monthsToAdd);
 
-  // Ensure the paidUpDate falls on the last day of the month
-  paidUpDate.setDate(1); // Set to the 1st of the month
-  paidUpDate.setMonth(paidUpDate.getMonth() + 1); // Move to the next month
-  paidUpDate.setDate(paidUpDate.getDate() - 1); // Set to the last day of the previous month
-
+  // Ensure the paidUpDate falls on the anniversary of the start date
+  paidUpDate.setMonth(paidUpDate.getMonth() - startDate.getMonth() +
+    (paidUpDate.getFullYear() - startDate.getFullYear()) * 12);
+  paidUpDate.setDate(startDate.getDate());
   // Format the paidUpDate in Australian standard format
   const options = { day: 'numeric', month: 'numeric', year: 'numeric' };
   const formattedDate = paidUpDate.toLocaleDateString('en-AU', options);
