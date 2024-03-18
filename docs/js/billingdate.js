@@ -140,7 +140,7 @@ function testCalculateNextBillingDate() {
         { date1: `2021-01-01`, frequency: 1, date2: `2021-03-01`, expected: { nextBillingDate: "01/03/2021" }},
         { date1: "2024-01-31", frequency: 1, date2: "2025-01-31", expected: { nextBillingDate: "31/01/2025"  }},
         { date1: "2023-01-31", frequency: 12, date2: "2024-01-31", expected: { nextBillingDate: "31/01/2024"  }},
-        { date1: "2023-02-29", frequency: 1, date2: "2024-03-31", expected: { nextBillingDate: "29/04/2021"  }},
+        { date1: "2024-02-29", frequency: 1, date2: "2024-03-31", expected: { nextBillingDate: "29/04/2021"  }},
         { date1: "2024-02-29", frequency: 12, date2: "2025-01-30", expected:  {nextBillingDate: "28/02/2025"  }}
         ];
     let testnbr = 1
