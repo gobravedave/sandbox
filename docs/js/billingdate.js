@@ -147,6 +147,7 @@ function testCalculateNextBillingDate() {
     testCases.forEach((testCase) => {
         addToResultLog("testcase" +testnbr + `: Start=${testCase.date1} Frequency=${testCase.frequency} As at=${testCase.date2}`);
         const result = calculateNextBillingDate(new Date(testCase.date1), testCase.frequency, new Date(testCase.date2));     
+        addToResultLog("testcase" +testnbr + `: Expected=${testCase.expected.nextBillingDate} Actual=${result}`);
         if (testCase.expected.nextBillingDate === result) {
             addToResultLog("testcase" +testnbr + `: Result= Passed`);
         } else {
