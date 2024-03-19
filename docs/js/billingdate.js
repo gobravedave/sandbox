@@ -39,7 +39,7 @@ function calculateNextBillingDate(startDate, frequency, processingDate) {
     if (startDate instanceof Date && processingDate instanceof Date && frequency > 0) {
         console.log("Start date and processing date are valid");
         const dateDiff = calculatePeriodsBetweenDates(startDate,processingDate);
-        // console.log("Date difference:", dateDiff);
+        console.log(`Date difference:` + dateDiff);
         let monthIncrement = dateDiff.inMonths; 
         // console.log(`Month increment before frequency-based increment: ${monthIncrement}`);
         //if not an aniversary, increment months based on frequency
@@ -49,19 +49,19 @@ function calculateNextBillingDate(startDate, frequency, processingDate) {
             // console.log(`days diff ${dateDiff.days}`);
             if (dateDiff.days > 0) {
                     monthIncrement +=1;
-                    // console.log(`Incrementing month increment by 1 month because there are ${dateDiff.days} days since the last billing date`);
+                    console.log(`Incrementing month increment by 1 month because there are ${dateDiff.days} days since the last billing date`);
                 }
                 break;
             case 3: //quarterly
                 if (dateDiff.months > 0 || dateDiff.days > 0) {
                     monthIncrement= (dateDiff.years * 12) + (dateDiff.quarters*3) +3;
-                    // console.log(`Incrementing month increment by 3 months because there are ${dateDiff.months} months and ${dateDiff.days} days since the last billing date`);
+                    console.log(`Incrementing month increment by 3 months because there are ${dateDiff.months} months and ${dateDiff.days} days since the last billing date`);
                 }
                 break;
             case 12: //yearly
                 if (dateDiff.quarters > 0 || dateDiff.months > 0 || dateDiff.days > 0) {
                     monthIncrement= dateDiff.years * 12 +12;
-                    // console.log(`Incrementing month increment by 12 months because there are ${dateDiff.quarters} quarters, ${dateDiff.months} months, and ${dateDiff.days} days since the last billing date`);
+                    console.log(`Incrementing month increment by 12 months because there are ${dateDiff.quarters} quarters, ${dateDiff.months} months, and ${dateDiff.days} days since the last billing date`);
                 }
                 break;
             default:
@@ -83,13 +83,20 @@ function calculateNextBillingDate(startDate, frequency, processingDate) {
 }
 
 function calculatePeriodsBetweenDates(date1, date2) {
+    console.log(`Calculating periods between dates: ${formatDate(date1)} and ${formatDate(date2)}`);
     const years = date2.getFullYear() - date1.getFullYear();
+    console.log(`Years: ${years}`);
     const quarters = Math.floor((date2.getMonth() - date1.getMonth()) / 3);
+    console.log(`Quarters: ${quarters}`);
     const months = (date2.getMonth() - date1.getMonth()) % 12;
+    console.log(`Months: ${months}`);
     const days = date2.getDate() - date1.getDate();
+    console.log(`Days: ${days}`);
     const inMonths = years*12 + quarters*3 + months;
+    console.log(`Total months: ${inMonths}`);
     return { years: years, quarters: quarters, months: months, days: days, inMonths: inMonths };
 }
+
 
 function addMonthsToDate(date, months) {
     console.log(`Adding ${months} months to date`, formatDate(date));
