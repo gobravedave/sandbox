@@ -66,14 +66,14 @@
       subscription.state = SubscriptionState.ACTIVE;
       subscription.startDate = processingDate;
       subscription.id = generateSubscriptionID();
-      addToAuditLog('Start Subscription');
+      addToAuditLog('started');
       updateUI();
     }
 
     function endSubscription() {
         subscription.state = SubscriptionState.ENDING;
         subscription.endDate = processingDate;
-        addToAuditLog('End Subscription');
+        addToAuditLog('request to end');
         updateUI();
         
         // Disable the "End" button and enable the "Restart" button
@@ -84,18 +84,20 @@
 
     function restartSubscription() {
     const previousSubscriptionID = subscription.id;
-    
+    let action = null;
     if (subscription.state === SubscriptionState.ENDING) {
         subscription.endDate = null;
+        action = `restarted`;
     }
 
     if (subscription.endDate && processingDate > subscription.endDate) {
         subscription.id = generateSubscriptionID();
+        subscription.endDate = null;
+        action = `created/restarted using subscription ${previousSubscriptionID}`;
     }
 
     subscription.state = SubscriptionState.ACTIVE;
 
-    const action = previousSubscriptionID ? `Restart Subscription (New ID: ${subscription.id})` : 'Restart Subscription';
     addToAuditLog(action);
     updateUI();
     }
@@ -106,16 +108,14 @@
     document.getElementById('currentDate').textContent = 'Processing Date: ' + processingDate;
 
     if (subscription.endDate) {
-        if (processingDate >= subscription.endDate) {
+        if (processingDate <= subscription.endDate ) {
         subscription.state = SubscriptionState.ENDING;
         addToAuditLog('Subscription Ending due to processing date');
+        } else if (processingDate > subscription.endDate) {
+          subscription.state = SubscriptionState.ENDED;
+          addToAuditLog('Subscription Ended due to processing date');
         } else {
-        subscription.state = SubscriptionState.ACTIVE;
-        }
-
-        if (processingDate > subscription.endDate) {
-        subscription.state = SubscriptionState.ENDED;
-        addToAuditLog('Subscription Ended due to processing date');
+          subscription.state = SubscriptionState.ACTIVE;
         }
         
         updateUI();
@@ -147,13 +147,16 @@
         startButton.disabled = false;
         endButton.disabled = true;
         restartButton.disabled = true;
+    } else if (subscription.endDate){
+        startButton.disabled = true;
+        endButton.disabled = true;
+        restartButton.disabled = false;
     } else {
         startButton.disabled = true;
-        endButton.disabled = subscription.state === SubscriptionState.ENDED;
-        restartButton.disabled = subscription.state !== SubscriptionState.ENDED;
+        endButton.disabled = false;
+        restartButton.disabled = true;
     }
-    }
-
+  }
 
     function updateStartButton() {
       const startButton = document.getElementById('startButton');
