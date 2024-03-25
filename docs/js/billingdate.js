@@ -1,36 +1,47 @@
 function calculateBillingDate() {
-    console.log("Calculating billing date");
-    const startDateInput = document.getElementById("startDate");
-    const billingFrequencyInput = document.getElementById("billingFrequency");
-    const processingDateInput = document.getElementById("processingDate");
-    let result;
+    try {
+        console.log("Calculating billing date");
+        const startDateInput = document.getElementById("startDate");
+        if (!startDateInput) {
+            throw new Error("Null pointer reference: startDateInput is null");
+        }
+        const billingFrequencyInput = document.getElementById("billingFrequency");
+        if (!billingFrequencyInput) {
+            throw new Error("Null pointer reference: billingFrequencyInput is null");
+        }
+        const processingDateInput = document.getElementById("processingDate");
+        if (!processingDateInput) {
+            throw new Error("Null pointer reference: processingDateInput is null");
+        }
+        let result;
 
-    if (!startDateInput || !billingFrequencyInput || !processingDateInput) {
-        result  `Error: Null pointer reference: One or more input elements are missing`;
+        const startDate = new Date(startDateInput.value);
+        if (isNaN(startDate.getTime())) {
+            throw new Error("Invalid date input: Start date is not a valid date");
+        }
+        const frequency = billingFrequencyInput.value === "monthly" ? 1 : billingFrequencyInput.value === "quarterly" ? 3 : 12;
+        const processingDate = new Date(processingDateInput.value);
+        if (isNaN(processingDate.getTime())) {
+            throw new Error("Invalid date input: Processing date is not a valid date");
+        }
+
+        if (startDate.getTime() === processingDate.getTime()) {
+            const nextBillingDate = formatDate(startDate);
+            result = `Start: ${formatDate(startDate)}|Freq: ${frequency}|Proc: ${formatDate(processingDate)}|Next Bill: ${nextBillingDate}`;
+        } else if (startDate < processingDate) {
+            const nextBillingDate = calculateNextBillingDate(startDate, frequency, processingDate);
+            result = `Start: ${formatDate(startDate)}|Freq: ${frequency}|Proc: ${formatDate(processingDate)}|Next Bill: ${nextBillingDate}`;
+        } else {
+            throw new Error("(Start date must be before processing date)");
+        }
+
+        console.log(result);
+        addToResultLog(result);
+    } catch (ex) {
+        console.error("Error in calculateBillingDate():", ex);
     }
-
-    const startDate = new Date(startDateInput.value);
-    const frequency = billingFrequencyInput.value === "monthly" ? 1 : billingFrequencyInput.value === "quarterly" ? 3 : 12;
-    const processingDate = new Date(processingDateInput.value);
-
-    if (isNaN(startDate.getTime()) || isNaN(processingDate.getTime())) {
-        result =`Error: Invalid date input: Start date or processing date is not a valid date`;
-    }
-
-    if (startDate.getTime() === processingDate.getTime()) {
-        const nextBillingDate = formatDate(startDate);
-        result = `Start: ${formatDate(startDate)}|Freq: ${frequency}|Proc: ${formatDate(processingDate)}|Next Bill: ${nextBillingDate}`;
-    } else if (startDate < processingDate) {
-        
-        const nextBillingDate = calculateNextBillingDate(startDate, frequency, processingDate);
-        result = `Start: ${formatDate(startDate)}|Freq: ${frequency}|Proc: ${formatDate(processingDate)}|Next Bill: ${nextBillingDate}`;
-    } else {
-        result= `Error: (Start date must be before processing date)`;
-    }
-
-    console.log(result);
-    addToResultLog(result);
 }
+
   
 // calculate next billing date by calculating the number of months between the start date and processing date, rounding up if there is a remainder, and returning a date value that is greater than or equal to the user-supplied processing date
 function calculateNextBillingDate(startDate, frequency, processingDate) {
@@ -39,7 +50,7 @@ function calculateNextBillingDate(startDate, frequency, processingDate) {
     if (startDate instanceof Date && processingDate instanceof Date && frequency > 0) {
         console.log("Start date and processing date are valid");
         const dateDiff = calculatePeriodsBetweenDates(startDate,processingDate);
-        console.log(`Date difference:` + dateDiff);
+        console.log(`Date difference:` + ${dateDiff})
         let monthIncrement = dateDiff.inMonths; 
         // console.log(`Month increment before frequency-based increment: ${monthIncrement}`);
         //if not an aniversary, increment months based on frequency
@@ -83,6 +94,9 @@ function calculateNextBillingDate(startDate, frequency, processingDate) {
 }
 
 function calculatePeriodsBetweenDates(date1, date2) {
+    if (date1 === null || date2 === null) {
+        throw new Error("calculatePeriodsBetweenDates: null date argument");
+    }
     console.log(`Calculating periods between dates: ${formatDate(date1)} and ${formatDate(date2)}`);
     const years = date2.getFullYear() - date1.getFullYear();
     console.log(`Years: ${years}`);
@@ -135,10 +149,16 @@ function testAddMonthsToDate() {
         { date: "2024-02-29", months: 26, expected: { date: "29/04/2026" }}
         ];
     testCases.forEach((testCase) => {
-    const result = addMonthsToDate(new Date(testCase.date), testCase.months);
-    console.log("Testing date:", testCase.date, "months to add:", testCase.months);
-    console.log("Expected:", testCase.expected);
-    console.log("Actual:", result);
+        try {
+            const result = addMonthsToDate(new Date(testCase.date), testCase.months);
+            console.log("Testing date:", testCase.date, "months to add:", testCase.months);
+            console.log("Expected:", testCase.expected);
+            console.log("Actual:", result);
+        } catch (error) {
+            console.error("Error occurred for test case:", testCase);
+            console.error(error);
+            throw error;
+        }
     });
 }
     
@@ -169,17 +189,36 @@ function testCalculateNextBillingDate() {
 
 function testCalculatePeriodsBetweenDates() {
     const testCases = [
-        { date1: `2021-01-01`, date2: `2021-03-01`, expected: { years: 0, Quarters: 0, Months: 2, Days: 0 }},
-        { date1: "2024-01-31", date2: "2024-01-31", expected: { years: 0, Quarters: 0, Months: 0, Days: 0 }},
-        { date1: "2023-01-31", date2: "2024-01-31", expected: { years: 1, Quarters: 0, Months: 0, Days: 0 }},
-        { date1: "2023-02-29", date2: "2024-03-31", expected: { years: 1, Quarters: 0, Months: 1, Days: 2 }},
-        { date1: "2023-02-29", date2: "2024-06-30", expected: { years: 1, Quarters: 1, Months: 1, Days: 1 }}
+        { request: { start_date: "2024-01-31",  process_date: "2024-01-31" }, expected: { years: 0, Quarters: 0, Months: 0, Days: 0, inMonths: 0 }},
+        { request: { start_date: "2023-01-31",  process_date: "2024-01-31" }, expected: { years: 1, Quarters: 0, Months: 0, Days: 0, inMonths: 12 }},
+        { request: { start_date: "2023-02-29",  process_date: "2024-03-31" }, expected: { years: 1, Quarters: 0, Months: 1, Days: 2, inMonths: 13 }},
+        { request: { start_date: "2023-02-29",  process_date: "2024-06-30" }, expected: { years: 1, Quarters: 1, Months: 1, Days: 1, inMonths: 16 }}
         ];
 
-    testCases.forEach((testCase) => {
-        const result = calculatePeriodsBetweenDates(new Date(testCase.date1),new Date(testCase.date2));
-        console.log("date1:", testCase.date1, "Testing date2:", testCase.date2);    
-        console.log("Expected:", testCase.expected);
-        console.log("Actual:", result);
-    });
-}
+        let testnbr = 1
+        testCases.forEach((testCase) => {
+            try {
+                const result = calculatePeriodsBetweenDates(
+                    new Date(testCase.request.start_date),
+                    new Date(testCase.request.process_date)
+                );
+                addToResultLog("testcase" +testnbr + `: Request=${testCase.request}`);
+                addToResultLog("testcase" +testnbr + `: Expected=${testCase.expected}`);
+                addToResultLog("testcase" +testnbr + `: Actual=${result}`);
+                if (JSON.stringify(testCase.expected) === JSON.stringify(result)) {
+                    addToResultLog("testcase" +testnbr + `: Result= Passed`);   
+                } else {
+                    addToResultLog("testcase" +testnbr + `: Result= Failed`);
+                }
+                testnbr++;
+            } catch (error) {
+                console.error("Error occurred for test case:", testCase);
+                console.error(error);
+                throw error;
+            }
+            console.log("Reuest:", testCase.request);    
+            console.log("Expected:", testCase.expected);
+            console.log("Actual:", result);
+        });
+    }
+
