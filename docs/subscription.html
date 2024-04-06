@@ -40,8 +40,8 @@
         <span class="docket-label">Frequency:</span>
         <select id="frequencySelect">
           <option value="monthly">Monthly</option>
-          <option value="quarterly">Quarterly</option>
-          <option value="yearly">Yearly</option>
+          <!-- <option value="quarterly">Quarterly</option>
+          <option value="yearly">Yearly</option> -->
         </select>
       </div>
       <div class="docket-item">
@@ -82,44 +82,100 @@
       ENDED: 'Ended'
     };
 
-    let processingDate = new Date(); // Initialize processingDate with the current date
-
+    document.getElementById('datePicker').valueAsDate = new Date(); 
+    let processingDate = document.getElementById('datePicker').valueAsDate; 
+    
     let subscription = {
       id: '',
       state: null,
       startDate: null,
       endDate: null,
+      frequency: null,
       discountGroup: null,
+      gracePeriod: null,
       nextBillingDate: null,
       feeAmount: null
-      // customerIDs: []
     };
 
     function createSubscription() {
       subscription.state = SubscriptionState.ACTIVE;
       subscription.startDate = formatDate(processingDate);
       subscription.id = generateSubscriptionID();
+      subscription.frequency = document.getElementById('frequencySelect').value;
       subscription.gracePeriod = document.getElementById('gracePeriod').value;
-      subscription.nextBillingDate = calculateFirstBillingDate(subscription.gracePeriod, processingDate);
+      subscription.nextBillingDate = formatDate(calculateFirstBillingDate(processingDate,subscription.gracePeriod));
       subscription.discountGroup = document.getElementById('discountGroupSelect').value;
       subscription.feeAmount = calculateFeeAmount(subscription.discountGroup);
       addToAuditLog('created');
       updateUI();
     }
 
-    function calculateFirstBillingDate(frequency, currentDate) {
-      console.log('Calculating first billing date with frequency:', frequency, 'and current date:', formatDate(currentDate));
-      const firstBill = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-      if (frequency > 0) {
-        firstBill.setMonth(firstBill.getMonth() + frequency);
-      } else if (frequency === 0) {
-        // Do nothing - first bill is on the current month
+    function calculateFirstBillingDate(startDate, grace) {
+      // Calaculate the first billing date based on the grace period and start date
+      console.log('Calculating first billing date with start date:', formatDate(startDate), ` and grace `, grace);
+      const dayOfMonth = new Date(startDate).getDate(); // new Date(currentDate.getDate());
+      let firstBill;
+      if (grace == 0) {
+        firstBill = new Date(startDate.getTime());
       } else {
-        // Negative frequencies increment backwards
-        firstBill.setMonth(firstBill.getMonth() + 1 + frequency);
+        firstBill = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+        firstBill.setMonth(startDate.getMonth() + Number(grace),1);
+        const daysInFirstBillingMonth = daysInMonth(firstBill.getMonth(),firstBill.getFullYear());
+        if (startDate.getDate() >=  daysInFirstBillingMonth) {
+          firstBill.setDate(daysInFirstBillingMonth);
+        } else {
+          firstBill.setDate( startDate.getDate());
+        }
       }
       console.log('First billing date calculated to be:', formatDate(firstBill));
-      return formatDate(firstBill);
+      return firstBill;
+    }
+
+    function calculateNextBillingDate(startDate, frequency, currentDate) {
+      // Calculate the next billing date based on the frequency and current date
+      // Next billing date cannot be in the past, or less than the first bill date
+      console.log('Start of calculateNextBillingDate');
+      let nextBill;
+      let daysInFirstBillingMonth;
+      //convert start date string to date type
+      const fromDate = new Date(startDate.split('/').reverse().join('/')); //format is dd/mm/yyyy, JS Date() parses mm/dd/yyyy so we need to reverse the order
+      const fromYear = fromDate.getFullYear();
+      const fromMonth = fromDate.getMonth();
+      const fromDayOfMonth = fromDate.getDate();
+
+      const firstBill = calculateFirstBillingDate(fromDate, subscription.gracePeriod);
+      const monthlyIncrement = frequency === "monthly" ? 1 : frequency === "quarterly" ? 3 : 12;
+      let months = fromMonth + monthlyIncrement;
+      do {
+        nextBill = new Date(fromDate);
+        // console.log(`billing date before roll: ${nextBill}`);
+        // console.log(`roll to month : ${months}`); 
+        nextBill.setMonth(months,1);
+        daysInBillingMonth = daysInMonth(nextBill.getMonth(),nextBill.getFullYear());
+        if (fromDayOfMonth >=  daysInBillingMonth) {
+          nextBill.setDate(daysInBillingMonth);
+        } else {
+          nextBill.setDate(fromDayOfMonth);
+        }
+        // console.log(`billing date after roll: ${nextBill}`);
+        months=months+monthlyIncrement;
+        if (formatDate(nextBill) ==formatDate(currentDate)) {
+          //seem there is an issue with the date object when comparing dates with differnt timezones
+          currentDate = nextBill;
+        }     
+      } while (nextBill < currentDate);
+
+      if (firstBill > nextBill) {
+        nextBill = firstBill;
+      }
+      
+      console.log('Next Billing Date calculated to be:', formatDate(nextBill));
+      return nextBill;
+    }
+    function daysInMonth (month, year) {
+      //bump to next month.. so the 0 returns the last day of last month
+      const result = new Date(year, month+1, 0).getDate();
+      return result;
     }
 
     function calculateFeeAmount(discountGroup) {
@@ -132,15 +188,16 @@
       }
     }
     function endSubscriptionNow() {
-        subscription.state = SubscriptionState.ENDING;
-        subscription.endDate = formatDate(processingDate);
-        addToAuditLog('ended immediately');
-        updateUI();
-        
-        // Disable the "End" buttons and enable the "Restart" button
-        document.getElementById('endNowButton').disabled = true;
-        document.getElementById('endNextBillButton').disabled = true;
-        document.getElementById('restartButton').disabled = false;
+      subscription.state = SubscriptionState.ENDED;
+      subscription.endDate = formatDate(processingDate);
+      subscription.nextBillingDate = null;
+      addToAuditLog('ended immediately');
+      updateUI();
+      
+      // Disable the "End" buttons and enable the "Restart" button
+      document.getElementById('endNowButton').disabled = true;
+      document.getElementById('endNextBillButton').disabled = true;
+      document.getElementById('restartButton').disabled = false;
     }
 
     function endSubscriptionNextBill() {
@@ -155,9 +212,8 @@
         document.getElementById('restartButton').disabled = false;
     }
 
-
-
     function restartSubscription() {
+    processingDate = new Date(document.getElementById('datePicker').value);
     const previousSubscriptionID = subscription.id;
     let action = null;
     if (subscription.state === SubscriptionState.ENDING) {
@@ -165,45 +221,48 @@
         action = `restarted`;
     }
 
-    if (subscription.endDate && processingDate > subscription.endDate) {
+    if (subscription.state === SubscriptionState.ENDED) {
         subscription.id = generateSubscriptionID();
+        subscription.startDate = formatDate(processingDate);
         subscription.endDate = null;
+        subscription.nextBillingDate = formatDate(processingDate); // processingDate;
         action = `created/restarted using subscription ${previousSubscriptionID}`;
     }
 
     subscription.state = SubscriptionState.ACTIVE;
 
+
     addToAuditLog(action);
     updateUI();
     }
 
-
     function updateDate() {
-    processingDate = new Date(document.getElementById('datePicker').value);
-    document.getElementById('currentDate').textContent = 'Processing Date: ' + formatDate(processingDate);
+      console.log('Updating date');
+      processingDate = new Date(document.getElementById('datePicker').value);
+      document.getElementById('currentDate').textContent = 'Processing Date: ' + formatDate(processingDate);
 
-    if (subscription.nextBillingDate) {
-        const nextBillingDate = new Date(subscription.nextBillingDate);
-        if (nextBillingDate <= processingDate) {
-            subscription.nextBillingDate = calculateNextBillingDate(subscription.frequency, processingDate);
-            addToAuditLog('Billing date updated');
+      if (subscription.state == SubscriptionState.ACTIVE) {
+        const BillingDate = new Date(subscription.nextBillingDate.split('/').reverse().join('/')); //format is dd-mm-yyyy, JS Date() parses mm-dd-yyyy so we need to reverse the order
+        const newNextBillingDate = calculateNextBillingDate(subscription.startDate, subscription.frequency, processingDate);
+        if (BillingDate !== newNextBillingDate) {
+          subscription.nextBillingDate = formatDate(newNextBillingDate);
+          addToAuditLog(`Billing date was updated to ${formatDate(newNextBillingDate)}`);
         }
+      }    
+      if (subscription.endDate) {
+        const endDate = new Date(subscription.endDate.split('/').reverse().join('/')); //format is dd-mm-yyyy, JS Date() parses mm-dd-yyyy so we need to reverse the order
+        if (processingDate < endDate ) {
+          subscription.state = SubscriptionState.ENDING;
+          addToAuditLog('Subscription Ending due to processing date');
+        } else if (processingDate >= endDate) {
+            subscription.state = SubscriptionState.ENDED;
+            addToAuditLog('Subscription Ended due to processing date');
+        } 
+      } else {
+        subscription.state = SubscriptionState.ACTIVE;
+      }
+      updateUI();
     }
-    
-    if (subscription.endDate) {
-        if (processingDate <= subscription.endDate ) {
-        subscription.state = SubscriptionState.ENDING;
-        addToAuditLog('Subscription Ending due to processing date');
-        } else if (processingDate > subscription.endDate) {
-          subscription.state = SubscriptionState.ENDED;
-          addToAuditLog('Subscription Ended due to processing date');
-        } else {
-          subscription.state = SubscriptionState.ACTIVE;
-        }
-        
-        updateUI();
-    }
-}
     function formatDate(date) {
       const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
       return date.toLocaleDateString('en-AU', options);
@@ -222,14 +281,16 @@
     document.getElementById('feeAmount').textContent = subscription.feeAmount || '-';
     document.getElementById('nextBillingDate').textContent = subscription.nextBillingDate || '-';
     
-    // document.getElementById('customerIDs').textContent = subscription.customerIDs.join(', ');
-    
     const createButton = document.getElementById('createButton');
     const endNowButton = document.getElementById('endNowButton');
     const endNextBillButton = document.getElementById('endNextBillButton');
     const restartButton = document.getElementById('restartButton');
 
-    if (subscription.id === '') {
+    if (subscription.state === 'Error') {
+        endNowButton.disabled = true;
+        endNextBillButton.disabled = true;
+        restartButton.disabled = true;
+    } else if (subscription.id === '') {
         createButton.disabled = false;
         endNowButton.disabled = true;
         endNextBillButton.disabled = true;
@@ -247,29 +308,12 @@
     }
   }
 
-    function updateStartButton() {
-      const createButton = document.getElementById('createButton');
-      const endNowButton = document.getElementById('endNowButton');
-      const restartButton = document.getElementById('restartButton');
-
-      if (subscription.id === '') {
-        createButton.disabled = false;
-        endNowButton.disabled = true;
-        restartButton.disabled = true;
-      } else {
-        createButton.disabled = true;
-        endNowButton.disabled = false;
-        restartButton.disabled = false;
-      }
-    }
-
     function addToAuditLog(action) {
     const auditLog = document.getElementById('auditLog');
     const timestamp = document.getElementById('datePicker').value ? formatDate(processingDate) : formatDate(new Date());
     const logEntry = `${timestamp} - Subscription ID: ${subscription.id} - ${action}\n`;
     auditLog.value += logEntry;
     }
-
 
     function clearAuditLog() {
       document.getElementById('auditLog').value = '';
@@ -283,10 +327,7 @@
     subscription.endDate = null;
     subscription.nextBillingDate = null;
     subscription.feeAmount=null;
-    // subscription.customerIDs = [];
-    
-    const action = previousSubscriptionID ? `Subscription Reset (Previous ID: ${previousSubscriptionID})` : 'Subscription Reset';
-    addToAuditLog(action);
+
     clearAuditLog();
     updateUI();
     }
