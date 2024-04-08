@@ -115,7 +115,7 @@ function endSubscriptionNow() {
   subscription.state = SubscriptionState.ENDED;
   subscription.endDate = formatDate(processingDate);
   subscription.nextBillingDate = null;
-  addToAuditLog(`ended immediately. Pro Rata Refund to be calaculated`);
+  addToAuditLog(`ended immediately. Pro Rata Refund calaculation coming soon`);
   updateUI();
   
   // Disable the "End" buttons and enable the "Restart" button
