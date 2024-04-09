@@ -112,7 +112,7 @@ function calculateFeeAmount(discountGroup) {
 }
 function endSubscriptionNow() {
 
-  subscription.state = SubscriptionState.ENDED;
+  subscription.state = SubscriptionState.ENDING;
   subscription.endDate = formatDate(processingDate);
   subscription.nextBillingDate = null;
   addToAuditLog(`ended immediately. Pro Rata Refund calaculation coming soon`);
