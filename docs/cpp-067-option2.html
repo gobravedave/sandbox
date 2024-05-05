@@ -24,7 +24,7 @@ function init() {
     new go.Binding('visible'),
     $(go.Panel,
       go.Panel.Auto,
-      $(go.Shape,
+      $(go.Shape, "Circle",
         { fill: 'white', minSize: new go.Size(30, 30), strokeWidth: 0 },
         { cursor: 'pointer' }, // indicate that linking may start here
         new go.Binding('fill', 'color')
@@ -104,7 +104,7 @@ function init() {
       { key: 'S6', color: 'lightgreen' },
       { key: 'P9', color: 'brown' },
       { key: 'H1', color: 'lightblue' },
-      { key: 'Sub1', color: 'gold' },
+      { key: 's1', color: 'gold' },
     ],
     [
       { from: 'C1', to: 'P1' },
@@ -138,10 +138,10 @@ function init() {
       { from: 'P6', to: 'S6' },
       { from: 'C2', to: 'P9' },
       { from: 'C2', to: 'H1' },
-      { from: 'C2', to: 'Sub1' },
+      { from: 'C2', to: 's1' },
       { from: 'P9', to: 'H1' },
-      { from: 'H1', to: 'Sub1' },
-      { from: 'Sub1', to: 'A2' },
+      { from: 'H1', to: 's1' },
+      { from: 's1', to: 'A2' },
       
     ]
   );
@@ -150,6 +150,6 @@ window.addEventListener('DOMContentLoaded', init);
 </script>
 
 <div id="sample">
-<div id="myDiagramDiv" style="border: 1px solid black; width: 800px; height: 400px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;"><canvas tabindex="0" width="1196" height="1396" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 598px; height: 698px; cursor: auto;"></canvas><div style="position: absolute; overflow: auto; width: 598px; height: 698px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div>
+<div id="myDiagramDiv" style="border: 1px solid black; width: 1200px; height: 500px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;"><canvas tabindex="0" width="1196" height="1396" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 598px; height: 698px; cursor: auto;"></canvas><div style="position: absolute; overflow: auto; width: 598px; height: 698px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div>
 </body>
 </html>
