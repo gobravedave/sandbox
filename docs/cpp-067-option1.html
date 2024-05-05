@@ -99,6 +99,9 @@ function init() {
       { key: 'A3', color: 'lightblue' },
       { key: 'S5', color: 'lightblue' },
       { key: 'S6', color: 'lightgreen' },
+      { key: 'P9', color: 'brown' },
+      { key: 'H1', color: 'lightblue' },
+      { key: 'Sub1', color: 'gold' },
     ],
     [
       { from: 'C1', to: 'P1' },
@@ -126,6 +129,12 @@ function init() {
       { from: 'P3', to: 'A3' },
       { from: 'P3', to: 'S5' },
       { from: 'P3', to: 'S6' },
+      { from: 'C2', to: 'P9' },
+      { from: 'C2', to: 'H1' },
+      { from: 'C2', to: 'Sub1' },
+      { from: 'P9', to: 'H1' },
+      { from: 'H1', to: 'Sub1' },
+      { from: 'Sub1', to: 'A2' },
       
     ]
   );
