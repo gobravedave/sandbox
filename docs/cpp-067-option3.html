@@ -32,7 +32,7 @@ function init() {
       $(go.TextBlock,
         { margin: 2 },
         { fromLinkable: false, toLinkable: false }, // don't start drawing a link from the text
-        new go.Binding('text', 'key')
+        new go.Binding('text', 'text') // bind to the 'text' property of the model data
       )
     ),
     $('Button', // a replacement for "TreeExpanderButton" that works for non-tree-structured graphs
@@ -85,23 +85,23 @@ function init() {
 
   myDiagram.model = new go.GraphLinksModel(
     [
-      { key: 'C1', text: 'customer1', color: 'coral' },
-      { key: 'P1', color: 'pink' },
-      { key: 'A1', color: 'lightblue' },
-      { key: 'S1', color: 'lightblue' },
-      { key: 'S2', color: 'lightgreen' },
-      { key: 'C2', color: 'coral' },
-      { key: 'P2', color: 'pink' },
-      { key: 'A2', color: 'lightblue' },
-      { key: 'S3', color: 'lightblue' },
-      { key: 'S4', color: 'lightgreen' },
-      { key: 'P3', color: 'pink' },
-      { key: 'A3', color: 'lightblue' },
-      { key: 'S5', color: 'lightblue' },
-      { key: 'S6', color: 'lightgreen' },
-      { key: 'P9', color: 'brown' },
-      { key: 'H1', color: 'lightblue' },
-      { key: 's1', color: 'gold' },
+      { key: 'C1', text: 'Fred', color: 'coral' },
+      { key: 'C2', text: "Mary",color: 'coral' },
+      { key: 'P1', text: "P", color: 'pink' },
+      { key: 'P2', text: "P", color: 'pink' },
+      { key: 'P3', text: "P", color: 'pink' },
+      { key: 'P9', text: "P", color: 'brown' },
+      { key: 'A1', text: "TX", color: 'lightblue' },
+      { key: 'A2', text: "TX", color: 'lightblue' },
+      { key: 'A3', text: "TX", color: 'lightblue' },
+      { key: 'S1', text: "QS", color: 'lightblue' },
+      { key: 'S2', text: "SS", color: 'lightgreen' },
+      { key: 'S3', text: "QS", color: 'lightblue' },
+      { key: 'S4', text: "SS", color: 'lightgreen' },
+      { key: 'S5', text: "QS", color: 'lightblue' },
+      { key: 'S6', text: "SS", color: 'lightgreen' },
+      { key: 'H1', text: "HL", color: 'lightblue' },
+      { key: 's1', text: "Sub", color: 'gold' },
 
     ],
     [
@@ -131,7 +131,7 @@ function init() {
       { from: 'C2', to: 'H1' },
       { from: 'C2', to: 's1' },
       { from: 'P9', to: 'H1' },
-      { from: 'H1', to: 's1' },
+      { from: 's1', to: 'H1' },
       { from: 's1', to: 'A2' },
 
     ]
