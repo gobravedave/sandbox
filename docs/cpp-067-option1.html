@@ -81,7 +81,14 @@ function init() {
     node.findNodesOutOf().each(expandFrom);
   }
 
-  myDiagram.linkTemplate = $(go.Link, { relinkableFrom: true, relinkableTo: true, corner: 10 }, $(go.Shape), $(go.Shape, { toArrow: 'Standard' }));
+  myDiagram.linkTemplate = $(go.Link,
+    { relinkableFrom: true, relinkableTo: true, corner: 10 },
+    $(go.Shape),
+    $(go.Shape, { toArrow: 'Standard' }),
+    $(go.TextBlock,  // This TextBlock displays the text for the link
+    new go.Binding('text', 'text')  // Bind to the 'text' property of the link data
+    )
+  );
 
   myDiagram.model = new go.GraphLinksModel(
     [
@@ -104,37 +111,38 @@ function init() {
       { key: 's1', text: "Sub", color: 'gold' },
     ],
     [
-      { from: 'C1', to: 'P1' },
-      { from: 'C1', to: 'A1' },
-      { from: 'C1', to: 'S1' },
-      { from: 'C1', to: 'S2' },
-      { from: 'P1', to: 'A1' },
-      { from: 'P1', to: 'S2' },
-      { from: 'P1', to: 'S1' },
-      { from: 'C2', to: 'P2' },
-      { from: 'C2', to: 'A2' },
-      { from: 'C2', to: 'S3' },
-      { from: 'C2', to: 'S4' },
-      { from: 'P2', to: 'A2' },
-      { from: 'P2', to: 'S3' },
-      { from: 'P2', to: 'S4' },
-      { from: 'C1', to: 'P3' },
-      { from: 'C2', to: 'P3' },
-      { from: 'C1', to: 'A3' },
-      { from: 'C2', to: 'A3' },
-      { from: 'C1', to: 'S5' },
-      { from: 'C2', to: 'S5' },
-      { from: 'C1', to: 'S6' },
-      { from: 'C2', to: 'S6' },
-      { from: 'P3', to: 'A3' },
-      { from: 'P3', to: 'S5' },
-      { from: 'P3', to: 'S6' },
-      { from: 'C2', to: 'P9' },
-      { from: 'C2', to: 'H1' },
-      { from: 'C2', to: 's1' },
-      { from: 'P9', to: 'H1' },
-      { from: 's1', to: 'H1' },
-      { from: 's1', to: 'A2' },
+      { from: 'C1', to: 'P1', text: "so" },
+      { from: 'C1', to: 'A1', text: "so" },
+      { from: 'C1', to: 'S1', text: "so" },
+      { from: 'C1', to: 'S2', text: "may so" },
+      { from: 'P1', to: 'A1', text: "has" },
+      { from: 'P1', to: 'S2', text: "may have" },
+      { from: 'P1', to: 'S1', text: "has" },
+      { from: 'C2', to: 'P2', text: "so" },
+      { from: 'C2', to: 'A2', text: "so" },
+      { from: 'C2', to: 'S3', text: "so" },
+      { from: 'C2', to: 'S4', text: "so" },
+      { from: 'P2', to: 'A2', text: "has" },
+      { from: 'P2', to: 'S3', text: "has" },
+      { from: 'P2', to: 'S4', text: "may have" },
+      { from: 'C1', to: 'P3', text: "jo" },
+      { from: 'C2', to: 'P3', text: "jo" },
+      { from: 'C1', to: 'A3', text: "jo" },
+      { from: 'C2', to: 'A3', text: "jo" },
+      { from: 'C1', to: 'S5', text: "jo" },
+      { from: 'C2', to: 'S5', text: "jo" },
+      { from: 'C1', to: 'S6', text: "may jo" },
+      { from: 'C2', to: 'S6', text: "may jo" },
+      { from: 'P3', to: 'A3', text: "has" },
+      { from: 'P3', to: 'S5', text: "has" },
+      { from: 'P3', to: 'S6', text: "may have" },
+      { from: 'C2', to: 'P9', text: "so" },
+      { from: 'C2', to: 'H1', text: "so" },
+      { from: 'C2', to: 's1', text: "so" },
+      { from: 'P9', to: 'H1', text: "has" },
+      { from: 's1', to: 'H1', text: "bo" },
+      { from: 's1', to: 'A2', text: "bills to" },
+
       
     ]
   );
