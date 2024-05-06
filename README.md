@@ -1,4 +1,4 @@
-# open-banking-au-sandbox
-experimental visualizations of open banking product data
+# sandbox
+experimental visualizations
 
 Veiw at https://gobravedave.github.io/sandbox/index.html
