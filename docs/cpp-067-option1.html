@@ -84,9 +84,6 @@ function init() {
     { relinkableFrom: true, relinkableTo: true, corner: 50 },
     $(go.Shape, {strokeWidth: 2}, new go.Binding('stroke', 'color')),
     $(go.Shape, { toArrow: 'Standard' }, new go.Binding('fill', 'color'), new go.Binding('stroke', 'color')),
-    // $(go.TextBlock,  // This TextBlock displays the text for the link
-    // new go.Binding('text', 'text')  // Bind to the 'text' property of the link data
-    // )
   );
 
   myDiagram.model = new go.GraphLinksModel(
@@ -127,9 +124,9 @@ function init() {
       { from: 'C1', to: 'P3', text: "jo", color: 'grey' },
       { from: 'C2', to: 'P3', text: "jo", color: 'grey' },
       { from: 'C1', to: 'A3', text: "jo", color: 'grey' },
-      { from: 'C2', to: 'A3', text: "jo", color: 'lightgrey' },
-      { from: 'C1', to: 'S5', text: "jo", color: 'lightgrey' },
-      { from: 'C2', to: 'S5', text: "jo", color: 'lightgrey' },
+      { from: 'C2', to: 'A3', text: "jo", color: 'grey' },
+      { from: 'C1', to: 'S5', text: "jo", color: 'grey' },
+      { from: 'C2', to: 'S5', text: "jo", color: 'grey' },
       { from: 'C1', to: 'S6', text: "jo", color: 'lightgreen' },
       { from: 'C2', to: 'S6', text: "jo", color: 'lightgreen' },
       { from: 'P3', to: 'A3', text: "has", color: 'lightgrey' },
