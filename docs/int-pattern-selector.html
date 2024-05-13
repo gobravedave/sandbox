@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integration Pattern Recommendor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Integration Pattern Proposal</h2>
+        <label for="sourceSystem">Select Source System:</label>
+        <select id="sourceSystem">
+            <option value="mobile">Mobile</option>
+            <option value="webapp">WebApp</option>
+            <option value="salesforce">Salesforce</option>
+            <option value="lightning">Lightning</option>
+            <option value="zafin">Zafin</option>
+        </select>
+        <label for="targetSystem">Select Target System:</label>
+        <select id="targetSystem">
+            <option value="fabric">Fabric</option>
+            <option value="lightning">Lightning</option>
+            <option value="cap">CAP</option>
+            <option value="zafin">Zafin</option>
+            <option value="ctm">CTM</option>
+        </select>
+        <button onclick="proposeIntegrationPattern()">Propose Integration Pattern</button>
+        <div id="integrationPattern"></div>
+    </div>
+
+    <script>
+        function proposeIntegrationPattern() {
+            var sourceSystem = document.getElementById("sourceSystem").value;
+            var targetSystem = document.getElementById("targetSystem").value;
+
+            var integrationPattern;
+
+            // Simple logic for proposing integration pattern
+            var table = {
+                "mobile,fabric": "grpc via waf, glb, apigateway",
+                "webapp,fabric": "grpc via waf, glb, apigateway",
+                "fabric,cap": "via apimesh",
+                "lightning,cap": "via apimesh",
+                "lightning,zafin": "via mulesoft",
+                "zafin,ctm": "via stargate & connect:direct"
+            };
+            integrationPattern = table[sourceSystem + "," + targetSystem] || "Integration pattern not determined";
+            document.getElementById("integrationPattern").innerHTML = "<strong>Proposed Integration Pattern:</strong> " + integrationPattern;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+"nodeDataArray": [
+    {"key":01, "text":"gprc", "isGroup":true, "category":"OfGroups"},
+    {"key":02, "text":"mulesoft", "isGroup":true, "category":"OfGroups"},
+    {"key":03, "text":"apimesh", "isGroup":true, "category":"OfGroups"},
+    {"text":"WAF", "group":1, "key":100},
+    {"text":"GLB", "group":1, "key":101},
+    {"text":"Ingress", "group":1, "key":102},
+    {"text":"ILB", "group":2, "key":104},
+    {"text":"VPN", "group":2, "key":200},
+    {"text":"Mulesoft", "group":2, "key":201},
+    {"text":"ApiMesh", "group":3, "key":301}
+    ],
+    "linkDataArray": [  ]
+    

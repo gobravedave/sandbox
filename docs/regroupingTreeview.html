@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <body>
+  <script src="https://unpkg.com/gojs@3.0.2/release/go.js"></script>
+  <div id="allSampleContent" class="p-4 w-full">
+          
+          
+<script id="code">
+  function init() {
+    // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
+    // For details, see https://gojs.net/latest/intro/buildingObjects.html
+    const $ = go.GraphObject.make;
+
+    myDiagram = new go.Diagram('myDiagramDiv', {
+      // what to do when a drag-drop occurs in the Diagram's background
+      mouseDrop: (e) => finishDrop(e, null),
+      // Diagram has simple horizontal layout
+      layout: $(go.GridLayout, { wrappingWidth: Infinity, alignment: go.GridAlignment.Position, cellSize: new go.Size(1, 1) }),
+      'commandHandler.archetypeGroupData': { isGroup: true, category: 'OfNodes' },
+      'undoManager.isEnabled': true,
+      // when a node is selected in the main Diagram, select the corresponding tree node
+      ChangedSelection: (e) => {
+        if (myChangingSelection) return;
+        myChangingSelection = true;
+        var diagnodes = new go.Set();
+        myDiagram.selection.each((n) => diagnodes.add(myTreeView.findNodeForData(n.data)));
+        myTreeView.clearSelection();
+        myTreeView.selectCollection(diagnodes);
+        myChangingSelection = false;
+      },
+    });
+
+    var myChangingSelection = false; // to protect against recursive selection changes
+
+    // when the document is modified, add a "*" to the title and enable the "Save" button
+    myDiagram.addDiagramListener('Modified', (e) => {
+      var button = document.getElementById('saveModel');
+      if (button) button.disabled = !myDiagram.isModified;
+      var idx = document.title.indexOf('*');
+      if (myDiagram.isModified) {
+        if (idx < 0) document.title += '*';
+      } else {
+        if (idx >= 0) document.title = document.title.slice(0, idx);
+      }
+    });
+
+    // There are two templates for Groups, "OfGroups" and "OfNodes".
+
+    // this function is used to highlight a Group that the selection may be dropped into
+    function highlightGroup(e, grp, show) {
+      if (!grp) return;
+      e.handled = true;
+      if (show) {
+        // cannot depend on the grp.diagram.selection in the case of external drag-and-drops;
+        // instead depend on the DraggingTool.draggedParts or .copiedParts
+        var tool = grp.diagram.toolManager.draggingTool;
+        var map = tool.draggedParts || tool.copiedParts; // this is a Map
+        // now we can check to see if the Group will accept membership of the dragged Parts
+        if (grp.canAddMembers(map.toKeySet())) {
+          grp.isHighlighted = true;
+          return;
+        }
+      }
+      grp.isHighlighted = false;
+    }
+
+    // Upon a drop onto a Group, we try to add the selection as members of the Group.
+    // Upon a drop onto the background, or onto a top-level Node, make selection top-level.
+    // If this is OK, we're done; otherwise we cancel the operation to rollback everything.
+    function finishDrop(e, grp) {
+      var ok = grp !== null ? grp.addMembers(grp.diagram.selection, true) : e.diagram.commandHandler.addTopLevelParts(e.diagram.selection, true);
+      if (!ok) e.diagram.currentTool.doCancel();
+    }
+
+    myDiagram.groupTemplateMap.add(
+      'OfGroups',
+      $(go.Group,
+        go.Panel.Auto,
+        {
+          background: 'transparent',
+          // highlight when dragging into the Group
+          mouseDragEnter: (e, grp, prev) => highlightGroup(e, grp, true),
+          mouseDragLeave: (e, grp, next) => highlightGroup(e, grp, false),
+          computesBoundsAfterDrag: true,
+          computesBoundsIncludingLocation: true,
+          // when the selection is dropped into a Group, add the selected Parts into that Group;
+          // if it fails, cancel the tool, rolling back any changes
+          mouseDrop: finishDrop,
+          handlesDragDropForMembers: true, // don't need to define handlers on member Nodes and Links
+          // Groups containing Groups lay out their members horizontally
+          layout: $(go.GridLayout, {
+            wrappingWidth: Infinity,
+            // alignment: go.GridAlignment.Position,
+            cellSize: new go.Size(1, 1),
+            spacing: new go.Size(4, 4),
+          }),
+        },
+        new go.Binding('background', 'isHighlighted', (h) => (h ? 'rgba(255,0,0,0.2)' : 'transparent')).ofObject(),
+        $(go.Shape, 'Rectangle', { fill: null, stroke: '#E69900', strokeWidth: 2 }),
+        $(go.Panel,
+          go.Panel.Vertical, // title above Placeholder
+          $(go.Panel,
+            go.Panel.Horizontal, // button next to TextBlock
+            { stretch: go.Stretch.Horizontal, background: '#FFDD33', margin: 1 },
+            $('SubGraphExpanderButton', { alignment: go.Spot.Right, margin: 5 }),
+            $(go.TextBlock,
+              {
+                alignment: go.Spot.Left,
+                editable: true,
+                margin: 5,
+                font: 'bold 18px sans-serif',
+                stroke: '#9A6600',
+              },
+              new go.Binding('text', 'text').makeTwoWay()
+            )
+          ), // end Horizontal Panel
+          $(go.Placeholder, { padding: 25, alignment: go.Spot.TopLeft })
+        ) // end Vertical Panel
+      )
+    ); // end Group and call to add to template Map
+
+    myDiagram.groupTemplateMap.add(
+      'OfNodes',
+      $(go.Group,
+        go.Panel.Auto,
+        {
+          background: 'transparent',
+          ungroupable: true,
+          // highlight when dragging into the Group
+          mouseDragEnter: (e, grp, prev) => highlightGroup(e, grp, true),
+          mouseDragLeave: (e, grp, next) => highlightGroup(e, grp, false),
+          computesBoundsAfterDrag: true,
+          computesBoundsIncludingLocation: true,
+          // when the selection is dropped into a Group, add the selected Parts into that Group;
+          // if it fails, cancel the tool, rolling back any changes
+          mouseDrop: finishDrop,
+          handlesDragDropForMembers: true, // don't need to define handlers on member Nodes and Links
+          // Groups containing Nodes lay out their members vertically
+          layout: $(go.GridLayout, {
+            wrappingColumn: 1,
+            alignment: go.GridAlignment.Position,
+            cellSize: new go.Size(1, 1),
+            spacing: new go.Size(4, 4),
+          }),
+        },
+        new go.Binding('background', 'isHighlighted', (h) => (h ? 'rgba(255,0,0,0.2)' : 'transparent')).ofObject(),
+        $(go.Shape, 'Rectangle', { fill: null, stroke: '#0099CC', strokeWidth: 2 }),
+        $(go.Panel,
+          go.Panel.Vertical, // title above Placeholder
+          $(go.Panel,
+            go.Panel.Horizontal, // button next to TextBlock
+            { stretch: go.Stretch.Horizontal, background: '#33D3E5', margin: 1 },
+            $('SubGraphExpanderButton', { alignment: go.Spot.Right, margin: 5 }),
+            $(go.TextBlock,
+              {
+                alignment: go.Spot.Left,
+                editable: true,
+                margin: 25,
+                font: 'bold 16px sans-serif',
+                stroke: '#006080',
+              },
+              new go.Binding('text', 'text').makeTwoWay()
+            )
+          ), // end Horizontal Panel
+          $(go.Placeholder, { padding: 25, alignment: go.Spot.TopLeft })
+        ) // end Vertical Panel
+      )
+    ); // end Group and call to add to template Map
+
+    // Nodes have a trivial definition
+    myDiagram.nodeTemplate = $(go.Node,
+      go.Panel.Auto,
+      {
+        // dropping on a Node is the same as dropping on its containing Group, even if it's top-level
+        mouseDrop: (e, nod) => finishDrop(e, nod.containingGroup),
+      },
+      $(go.Shape, 'Rectangle', { fill: '#ACE600', stroke: '#558000', strokeWidth: 2 }, new go.Binding('fill', 'color')),
+      $(go.TextBlock,
+        {
+          margin: 5,
+          editable: true,
+          font: 'bold 13px sans-serif',
+          stroke: '#446700',
+        },
+        new go.Binding('text', 'text').makeTwoWay()
+      )
+    );
+
+    var myChangingModel = false; // to protect against recursive model changes
+
+    myDiagram.addModelChangedListener((e) => {
+      if (e.model.skipsUndoManager) return;
+      if (myChangingModel) return;
+      myChangingModel = true;
+      // don't need to start/commit a transaction because the UndoManager is shared with myTreeView
+      if (e.modelChange === 'nodeGroupKey' || e.modelChange === 'nodeParentKey') {
+        // handle structural change: group memberships
+        var treenode = myTreeView.findNodeForData(e.object);
+        if (treenode !== null) treenode.updateRelationshipsFromData();
+      } else if (e.change === go.ChangeType.Property) {
+        var treenode = myTreeView.findNodeForData(e.object);
+        if (treenode !== null) treenode.updateTargetBindings();
+      } else if (e.change === go.ChangeType.Insert && e.propertyName === 'nodeDataArray') {
+        // pretend the new data isn't already in the nodeDataArray for myTreeView
+        myTreeView.model.nodeDataArray.splice(e.newParam, 1);
+        // now add to the myTreeView model using the normal mechanisms
+        myTreeView.model.addNodeData(e.newValue);
+      } else if (e.change === go.ChangeType.Remove && e.propertyName === 'nodeDataArray') {
+        // remove the corresponding node from myTreeView
+        var treenode = myTreeView.findNodeForData(e.oldValue);
+        if (treenode !== null) myTreeView.remove(treenode);
+      }
+      myChangingModel = false;
+    });
+
+    // setup the tree view; will be initialized with data by the load() function
+    myTreeView = new go.Diagram('myTreeView', {
+      initialContentAlignment: go.Spot.TopLeft,
+      allowMove: false, // don't let users mess up the tree
+      allowCopy: true, // but you might want this to be false
+      'commandHandler.copiesTree': true,
+      'commandHandler.copiesParentKey': true,
+      allowDelete: true, // but you might want this to be false
+      'commandHandler.deletesTree': true,
+      allowHorizontalScroll: false,
+      layout: $(go.TreeLayout, {
+        alignment: go.TreeAlignment.Start,
+        angle: 0,
+        compaction: go.TreeCompaction.None,
+        layerSpacing: 16,
+        layerSpacingParentOverlap: 1,
+        nodeIndentPastParent: 1.0,
+        nodeSpacing: 0,
+        setsPortSpot: false,
+        setsChildPortSpot: false,
+        arrangementSpacing: new go.Size(0, 0),
+      }),
+      // when a node is selected in the tree, select the corresponding node in the main diagram
+      ChangedSelection: (e) => {
+        if (myChangingSelection) return;
+        myChangingSelection = true;
+        var diagnodes = new go.Set();
+        myTreeView.selection.each((n) => diagnodes.add(myDiagram.findNodeForData(n.data)));
+        myDiagram.clearSelection();
+        myDiagram.selectCollection(diagnodes);
+        myChangingSelection = false;
+      },
+    });
+
+    myTreeView.nodeTemplate = $(go.Node,
+      // no Adornment: instead change panel background color by binding to Node.isSelected
+      { selectionAdorned: false },
+      $('TreeExpanderButton', {
+        width: 14,
+        'ButtonBorder.fill': 'white',
+        'ButtonBorder.stroke': null,
+        _buttonFillOver: 'rgba(0,128,255,0.25)',
+        _buttonStrokeOver: null,
+      }),
+      $(go.Panel,
+        'Horizontal',
+        { position: new go.Point(16, 0) },
+        new go.Binding('background', 'isSelected', (s) => (s ? 'lightblue' : 'white')).ofObject(),
+        // Icon is not needed?
+        //$(go.Picture,
+        //  {
+        //    width: 14, height: 14,
+        //    margin: new go.Margin(0, 4, 0, 0),
+        //    imageStretch: go.ImageStretch.Uniform,
+        //    source: "images/50x40.png"
+        //  }),
+        $(go.TextBlock, { editable: true }, new go.Binding('text').makeTwoWay())
+      ) // end Horizontal Panel
+    ); // end Node
+
+    // without lines
+    myTreeView.linkTemplate = $(go.Link);
+
+    // cannot share the model itself, but can share all of the node data from the main Diagram,
+    // pretending the "group" relationship is the "tree parent" relationship
+    myTreeView.model = new go.TreeModel({ nodeParentKeyProperty: 'group' });
+
+    myTreeView.addModelChangedListener((e) => {
+      if (e.model.skipsUndoManager) return;
+      if (myChangingModel) return;
+      myChangingModel = true;
+      // don't need to start/commit a transaction because the UndoManager is shared with myDiagram
+      if (e.modelChange === 'nodeGroupKey' || e.modelChange === 'nodeParentKey') {
+        // handle structural change: tree parent/children
+        var node = myDiagram.findNodeForData(e.object);
+        if (node !== null) node.updateRelationshipsFromData();
+      } else if (e.change === go.ChangeType.Property) {
+        // propagate simple data property changes back to the main Diagram
+        var node = myDiagram.findNodeForData(e.object);
+        if (node !== null) node.updateTargetBindings();
+      } else if (e.change === go.ChangeType.Insert && e.propertyName === 'nodeDataArray') {
+        // pretend the new data isn't already in the nodeDataArray for the main Diagram model
+        myDiagram.model.nodeDataArray.splice(e.newParam, 1);
+        // now add to the myDiagram model using the normal mechanisms
+        myDiagram.model.addNodeData(e.newValue);
+      } else if (e.change === go.ChangeType.Remove && e.propertyName === 'nodeDataArray') {
+        // remove the corresponding node from the main Diagram
+        var node = myDiagram.findNodeForData(e.oldValue);
+        if (node !== null) myDiagram.remove(node);
+      }
+      myChangingModel = false;
+    });
+
+    load();
+  }
+
+  // save a model to and load a model from JSON text, displayed below the Diagram
+  function save() {
+    document.getElementById('mySavedModel').value = myDiagram.model.toJson();
+    myDiagram.isModified = false;
+  }
+  function load() {
+    myDiagram.model = go.Model.fromJson(document.getElementById('mySavedModel').value);
+
+    // share all of the data with the tree view
+    myTreeView.model.nodeDataArray = myDiagram.model.nodeDataArray;
+
+    // share the UndoManager too!
+    myTreeView.model.undoManager = myDiagram.model.undoManager;
+  }
+  window.addEventListener('DOMContentLoaded', init);
+</script>
+
+<div id="sample">
+  <div style="width: 100%; display: flex; justify-content: space-between">
+    <div id="myTreeView" style="width: 150px; margin-right: 2px; background-color: whitesmoke; border: 1px solid black; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;"><canvas tabindex="0" width="296" height="996" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 148px; height: 498px; cursor: auto;"></canvas><div style="position: absolute; overflow: auto; width: 148px; height: 498px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div>
+    <div id="myDiagramDiv" style="flex-grow: 1; height: 500px; border: 1px solid black; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;"><canvas tabindex="0" width="2188" height="996" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 1094px; height: 498px; cursor: auto;"></canvas><div style="position: absolute; overflow: auto; width: 1094px; height: 498px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div>
+  </div>
+  <p>
+    This sample demonstrates the synchronization of two different models, necessitated by their being different types:
+    <a href="../api/symbols/TreeModel.html" target="api">TreeModel</a> for the tree view and <a href="../api/symbols/GraphLinksModel.html" target="api">GraphLinksModel</a> for the general diagram on the right. Normally in such situations one would have a single
+    model with two diagrams showing the shared model. However in this case there are two separate models but the model data, including the
+    <a href="../api/symbols/Model.html#nodeDataArray" target="api">Model.nodeDataArray</a>, are shared. That means the "group" property is used in the normal fashion in the GraphLinksModel but is used as the "parent"
+    reference in the TreeModel.
+  </p>
+  <p>
+    That introduces some complications when there are changes to the data, since they need to be reflected in other other model even though the data properties
+    have already been changed! This is accomplished by having a Model Changed listener on each model that explicitly updates the other model.
+  </p>
+  <div id="buttons">
+    <button id="saveModel" onclick="save()">Save</button>
+    <button id="loadModel" onclick="load()">Load</button>
+  </div>
+  <textarea id="mySavedModel" style="width: 100%; height: 300px">{ "class": "go.GraphLinksModel",
+  "nodeDataArray": [
+  {"key":1, "text":"gprc", "isGroup":true, "category":"OfGroups"},
+  {"key":2, "text":"mulesoft", "isGroup":true, "category":"OfGroups"},
+  {"key":3, "text":"apimesh", "isGroup":true, "category":"OfGroups"},
+  {"text":"WAF", "group":1, "key":100},
+  {"text":"GLB", "group":1, "key":101},
+  {"text":"Ingress", "group":1, "key":102},
+  {"text":"ILB", "group":1, "key":103},
+  {"text":"VPN", "group":2, "key":200},
+  {"text":"Mulesoft", "group":2, "key":201},
+  {"text":"ApiMesh", "group":3, "key":301}
+  ],
+  "linkDataArray": [
+  { "from": 100, "to": 101 },
+  { "from": 101, "to": 102 },
+  { "from": 102, "to": 103 },
+  { "from": 200, "to": 201 }
+    ]}
+  </textarea>
+</pre></div>
+  </body>
+  </html>
