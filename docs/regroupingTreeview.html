@@ -15,6 +15,7 @@
       // what to do when a drag-drop occurs in the Diagram's background
       mouseDrop: (e) => finishDrop(e, null),
       // Diagram has simple horizontal layout
+      // layout: $(go.TreeLayout, { angle: 90, arrangement: go.TreeArrangement.Horizontal, isRealtime: false }),
       layout: $(go.GridLayout, { wrappingWidth: Infinity, alignment: go.GridAlignment.Position, cellSize: new go.Size(1, 1) }),
       'commandHandler.archetypeGroupData': { isGroup: true, category: 'OfNodes' },
       'undoManager.isEnabled': true,
@@ -92,7 +93,7 @@
             wrappingWidth: Infinity,
             // alignment: go.GridAlignment.Position,
             cellSize: new go.Size(1, 1),
-            spacing: new go.Size(4, 4),
+            spacing: new go.Size(25, 25),
           }),
         },
         new go.Binding('background', 'isHighlighted', (h) => (h ? 'rgba(255,0,0,0.2)' : 'transparent')).ofObject(),
