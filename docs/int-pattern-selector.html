@@ -248,21 +248,13 @@
         function load(jsonfile) {
           if (jsonfile) {
             console.log(`Loading dataset ${jsonfile}`);
-            fetch(`../datasets/${jsonfile}.json`)
+            fetch(`datasets/${jsonfile}.json`)
               .then(response => response.json())
               .then(data => {
                 console.log(`Loaded dataset ${jsonfile}`);
                 myDiagram.model = go.Model.fromJson(JSON.stringify(data));
               });
-          } else {
-            console.log('Loading int-pat-01');
-            fetch('../datasets/int-pat-01.json')
-              .then(response => response.json())
-              .then(data => {
-                console.log('Loaded int-pat-01');
-                myDiagram.model = go.Model.fromJson(JSON.stringify(data));
-              });
-          }
+          }; 
         }
     </script>
       
