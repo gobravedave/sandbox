@@ -1,0 +1,14 @@
+{ "class": "go.GraphLinksModel",
+  "nodeDataArray": [
+  {"text":"Source", "key":-9999},
+  {"key":2, "text":"mulesoft", "isGroup":true, "category":"OfGroups"},
+  {"text":"VPN", "group":2, "key":200},
+  {"text":"Mulesoft", "group":2, "key":201},
+  {"text":"Target", "key":9999}
+  ],
+  "linkDataArray": [
+  { "from": -9999, "to": 200 },
+  { "from": 200, "to": 201 },
+  { "from": 201, "to": 9999 }
+]
+}

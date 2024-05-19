@@ -1,0 +1,12 @@
+{ "class": "go.GraphLinksModel",
+  "nodeDataArray": [
+    {"text":"Source", "key":-9999},
+  {"key":9, "text":"no pattern", "isGroup":true, "category":"OfGroups"},
+  {"text":"Define Me", "group":9, "key":901},
+  {"text":"Target", "key":9999}
+  ],
+  "linkDataArray": [ 
+    { "from": -9999, "to": 901 },
+    { "from": 901, "to": 9999 }
+]
+}

@@ -31,6 +31,241 @@
     </style>
 </head>
 <body>
+    <script src="https://unpkg.com/gojs@3.0.2/release/go.js"></script>
+
+    <script id="code">
+        function init() {
+          // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
+          // For details, see https://gojs.net/latest/intro/buildingObjects.html
+          
+          const $ = go.GraphObject.make;
+      
+          myDiagram = new go.Diagram('myDiagramDiv', {
+            // what to do when a drag-drop occurs in the Diagram's background
+            mouseDrop: (e) => finishDrop(e, null),
+            // Diagram has simple horizontal layout
+            // layout: $(go.TreeLayout, { angle: 90, arrangement: go.TreeArrangement.Horizontal, isRealtime: false }),
+            layout: $(go.GridLayout, { wrappingWidth: Infinity, alignment: go.GridAlignment.Position, cellSize: new go.Size(1, 1) }),
+            'commandHandler.archetypeGroupData': { isGroup: true, category: 'OfNodes' },
+            'undoManager.isEnabled': true,
+            // when a node is selected in the main Diagram, select the corresponding tree node
+            ChangedSelection: (e) => {
+              if (myChangingSelection) return;
+              myChangingSelection = true;
+              var diagnodes = new go.Set();
+              myDiagram.selection.each((n) => diagnodes.add(myTreeView.findNodeForData(n.data)));
+              myTreeView.clearSelection();
+              myTreeView.selectCollection(diagnodes);
+              myChangingSelection = false;
+            },
+          });
+      
+          var myChangingSelection = false; // to protect against recursive selection changes
+      
+          // when the document is modified, add a "*" to the title and enable the "Save" button
+          myDiagram.addDiagramListener('Modified', (e) => {
+            var button = document.getElementById('saveModel');
+            if (button) button.disabled = !myDiagram.isModified;
+            var idx = document.title.indexOf('*');
+            if (myDiagram.isModified) {
+              if (idx < 0) document.title += '*';
+            } else {
+              if (idx >= 0) document.title = document.title.slice(0, idx);
+            }
+          });
+      
+          // There are two templates for Groups, "OfGroups" and "OfNodes".
+      
+          // this function is used to highlight a Group that the selection may be dropped into
+          function highlightGroup(e, grp, show) {
+            if (!grp) return;
+            e.handled = true;
+            if (show) {
+              // cannot depend on the grp.diagram.selection in the case of external drag-and-drops;
+              // instead depend on the DraggingTool.draggedParts or .copiedParts
+              var tool = grp.diagram.toolManager.draggingTool;
+              var map = tool.draggedParts || tool.copiedParts; // this is a Map
+              // now we can check to see if the Group will accept membership of the dragged Parts
+              if (grp.canAddMembers(map.toKeySet())) {
+                grp.isHighlighted = true;
+                return;
+              }
+            }
+            grp.isHighlighted = false;
+          }
+      
+          // Upon a drop onto a Group, we try to add the selection as members of the Group.
+          // Upon a drop onto the background, or onto a top-level Node, make selection top-level.
+          // If this is OK, we're done; otherwise we cancel the operation to rollback everything.
+          function finishDrop(e, grp) {
+            var ok = grp !== null ? grp.addMembers(grp.diagram.selection, true) : e.diagram.commandHandler.addTopLevelParts(e.diagram.selection, true);
+            if (!ok) e.diagram.currentTool.doCancel();
+          }
+      
+          myDiagram.groupTemplateMap.add(
+            'OfGroups',
+            $(go.Group,
+              go.Panel.Auto,
+              {
+                background: 'transparent',
+                // highlight when dragging into the Group
+                mouseDragEnter: (e, grp, prev) => highlightGroup(e, grp, true),
+                mouseDragLeave: (e, grp, next) => highlightGroup(e, grp, false),
+                computesBoundsAfterDrag: true,
+                computesBoundsIncludingLocation: true,
+                // when the selection is dropped into a Group, add the selected Parts into that Group;
+                // if it fails, cancel the tool, rolling back any changes
+                mouseDrop: finishDrop,
+                handlesDragDropForMembers: true, // don't need to define handlers on member Nodes and Links
+                // Groups containing Groups lay out their members horizontally
+                layout: $(go.GridLayout, {
+                  wrappingWidth: Infinity,
+                  // alignment: go.GridAlignment.Position,
+                  cellSize: new go.Size(1, 1),
+                  spacing: new go.Size(25, 25),
+                }),
+              },
+              new go.Binding('background', 'isHighlighted', (h) => (h ? 'rgba(255,0,0,0.2)' : 'transparent')).ofObject(),
+              $(go.Shape, 'Rectangle', { fill: null, stroke: '#E69900', strokeWidth: 2 }),
+              $(go.Panel,
+                go.Panel.Vertical, // title above Placeholder
+                $(go.Panel,
+                  go.Panel.Horizontal, // button next to TextBlock
+                  { stretch: go.Stretch.Horizontal, background: '#FFDD33', margin: 1 },
+                  $('SubGraphExpanderButton', { alignment: go.Spot.Right, margin: 2 }),
+                  $(go.TextBlock,
+                    {
+                      alignment: go.Spot.Left,
+                      editable: true,
+                      margin: 5,
+                      font: 'bold 18px sans-serif',
+                      stroke: '#9A6600',
+                    },
+                    new go.Binding('text', 'text').makeTwoWay()
+                  )
+                ), // end Horizontal Panel
+                $(go.Placeholder, { padding: 25, alignment: go.Spot.TopLeft })
+              ) // end Vertical Panel
+            )
+          ); // end Group and call to add to template Map
+      
+          myDiagram.groupTemplateMap.add(
+            'OfNodes',
+            $(go.Group,
+              go.Panel.Auto,
+              {
+                background: 'transparent',
+                ungroupable: true,
+                // highlight when dragging into the Group
+                mouseDragEnter: (e, grp, prev) => highlightGroup(e, grp, true),
+                mouseDragLeave: (e, grp, next) => highlightGroup(e, grp, false),
+                computesBoundsAfterDrag: true,
+                computesBoundsIncludingLocation: true,
+                // when the selection is dropped into a Group, add the selected Parts into that Group;
+                // if it fails, cancel the tool, rolling back any changes
+                mouseDrop: finishDrop,
+                handlesDragDropForMembers: true, // don't need to define handlers on member Nodes and Links
+                // Groups containing Nodes lay out their members vertically
+                layout: $(go.GridLayout, {
+                  wrappingColumn: 1,
+                  alignment: go.GridAlignment.Position,
+                  cellSize: new go.Size(1, 1),
+                  spacing: new go.Size(4, 4),
+                }),
+              },
+              new go.Binding('background', 'isHighlighted', (h) => (h ? 'rgba(255,0,0,0.2)' : 'transparent')).ofObject(),
+              $(go.Shape, 'Rectangle', { fill: null, stroke: '#0099CC', strokeWidth: 2 }),
+              $(go.Panel,
+                go.Panel.Vertical, // title above Placeholder
+                $(go.Panel,
+                  go.Panel.Horizontal, // button next to TextBlock
+                  { stretch: go.Stretch.Horizontal, background: '#33D3E5', margin: 1 },
+                  $('SubGraphExpanderButton', { alignment: go.Spot.Right, margin: 5 }),
+                  $(go.TextBlock,
+                    {
+                      alignment: go.Spot.Left,
+                      editable: true,
+                      margin: 25,
+                      font: 'bold 16px sans-serif',
+                      stroke: '#006080',
+                    },
+                    new go.Binding('text', 'text').makeTwoWay()
+                  )
+                ), // end Horizontal Panel
+                $(go.Placeholder, { padding: 25, alignment: go.Spot.TopLeft })
+              ) // end Vertical Panel
+            )
+          ); // end Group and call to add to template Map
+      
+          // Nodes have a trivial definition
+          myDiagram.nodeTemplate = $(go.Node,
+            go.Panel.Auto,
+            {
+              // dropping on a Node is the same as dropping on its containing Group, even if it's top-level
+              mouseDrop: (e, nod) => finishDrop(e, nod.containingGroup),
+            },
+            $(go.Shape, 'Rectangle', { fill: '#ACE600', stroke: '#558000', strokeWidth: 2 }, new go.Binding('fill', 'color')),
+            $(go.TextBlock,
+              {
+                margin: 5,
+                editable: true,
+                font: 'bold 13px sans-serif',
+                stroke: '#446700',
+              },
+              new go.Binding('text', 'text').makeTwoWay()
+            )
+          );
+      
+          var myChangingModel = false; // to protect against recursive model changes
+      
+          myDiagram.addModelChangedListener((e) => {
+            if (e.model.skipsUndoManager) return;
+            if (myChangingModel) return;
+            myChangingModel = true;
+            // don't need to start/commit a transaction because the UndoManager is shared with myTreeView
+            if (e.modelChange === 'nodeGroupKey' || e.modelChange === 'nodeParentKey') {
+              // handle structural change: group memberships
+              var treenode = myTreeView.findNodeForData(e.object);
+              if (treenode !== null) treenode.updateRelationshipsFromData();
+            } else if (e.change === go.ChangeType.Property) {
+              var treenode = myTreeView.findNodeForData(e.object);
+              if (treenode !== null) treenode.updateTargetBindings();
+            } else if (e.change === go.ChangeType.Insert && e.propertyName === 'nodeDataArray') {
+              // pretend the new data isn't already in the nodeDataArray for myTreeView
+              myTreeView.model.nodeDataArray.splice(e.newParam, 1);
+              // now add to the myTreeView model using the normal mechanisms
+              myTreeView.model.addNodeData(e.newValue);
+            } else if (e.change === go.ChangeType.Remove && e.propertyName === 'nodeDataArray') {
+              // remove the corresponding node from myTreeView
+              var treenode = myTreeView.findNodeForData(e.oldValue);
+              if (treenode !== null) myTreeView.remove(treenode);
+            }
+            myChangingModel = false;
+          });
+        }
+      
+        // save a model to and load a model from JSON text, displayed below the Diagram
+        function load(jsonfile) {
+          if (jsonfile) {
+            console.log(`Loading dataset ${jsonfile}`);
+            fetch(`../datasets/${jsonfile}.json`)
+              .then(response => response.json())
+              .then(data => {
+                console.log(`Loaded dataset ${jsonfile}`);
+                myDiagram.model = go.Model.fromJson(JSON.stringify(data));
+              });
+          } else {
+            console.log('Loading int-pat-01');
+            fetch('../datasets/int-pat-01.json')
+              .then(response => response.json())
+              .then(data => {
+                console.log('Loaded int-pat-01');
+                myDiagram.model = go.Model.fromJson(JSON.stringify(data));
+              });
+          }
+        }
+    </script>
+      
     <div class="container">
         <h2>Integration Pattern Proposal</h2>
         <label for="sourceSystem">Select Source System:</label>
@@ -38,6 +273,7 @@
             <option value="mobile">Mobile</option>
             <option value="webapp">WebApp</option>
             <option value="salesforce">Salesforce</option>
+            <option value="fabric">Fabric</option>
             <option value="lightning">Lightning</option>
             <option value="zafin">Zafin</option>
         </select>
@@ -51,6 +287,11 @@
         </select>
         <button onclick="proposeIntegrationPattern()">Propose Integration Pattern</button>
         <div id="integrationPattern"></div>
+            <div style="width: 100%; display: flex; justify-content: space-between">
+              <div id="myDiagramDiv" style="flex-grow: 1; height: 500px; border: 1px solid black; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;"><canvas tabindex="0" width="2188" height="996" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 1094px; height: 498px; cursor: auto;"></canvas><div style="position: absolute; overflow: auto; width: 1094px; height: 498px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div>
+            </div>
+          </pre></div>
+          
     </div>
 
     <script>
@@ -62,16 +303,23 @@
 
             // Simple logic for proposing integration pattern
             var table = {
-                "mobile,fabric": "grpc via waf, glb, apigateway",
-                "webapp,fabric": "grpc via waf, glb, apigateway",
-                "fabric,cap": "via apimesh",
-                "lightning,cap": "via apimesh",
-                "lightning,zafin": "via mulesoft",
-                "zafin,ctm": "via stargate & connect:direct"
+                "mobile,fabric": "int-pat-01",
+                "webapp,fabric": "int-pat-01",
+                "fabric,cap": "int-pat-03",
+                "fabric,ctm": "int-pat-03",
+                "lightning,cap": "int-pat-03",
+                "lightning,zafin": "int-pat-02",
+                "zafin,ctm": "int-pat-04"
             };
-            integrationPattern = table[sourceSystem + "," + targetSystem] || "Integration pattern not determined";
+            integrationPattern = table[sourceSystem + "," + targetSystem] || "nopat4u";
             document.getElementById("integrationPattern").innerHTML = "<strong>Proposed Integration Pattern:</strong> " + integrationPattern;
+            //todo: check if myDiagram object exists.. if it doesn't run init function
+            if (!window.myDiagram) {
+                init();
+            }
+            load(integrationPattern);
         }
     </script>
+
 </body>
 </html>

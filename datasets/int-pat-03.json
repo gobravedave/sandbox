@@ -1,0 +1,12 @@
+{ "class": "go.GraphLinksModel",
+  "nodeDataArray": [
+    {"text":"Source", "key":-9999},
+  {"key":3, "text":"apimesh", "isGroup":true, "category":"OfGroups"},
+  {"text":"ApiMesh", "group":3, "key":301},
+  {"text":"Target", "key":9999}
+  ],
+  "linkDataArray": [ 
+    { "from": -9999, "to": 301 },
+    { "from": 301, "to": 9999 }
+]
+}
