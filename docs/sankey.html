@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<script src="https://unpkg.com/gojs@3.0.2/release/go.js"></script>
+<div id="allSampleContent" class="p-4 w-full">
+                  
+<script id="code">
+class SankeyLayout extends go.LayeredDigraphLayout {
+  // determine the desired height of each node/vertex,
+  // based on the thicknesses of the connected links;
+  // actually modify the height of each node's SHAPE
+  makeNetwork(coll) {
+    const net = super.makeNetwork(coll);
+    this.diagram.nodes.each((node) => {
+      // figure out how tall the node's bar should be
+      const height = this.getAutoHeightForNode(node);
+      const shape = node.findObject('SHAPE');
+      if (shape) shape.height = height;
+      const text = node.findObject('TEXT');
+      const ltext = node.findObject('LTEXT');
+      const font = 'bold ' + Math.max(12, Math.round(height / 8)) + 'pt Segoe UI, Roboto, Helvetica Neue, Noto Sans, sans-serif';
+      if (text) text.font = font;
+      if (ltext) ltext.font = font;
+      // and update the vertex's dimensions accordingly
+      const v = net.findVertex(node);
+      if (v !== null) {
+        node.ensureBounds();
+        const r = node.actualBounds;
+        v.width = r.width;
+        v.height = r.height;
+        v.focusY = v.height / 2;
+      }
+    });
+    return net;
+  }
+
+  getAutoHeightForNode(node) {
+    let heightIn = 0;
+    let it = node.findLinksInto();
+    while (it.next()) {
+      heightIn += it.value.computeThickness();
+    }
+    let heightOut = 0;
+    it = node.findLinksOutOf();
+    while (it.next()) {
+      heightOut += it.value.computeThickness();
+    }
+    let h = Math.max(heightIn, heightOut);
+    if (h < 10) h = 10;
+    return h;
+  }
+
+  // treat dummy vertexes as having the thickness of the link that they are in
+  nodeMinColumnSpace(v, topleft) {
+    if (v.node === null) {
+      if (v.edgesCount >= 1) {
+        let max = 1;
+        const it = v.edges;
+        while (it.next()) {
+          const edge = it.value;
+          if (edge.link != null) {
+            const t = edge.link.computeThickness();
+            if (t > max) max = t;
+            break;
+          }
+        }
+        return Math.max(2, Math.ceil(max / this.columnSpacing));
+      }
+      return 2;
+    }
+    return super.nodeMinColumnSpace(v, topleft);
+  }
+
+  // treat dummy vertexes as being thicker, so that the Bezier curves are gentler
+  nodeMinLayerSpace(v, topleft) {
+    if (v.node === null) return 100;
+    return super.nodeMinLayerSpace(v, topleft);
+  }
+
+  assignLayers() {
+    super.assignLayers();
+    const maxlayer = this.maxLayer;
+    // now make sure every vertex with no outputs is maxlayer
+    for (const it = this.network.vertexes.iterator; it.next(); ) {
+      const v = it.value;
+      const node = v.node;
+      if (v.destinationVertexes.count == 0) {
+        v.layer = 0;
+      }
+      if (v.sourceVertexes.count == 0) {
+        v.layer = maxlayer;
+      }
+    }
+    // from now on, the LayeredDigraphLayout will think that the Node is bigger than it really is
+    // (other than the ones that are the widest or tallest in their respective layer).
+  }
+
+  commitLayout() {
+    super.commitLayout();
+    for (const it = this.network.edges.iterator; it.next(); ) {
+      const link = it.value.link;
+      if (link && link.curve === go.Curve.Bezier) {
+        // depend on Link.adjusting === go.LinkAdjusting.End to fix up the end points of the links
+        // without losing the intermediate points of the route as determined by LayeredDigraphLayout
+        link.invalidateRoute();
+      }
+    }
+  }
+}
+// end of SankeyLayout
+
+function init() {
+  // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
+  // For details, see https://gojs.net/latest/intro/buildingObjects.html
+  const $ = go.GraphObject.make; // for conciseness in defining templates
+
+  myDiagram = new go.Diagram(
+    'myDiagramDiv', // the ID of the DIV HTML element
+    {
+      initialAutoScale: go.AutoScale.Uniform,
+      'animationManager.isEnabled': false,
+      layout: $(SankeyLayout, {
+        setsPortSpots: false, // to allow the "Side" spots on the nodes to take effect
+        layerSpacing: 200, // lots of space between layers, for nicer thick links
+        columnSpacing: 1,
+      }),
+    }
+  );
+
+  // this function provides a common style for the TextBlocks
+  function textStyle() {
+    return { font: 'bold 12pt Segoe UI, sans-serif', stroke: 'black', margin: 5 };
+  }
+
+  // define the Node template
+  myDiagram.nodeTemplate = $(go.Node,
+    go.Panel.Horizontal,
+    {
+      locationObjectName: 'SHAPE',
+      locationSpot: go.Spot.Left,
+      portSpreading: go.PortSpreading.Packed, // rather than the default go.PortSpreading.Evenly
+    },
+    $(go.TextBlock, textStyle(), { name: 'LTEXT' }, new go.Binding('text', 'ltext')),
+    $(go.Shape,
+      {
+        name: 'SHAPE',
+        fill: '#2E8DEF', // default fill color
+        strokeWidth: 0,
+        portId: '',
+        fromSpot: go.Spot.RightSide,
+        toSpot: go.Spot.LeftSide,
+        height: 10,
+        width: 20,
+      },
+      new go.Binding('fill', 'color')
+    ),
+    $(go.TextBlock, textStyle(), { name: 'TEXT' }, new go.Binding('text'))
+  );
+
+  function getAutoLinkColor(data) {
+    const nodedata = myDiagram.model.findNodeDataForKey(data.from);
+    const hex = nodedata.color;
+    return go.Brush.lightenBy(hex, 0.2);
+  }
+
+  // define the Link template
+  const linkSelectionAdornmentTemplate = $(go.Adornment,
+    'Link',
+    $(go.Shape, { isPanelMain: true, fill: null, stroke: 'rgba(0, 0, 255, 0.3)', strokeWidth: 0 }) // use selection object's strokeWidth
+  );
+
+  myDiagram.linkTemplate = $(go.Link,
+    {
+      curve: go.Curve.Bezier,
+      selectionAdornmentTemplate: linkSelectionAdornmentTemplate,
+      layerName: 'Background',
+      fromEndSegmentLength: 150,
+      toEndSegmentLength: 150,
+      adjusting: go.LinkAdjusting.End,
+    },
+    $(go.Shape,
+      { strokeWidth: 4, stroke: 'rgba(173, 173, 173, 0.25)', opacity: 0.65 },
+      new go.Binding('stroke', '', getAutoLinkColor),
+      new go.Binding('strokeWidth', 'width')
+    )
+  );
+
+  // read in the JSON-format data from the "mySavedModel" element
+  load();
+}
+
+function load() {
+  myDiagram.model = go.Model.fromJson(document.getElementById('mySavedModel').value);
+}
+window.addEventListener('DOMContentLoaded', init);
+</script>
+
+<div id="sample">
+<div id="myDiagramDiv" style="border: 1px solid black; width: 99%; height: 850px; background-color: rgb(242, 233, 218); position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0);"><canvas tabindex="0" width="2468" height="1696" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 1234px; height: 848px;"></canvas><div style="position: absolute; overflow: auto; width: 1234px; height: 848px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div>
+<p>A Sankey diagram is a type of flow diagram where the Link thickness is proportional to the flow quantity.</p>
+<p>This sample customizes LayeredDigraphLayout.</p>
+<div>
+  <div>
+    <button onclick="load()">Read</button>
+  </div>
+  <textarea id="mySavedModel" style="width: 100%; height: 250px">{
+    "class": "go.GraphLinksModel",
+    "nodeDataArray": [
+      {"key": "Source-Group-01", "text": "Group 01", "color": "#b300ff"},
+      {"key": "Source-Group-02", "text": "Group 02", "color": "#ff6b00"},
+      {"key": "Source-Group-03", "text": "Group 03", "color": "#00ff6b"},
+      {"key": "Source-Group-04", "text": "Group 04", "color": "#ff00b3"},
+      {"key": "Source-Group-05", "text": "Group 05", "color": "#b300ff"},
+      {"key": "Source-Group-06", "text": "Group 06", "color": "#00b3ff"},
+      {"key": "Source-Group-07", "text": "Group 07", "color": "#ffb300"},
+      {"key": "Source-Group-08", "text": "Group 08", "color": "#b3ff00"},
+      {"key": "Synch-Pattern-01", "text": "Synch Pattern 01", "color": "#254d57"},
+      {"key": "Synch-Pattern-02", "text": "Synch Pattern 03", "color": "#254d57"},
+      {"key": "Synch-Pattern-03", "text": "Synch Pattern 03", "color": "#254d57"},
+      {"key": "Synch-Pattern-04", "text": "Synch Pattern 04", "color": "#254d57"},
+      {"key": "Synch-Pattern-05", "text": "Synch Pattern 05", "color": "#254d57"},
+      {"key": "Synch-Pattern-06", "text": "Synch Pattern 06", "color": "#254d57"},
+      {"key": "Asynch-Pattern-01", "text": "Asynch Pattern 01", "color": "#254d57"},
+      {"key": "Asynch-Pattern-02", "text": "Asynch Pattern 03", "color": "#254d57"},
+      {"key": "Asynch-Pattern-03", "text": "Asynch Pattern 03", "color": "#254d57"},
+      {"key": "Asynch-Pattern-04", "text": "Asynch Pattern 04", "color": "#254d57"},
+      {"key": "Asynch-Pattern-05", "text": "Asynch Pattern 05", "color": "#254d57"},
+      {"key": "Asynch-Pattern-06", "text": "Asynch Pattern 06", "color": "#254d57"},
+      {"key": "Target-Group-01", "text": "Group 01", "color": "#b300ff"},
+      {"key": "Target-Group-02", "text": "Group 02", "color": "#ff6b00"},
+      {"key": "Target-Group-03", "text": "Group 03", "color": "#00ff6b"},
+      {"key": "Target-Group-04", "text": "Group 04", "color": "#ff00b3"},
+      {"key": "Target-Group-05", "text": "Group 05", "color": "#b300ff"},
+      {"key": "Target-Group-06", "text": "Group 06", "color": "#00b3ff"},
+      {"key": "Target-Group-07", "text": "Group 07", "color": "#ffb300"},
+      {"key": "Target-Group-08", "text": "Group 08", "color": "#b3ff00"}
+    ],
+    "linkDataArray": [
+        {"from": "Source-Group-01", "to": "Synch-Pattern-01", "width": 10},
+        {"from": "Source-Group-02", "to": "Synch-Pattern-01", "width": 10},
+        {"from": "Source-Group-03", "to": "Synch-Pattern-01", "width": 10},
+        {"from": "Source-Group-04", "to": "Synch-Pattern-01", "width": 10},
+        {"from": "Source-Group-05", "to": "Synch-Pattern-01", "width": 10},
+        {"from": "Source-Group-06", "to": "Synch-Pattern-01", "width": 10},
+        {"from": "Source-Group-07", "to": "Synch-Pattern-01", "width": 10},
+        {"from": "Source-Group-08", "to": "Synch-Pattern-01", "width": 10},
+        {"from": "Synch-Pattern-01", "to": "Target-Group-01", "width": 10},
+        {"from": "Synch-Pattern-01", "to": "Target-Group-02", "width": 10},
+        {"from": "Synch-Pattern-01", "to": "Target-Group-03", "width": 10},
+        {"from": "Synch-Pattern-01", "to": "Target-Group-04", "width": 10},
+        {"from": "Synch-Pattern-01", "to": "Target-Group-05", "width": 10},
+        {"from": "Synch-Pattern-01", "to": "Target-Group-06", "width": 10},
+        {"from": "Synch-Pattern-01", "to": "Target-Group-07", "width": 10},
+        {"from": "Synch-Pattern-01", "to": "Target-Group-08", "width": 10},
+      {"from": "Source-Group-01", "to": "Synch-Pattern-02", "width": 10},
+      {"from": "Source-Group-02", "to": "Synch-Pattern-02", "width": 10},
+      {"from": "Source-Group-03", "to": "Synch-Pattern-02", "width": 10},
+      {"from": "Source-Group-04", "to": "Synch-Pattern-02", "width": 10},
+      {"from": "Source-Group-05", "to": "Synch-Pattern-02", "width": 10},
+      {"from": "Source-Group-06", "to": "Synch-Pattern-02", "width": 10},
+      {"from": "Source-Group-07", "to": "Synch-Pattern-02", "width": 10},
+      {"from": "Source-Group-08", "to": "Synch-Pattern-02", "width": 10},
+      {"from": "Synch-Pattern-02", "to": "Target-Group-01", "width": 10},
+      {"from": "Synch-Pattern-02", "to": "Target-Group-02", "width": 10},
+      {"from": "Synch-Pattern-02", "to": "Target-Group-03", "width": 10},
+      {"from": "Synch-Pattern-02", "to": "Target-Group-04", "width": 10},
+      {"from": "Synch-Pattern-02", "to": "Target-Group-05", "width": 10},
+      {"from": "Synch-Pattern-02", "to": "Target-Group-06", "width": 10},
+      {"from": "Synch-Pattern-02", "to": "Target-Group-07", "width": 10},
+      {"from": "Synch-Pattern-02", "to": "Target-Group-08", "width": 10},
+      {"from": "Source-Group-01", "to": "Synch-Pattern-03", "width": 10},
+      {"from": "Source-Group-02", "to": "Synch-Pattern-03", "width": 10},
+      {"from": "Source-Group-03", "to": "Synch-Pattern-03", "width": 10},
+      {"from": "Source-Group-04", "to": "Synch-Pattern-03", "width": 100},
+      {"from": "Source-Group-05", "to": "Synch-Pattern-03", "width": 10},
+      {"from": "Source-Group-06", "to": "Synch-Pattern-03", "width": 10},
+      {"from": "Source-Group-01", "to": "Synch-Pattern-04", "width": 10},
+      {"from": "Source-Group-02", "to": "Synch-Pattern-04", "width": 10},
+      {"from": "Source-Group-03", "to": "Synch-Pattern-04", "width": 10},
+      {"from": "Source-Group-04", "to": "Synch-Pattern-04", "width": 10},
+      {"from": "Source-Group-05", "to": "Synch-Pattern-04", "width": 10},
+      {"from": "Source-Group-06", "to": "Synch-Pattern-04", "width": 10},
+      {"from": "Source-Group-01", "to": "Synch-Pattern-05", "width": 10},
+      {"from": "Source-Group-02", "to": "Synch-Pattern-05", "width": 10},
+      {"from": "Source-Group-03", "to": "Synch-Pattern-05", "width": 10},
+      {"from": "Source-Group-04", "to": "Synch-Pattern-05", "width": 10},
+      {"from": "Source-Group-05", "to": "Synch-Pattern-05", "width": 10},
+      {"from": "Source-Group-06", "to": "Synch-Pattern-05", "width": 10},
+      {"from": "Source-Group-01", "to": "Synch-Pattern-06", "width": 10},
+      {"from": "Source-Group-02", "to": "Synch-Pattern-06", "width": 10},
+      {"from": "Source-Group-03", "to": "Synch-Pattern-06", "width": 10},
+      {"from": "Source-Group-04", "to": "Synch-Pattern-06", "width": 10},
+      {"from": "Source-Group-05", "to": "Synch-Pattern-06", "width": 10},
+      {"from": "Source-Group-06", "to": "Synch-Pattern-06", "width": 10},
+      {"from": "Source-Group-07", "to": "Synch-Pattern-06", "width": 10},
+      {"from": "Source-Group-08", "to": "Synch-Pattern-06", "width": 10},
+      {"from": "Synch-Pattern-03", "to": "Target-Group-03", "width": 10},
+      {"from": "Synch-Pattern-04", "to": "Target-Group-04", "width": 10},
+      {"from": "Synch-Pattern-05", "to": "Target-Group-05", "width": 10},
+      {"from": "Synch-Pattern-06", "to": "Target-Group-06", "width": 10},
+      {"from": "Source-Group-01", "to": "Asynch-Pattern-01", "width": 10},
+      {"from": "Source-Group-02", "to": "Asynch-Pattern-01", "width": 10},
+      {"from": "Source-Group-03", "to": "Asynch-Pattern-01", "width": 10},
+      {"from": "Source-Group-04", "to": "Asynch-Pattern-01", "width": 10},
+      {"from": "Source-Group-05", "to": "Asynch-Pattern-01", "width": 10},
+      {"from": "Source-Group-06", "to": "Asynch-Pattern-01", "width": 10},
+      {"from": "Source-Group-07", "to": "Asynch-Pattern-06", "width": 10},
+      {"from": "Source-Group-08", "to": "Asynch-Pattern-02", "width": 10},
+      {"from": "Source-Group-06", "to": "Asynch-Pattern-02", "width": 10},
+      {"from": "Source-Group-06", "to": "Asynch-Pattern-02", "width": 10},
+      {"from": "Source-Group-06", "to": "Asynch-Pattern-02", "width": 10},
+      {"from": "Source-Group-06", "to": "Asynch-Pattern-02", "width": 10},
+      {"from": "Source-Group-06", "to": "Asynch-Pattern-03", "width": 10},
+      {"from": "Source-Group-06", "to": "Asynch-Pattern-04", "width": 10},
+      {"from": "Source-Group-06", "to": "Asynch-Pattern-05", "width": 10},
+      {"from": "Source-Group-06", "to": "Asynch-Pattern-06", "width": 10},
+      {"from": "Asynch-Pattern-01", "to": "Target-Group-01", "width": 10},
+      {"from": "Asynch-Pattern-01", "to": "Target-Group-02", "width": 10},
+      {"from": "Asynch-Pattern-01", "to": "Target-Group-03", "width": 10},
+      {"from": "Asynch-Pattern-01", "to": "Target-Group-04", "width": 10},
+      {"from": "Asynch-Pattern-01", "to": "Target-Group-05", "width": 10},
+      {"from": "Asynch-Pattern-01", "to": "Target-Group-06", "width": 10},
+      {"from": "Asynch-Pattern-02", "to": "Target-Group-01", "width": 10},
+      {"from": "Asynch-Pattern-02", "to": "Target-Group-02", "width": 10},
+      {"from": "Asynch-Pattern-02", "to": "Target-Group-03", "width": 10},
+      {"from": "Asynch-Pattern-02", "to": "Target-Group-04", "width": 10},
+      {"from": "Asynch-Pattern-02", "to": "Target-Group-06", "width": 10},
+      {"from": "Asynch-Pattern-02", "to": "Target-Group-07", "width": 10},
+      {"from": "Asynch-Pattern-02", "to": "Target-Group-08", "width": 10},
+      {"from": "Asynch-Pattern-03", "to": "Target-Group-03", "width": 10},
+      {"from": "Asynch-Pattern-04", "to": "Target-Group-04", "width": 10},
+      {"from": "Asynch-Pattern-05", "to": "Target-Group-05", "width": 10},
+      {"from": "Asynch-Pattern-06", "to": "Target-Group-06", "width": 10},
+      {"from": "Asynch-Pattern-06", "to": "Target-Group-07", "width": 10},
+      {"from": "Asynch-Pattern-06", "to": "Target-Group-08", "width": 10}
+    ]}
+  </textarea>
+</div>
+</body>
+</html>
