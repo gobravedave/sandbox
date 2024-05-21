@@ -1,0 +1,21 @@
+{ "class": "go.GraphLinksModel",
+  "nodeDataArray": [
+  {"key":0, "text":"Consumer", "isGroup":true, "category":"OfGroups"},
+  {"key":1, "text":"Business Service", "isGroup":true, "category":"OfGroups"},
+  {"key":2, "text":"Domain Service", "group": 1, "isGroup":true, "category":"OfNodes"},
+  {"key":3, "text":"Provider", "isGroup":true, "category":"OfGroups"},
+  {"text":"Mobile App", "group":0, "key":"001"},
+  {"text":"Web App", "group":0, "key":"002"},
+  {"text":"Account", "group":2, "key":"201"},
+  {"text":"Lending", "group":2, "key":"202"},
+  {"text":"Origination", "group":2, "key":"203"},
+  {"text":"Product & Pricing", "group":2, "key":"204"},
+  {"text":"OnPrem", "group":3, "key":"301"},
+  {"text":"SaaS", "group":3, "key":"302"},
+  {"text":"Market Place", "group":3, "key":"303"}
+  ],
+  "linkDataArray": [
+  { "from": 0, "to": 2,"text": "INT-PAT-01" },
+  { "from": 2, "to": 3,"text": "INT-PAT-02" }
+]
+}
