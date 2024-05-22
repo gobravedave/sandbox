@@ -40,7 +40,7 @@
           wrappingColumn: horiz ? Infinity : 1,
           alignment: go.GridAlignment.Position,
           cellSize: new go.Size(1, 1),
-          spacing: horiz ? new go.Size(8, 8) : new go.Size(5, 5)
+          spacing: horiz ? new go.Size(20, 20) : new go.Size(20, 20)
         });
     }
 
@@ -122,7 +122,6 @@
             )  // end Vertical Panel
         )  // end Auto Panel
 
-
     myDiagram.nodeTemplate =
       new go.Node("Auto",
         { // dropping on a Node is the same as dropping on its containing Group, even if it's top-level
@@ -139,7 +138,16 @@
             editable: true,
             font: "13px Lora, serif",
           })
-          .bindTwoWay("text"));
+          .bindTwoWay("text"))        
+    ;
+    myDiagram.linkTemplate =
+      new go.Link()
+        .add(
+            new go.Shape(),                           // this is the link shape (the line)
+            new go.Shape({ toArrow: "Standard" }),  // this is an arrowhead
+            new go.TextBlock()                        // this is a Link label
+        .bind("text","text")
+        );
 
     // initialize the Palette and its contents
     myPalette =
