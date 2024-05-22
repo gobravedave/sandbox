@@ -145,7 +145,7 @@
         .add(
             new go.Shape(),                           // this is the link shape (the line)
             new go.Shape({ toArrow: "Standard" }),  // this is an arrowhead
-            new go.TextBlock()                        // this is a Link label
+            new go.TextBlock({background: 'white'})   // this is a Link label
         .bind("text","text")
         );
 
@@ -236,8 +236,8 @@
   {"isGroup":true,"text":"Business Service Pattern","horiz":true,"key":-14}
   ],
     "linkDataArray": [
-  {"from":0,"to":2,"text":"INT-PAT-01"},
-  {"from":2,"to":3,"text":"INT-PAT-02"}
+  {"from":0,"to":2},
+  {"from":2,"to":3}
   ]}
 </textarea>
           
