@@ -136,19 +136,22 @@
           {
             margin: 8,
             editable: true,
-            font: "13px Lora, serif",
+            font: "13px Lora, serif"
           })
           .bindTwoWay("text"))        
-    ;
+    
     myDiagram.linkTemplate =
       new go.Link()
         .add(
-            new go.Shape(),                           // this is the link shape (the line)
-            new go.Shape({ toArrow: "Standard" }),  // this is an arrowhead
-            new go.TextBlock({background: 'white'})   // this is a Link label
-        .bind("text","text")
-        );
-
+            new go.Shape().bind("stroke", "color")
+,                           // this is the link shape (the line)
+            new go.Shape({ toArrow: "Standard" }).bind("stroke", "color").bind("fill", "color")
+,  // this is an arrowhead
+            new go.TextBlock({ background: 'white',segmentOffset: new go.Point(0, -10) })                        // this is a Link label
+              .bind("text", "text")
+              .bind("stroke", "color")
+          )
+          ;
     // initialize the Palette and its contents
     myPalette =
       new go.Palette("myPaletteDiv",
@@ -236,8 +239,8 @@
   {"isGroup":true,"text":"Business Service Pattern","horiz":true,"key":-14}
   ],
     "linkDataArray": [
-  {"from":0,"to":2},
-  {"from":2,"to":3}
+  {"from":0,"to":2,"text":"Uses","color":"red"},
+  {"from":2,"to":3,"text":"Uses"}
   ]}
 </textarea>
           

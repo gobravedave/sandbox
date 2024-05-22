@@ -219,13 +219,14 @@
           { relinkableFrom: true, relinkableTo: true, corner: 50 },
           $(go.Shape, {strokeWidth: 2}, new go.Binding('stroke', 'color')),
           $(go.Shape, { toArrow: 'Standard' }, new go.Binding('fill', 'color'), new go.Binding('stroke', 'color')),
-          $(go.TextBlock,
+          $(go.TextBlock,"left",
                     {
                     margin: 5,
                     editable: true,
                     font: 'bold 13px sans-serif',
                     stroke: '#446700',
-                    background: 'white'
+                    background: 'white',
+                    segmentOffset: new go.Point(0, -10)
                   },
                   new go.Binding('text', 'text')
                 )
