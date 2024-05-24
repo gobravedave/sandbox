@@ -12,6 +12,13 @@ body {
     align-items: center;
     flex-wrap: wrap;
   }
+
+  .h1 {
+    font-weight: normal;
+    font-size: 3rem;
+    color: #FFF;
+    margin: 0;
+  }
   
   .nav a {
     color: #FFF;

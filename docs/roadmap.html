@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400&display=swap">
 <script src="https://unpkg.com/gojs@3.0.2/release/go.js"></script>
 <div id="allSampleContent" class="p-4 w-full">
 <div id="sample">
+  <title>Lightning Roadmap</title>
+
+  <h1>Lightning Product Hub Roadmap</h1>
+
 <div style="width: 100%; display: flex; justify-content: space-between; border: solid 1px black">
   <div id="myTasksDiv" style="width: 280px; margin-right: 2px; border-right: 1px solid black; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); font: 13px sans-serif; cursor: auto;"><canvas tabindex="0" width="558" height="778" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 279px; height: 389px; cursor: auto;"></canvas><div style="position: absolute; overflow: auto; width: 279px; height: 400px; z-index: 1;"><div style="position: absolute; width: 400px; height: 1px;"></div></div></div>
   <div id="myGanttDiv" style="flex-grow: 1; height: 800px; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0);"><canvas tabindex="0" width="1144" height="778" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 572px; height: 389px;"></canvas><div style="position: absolute; overflow: auto; width: 583px; height: 400px; z-index: 1;"><div style="position: absolute; width: 2376px; height: 508px;"></div></div></div>
@@ -12,11 +18,9 @@
   <label>Spacing:</label>
   <input id="widthSlider" type="range" min="8" max="24" value="12" oninput="rescale()">
 </div>
-<p>
-  You can zoom in on the diagram by changing the "Spacing" value, which scales the diagram using a data binding function for nodes' widths and locations. This
-  is in place of changing the <a href="../api/symbols/Diagram.html#scale" target="api">Diagram.scale</a>.
-</p>
 <p>The current model in JSON format, automatically updated as the diagram is modified:</p>
+<!-- todo: add save button, which is enabled when there is a model model change and save the results to datasets/roadmap.json -->
+<!-- todo: add load button, which allows the model to be refreshed from the datasets/roadmap.json  -->
 <textarea id="mySavedModel" style="width: 100%; height: 250px"></textarea>
 </div>
 <script id="code">
@@ -178,6 +182,7 @@ function standardContextMenus() {
           console.log('show HTML panel with details about the task ' + task.text);
         },
       }),
+      // todo: add menu items to support moving a task up or down the treeview
       $('ContextMenuButton', $(go.TextBlock, 'New Task'), {
         click: (e, button) => {
           const task = button.part.adornedPart;
@@ -524,7 +529,8 @@ myGantt.linkTemplateMap.add(
   )
 );
 
-// The Model that is shared by both Diagrams
+//todo: get json from datasets/roadmap.json and store in a variable called myModelData
+
 const myModel = new go.GraphLinksModel({ "class": "GraphLinksModel",
   "modelData": {"origin":1707808000000},
   "nodeDataArray": [
@@ -532,7 +538,7 @@ const myModel = new go.GraphLinksModel({ "class": "GraphLinksModel",
 {"key":1,"text":"Offset Feature","color":"black","duration":20,"start":0,"isTreeExpanded":false},
 {"key":11,"text":"Feature Eligibility","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
 {"key":12,"text":"Assessment Eventing","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
-{"key":2,"text":"Offset Fee","color":"black","start":0,"duration":20,"isTreeExpanded":false},
+{"key":2,"text":"Subscription Fee","color":"black","start":0,"duration":20,"isTreeExpanded":false},
 {"key":21,"text":"Subscription Service","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
 {"key":22,"text":"Pricing Synch","color":"yellow","start":0,"duration":20,"isTreeExpanded":false},
 {"key":-57,"text":"Joint Package","duration":20,"start":0,"isTreeExpanded":false,"color":"black"},
@@ -547,13 +553,13 @@ const myModel = new go.GraphLinksModel({ "class": "GraphLinksModel",
 {"key":42,"text":"Product Service","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
 {"key":43,"text":"Product Eligibility","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
 {"key":44,"text":"Store Service","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
-{"key":5,"text":"Loan LVR Rates","color":"black","start":0,"duration":20,"isTreeExpanded":false},
+{"key":5,"text":"Loan Product Inquiry","color":"black","start":0,"duration":20,"isTreeExpanded":false},
 {"key":51,"text":"Product Hub","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
 {"key":52,"text":"Product Service","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
 {"key":6,"text":"Credit Cards","color":"black","start":0,"duration":20,"isTreeExpanded":false},
 {"key":61,"text":"Product Hub","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
 {"key":62,"text":"Product Service","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
-{"key":7,"text":"Tech Debt","color":"black","start":0,"duration":20,"isTreeExpanded":false},
+{"key":7,"text":"Tech Debt","color":"black","start":0,"duration":20,"isTreeExpanded":true},
 {"key":71,"text":"Product Hub Cache","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
 {"key":72,"text":"Product Service","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
 {"key":73,"text":"Product Hub Eventing","color":"yellow","duration":20,"start":0,"isTreeExpanded":false},
