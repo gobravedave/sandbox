@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <body>
+  <script src="https://unpkg.com/gojs@3.0.2/release/go.js"></script>
+  <div id="allSampleContent" class="p-4 w-full">
+<h1>5 Year Planner</h1>          
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Lora&amp;display=swap" rel="stylesheet">
+<script id="code">
+  function init() {
+
+    myDiagram = new go.Diagram("myDiagramDiv",
+      {
+        "InitialLayoutCompleted": e => updateTotalGroupDepth(),
+        // when a drag-drop occurs in the Diagram's background, make it a top-level node
+        mouseDrop: e => finishDrop(e, null),
+        layout:  // Diagram has simple horizontal layout
+          new go.GridLayout(
+            { wrappingWidth: Infinity, alignment: go.GridAlignment.Position, cellSize: new go.Size(1, 1) }),
+        "commandHandler.archetypeGroupData": { isGroup: true, text: "Group", horiz: false },
+        "undoManager.isEnabled": true
+      });
+
+    const colors = {
+      white: '#fffcf6',
+      blue: '#dfebe5',
+      darkblue: '#cae0d8',
+      yellow: '#fcdba2',
+      gray: '#59524c',
+      black: '#000000'
+    }
+
+    // The one template for Groups can be configured to either layout out its members
+    // horizontally or vertically, each with a different default color.
+
+    function makeLayout(horiz) {  // a Binding conversion function
+      return new go.GridLayout(
+        {
+          wrappingColumn: horiz ? Infinity : 1,
+          alignment: go.GridAlignment.Position,
+          cellSize: new go.Size(1, 1),
+          spacing: horiz ? new go.Size(20, 20) : new go.Size(20, 20)
+        });
+    }
+
+    function defaultColor(horiz) {  // a Binding conversion function
+      return horiz ? colors.white : colors.darkblue;
+    }
+
+    // this function is used to highlight a Group that the selection may be dropped into
+    function highlightGroup(e, grp, show) {
+      if (!grp) return;
+      e.handled = true;
+      if (show) {
+        // cannot depend on the grp.diagram.selection in the case of external drag-and-drops;
+        // instead depend on the DraggingTool.draggedParts or .copiedParts
+        var tool = grp.diagram.toolManager.draggingTool;
+        var map = tool.draggedParts || tool.copiedParts;  // this is a Map
+        // now we can check to see if the Group will accept membership of the dragged Parts
+        if (grp.canAddMembers(map.toKeySet())) {
+          grp.isHighlighted = true;
+          return;
+        }
+      }
+      grp.isHighlighted = false;
+    }
+
+    // Upon a drop onto a Group, we try to add the selection as members of the Group.
+    // Upon a drop onto the background, or onto a top-level Node, make selection top-level.
+    // If this is OK, we're done; otherwise we cancel the operation to rollback everything.
+    function finishDrop(e, grp) {
+      var ok = (grp !== null
+        ? grp.addMembers(grp.diagram.selection, true)
+        : e.diagram.commandHandler.addTopLevelParts(e.diagram.selection, true));
+      if (!ok) e.diagram.currentTool.doCancel();
+      updateTotalGroupDepth();
+    }
+
+    myDiagram.groupTemplate =
+      new go.Group("Auto",
+        {
+          ungroupable: true,
+          // highlight when dragging into the Group
+          mouseDragEnter: (e, grp, prev) => highlightGroup(e, grp, true),
+          mouseDragLeave: (e, grp, next) => highlightGroup(e, grp, false),
+          computesBoundsAfterDrag: true,
+          computesBoundsIncludingLocation: true,
+          // when the selection is dropped into a Group, add the selected Parts into that Group;
+          // if it fails, cancel the tool, rolling back any changes
+          mouseDrop: finishDrop,
+          handlesDragDropForMembers: true,  // don't need to define handlers on member Nodes and Links
+          // Groups containing Groups lay out their members horizontally
+          layout: makeLayout(false),
+          background: defaultColor(false) // default value if not specified in data
+        })
+        .bind("background", "horiz", defaultColor)
+        .bind("layout", "horiz", makeLayout)
+        .add(
+          new go.Shape("Rectangle",
+            { stroke: colors.gray, strokeWidth: 1, hasShadow: true })
+            .bindObject("fill", "isHighlighted", h => h ? 'rgba(0,255,0,.3)' : 'transparent'),
+          new go.Panel("Vertical")  // title above Placeholder
+            .add(
+              new go.Panel("Horizontal",  // button next to TextBlock
+                { stretch: go.Stretch.Horizontal })
+                .add(
+                  go.GraphObject.build("SubGraphExpanderButton", { alignment: go.Spot.Right, margin: 5 }),
+                  new go.TextBlock(
+                    {
+                      alignment: go.Spot.Left,
+                      editable: true,
+                      margin: new go.Margin(6, 10, 6, 1),
+                      font: "bold 16px Lora, serif",
+                      opacity: 0.95,  // allow some color to show through
+                      stroke: colors.black
+                    })
+                    .bind("font", "horiz", (horiz) => horiz ? "bold 20px Lora, serif" : "bold 16px Lora, serif")
+                    .bindTwoWay("text")
+                ),  // end Horizontal Panel
+              new go.Placeholder({ padding: 8, margin: 4, alignment: go.Spot.TopLeft })
+            )  // end Vertical Panel
+        )  // end Auto Panel
+
+    myDiagram.nodeTemplate =
+      new go.Node("Auto",
+        { // dropping on a Node is the same as dropping on its containing Group, even if it's top-level
+          mouseDrop: (e, node) => finishDrop(e, node.containingGroup),
+          isShadowed: true,
+          shadowBlur: 0,
+          shadowColor: colors.gray,
+          shadowOffset: new go.Point(4.5, 3.5)
+        })
+        .add(new go.Shape("RoundedRectangle", { fill: colors.yellow, stroke: null, strokeWidth: 0 }))
+        .add(new go.TextBlock(
+          {
+            margin: 8,
+            editable: true,
+            font: "13px Lora, serif"
+          })
+          .bindTwoWay("text"))        
+    
+    myDiagram.linkTemplate =
+      new go.Link()
+        .add(
+            new go.Shape().bind("stroke", "color")
+,                           // this is the link shape (the line)
+            new go.Shape({ toArrow: "Standard" }).bind("stroke", "color").bind("fill", "color")
+,  // this is an arrowhead
+            new go.TextBlock({ background: 'white',segmentOffset: new go.Point(0, -10) })                        // this is a Link label
+              .bind("text", "text")
+              .bind("stroke", "color")
+          )
+          ;
+    // initialize the Palette and its contents
+    myPalette =
+      new go.Palette("myPaletteDiv",
+        {
+          nodeTemplateMap: myDiagram.nodeTemplateMap,
+          groupTemplateMap: myDiagram.groupTemplateMap
+        });
+
+    myPalette.model = new go.GraphLinksModel([
+      { text: "New Node", color: "#ACE600" },
+      { isGroup: true, text: "H Group", horiz: true },
+      { isGroup: true, text: "V Group", horiz: false }
+    ]);
+
+    var slider = document.getElementById("levelSlider");
+    slider.addEventListener('change', reexpand);
+    slider.addEventListener('input', reexpand);
+
+    load();
+  }
+
+  function reexpand(e) {
+    myDiagram.commit(diag => {
+      var level = parseInt(document.getElementById("levelSlider").value);
+      diag.findTopLevelGroups().each(g => expandGroups(g, 0, level))
+    }, "reexpand");
+  }
+  function expandGroups(g, i, level) {
+    if (!(g instanceof go.Group)) return;
+    g.isSubGraphExpanded = i < level;
+    g.memberParts.each(m => expandGroups(m, i + 1, level))
+  }
+  function updateTotalGroupDepth() {
+    let d = 0;
+    myDiagram.findTopLevelGroups().each(g => d = Math.max(d, groupDepth(g)));
+    document.getElementById("levelSlider").max = Math.max(0, d);
+  }
+  function groupDepth(g) {
+    if (!(g instanceof go.Group)) return 0;
+    let d = 1;
+    g.memberParts.each(m => d = Math.max(d, groupDepth(m)+1));
+    return d;
+  }
+
+  // save a model to and load a model from JSON text, displayed below the Diagram
+  function save() {
+    document.getElementById("mySavedModel").value = myDiagram.model.toJson();
+    myDiagram.isModified = false;
+  }
+  function load() {
+    myDiagram.model = go.Model.fromJson(document.getElementById("mySavedModel").value);
+  }
+  window.addEventListener('DOMContentLoaded', init);
+</script>
+
+<div id="sample">
+  <div style="width: 100%; display: flex; justify-content: space-between">
+    <div id="myPaletteDiv" style="width: 130px; margin-right: 2px; background-color: rgb(223, 235, 229); border: 1px solid black; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0);"><canvas tabindex="0" width="256" height="996" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 128px; height: 498px;"></canvas><div style="position: absolute; overflow: auto; width: 128px; height: 498px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div>
+    <div id="myDiagramDiv" style="flex-grow: 1; height: 500px; background-color: rgb(223, 235, 229); border: 1px solid black; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;"><canvas tabindex="0" width="2228" height="996" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 1114px; height: 498px; cursor: auto;"></canvas><div style="position: absolute; overflow: auto; width: 1114px; height: 498px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div>
+  </div>
+  <p>
+    The slider controls how many nested levels of Groups are expanded. <br>
+    Semantic zoom level: <input id="levelSlider" type="range" min="0" max="2">
+  </p>
+  <div id="buttons">
+    <button id="saveModel" onclick="save()">Save</button>
+    <button id="loadModel" onclick="load()">Load</button>
+    Diagram Model saved in JSON format:
+  </div>
+  <textarea id="mySavedModel" style="width:100%;height:300px">{ "class": "GraphLinksModel",
+    "nodeDataArray": [
+  {"isGroup":true,"text":"Business Architecture","horiz":true,"key":-19,"group":-337},
+  {"isGroup":true,"text":"Delivery Architecture","horiz":true,"key":-20,"group":-337},
+  {"isGroup":true,"text":"Solution Architecture","horiz":true,"key":-21,"group":-337},
+  {"isGroup":true,"text":"Year 1","horiz":true,"key":-25,"group":-74},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-26,"group":-25},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-27,"group":-25},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-28,"group":-25},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-29,"group":-25},
+  {"isGroup":true,"text":"Value Stream 1","horiz":true,"key":-12,"group":-73},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-13,"group":-18},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-14,"group":-18},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-15,"group":-18},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-16,"group":-18},
+  {"isGroup":true,"text":"Year 3","horiz":true,"key":-18,"group":-74},
+  {"isGroup":true,"text":"Year 2","horiz":true,"key":-30,"group":-74},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-31,"group":-30},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-32,"group":-30},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-33,"group":-30},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-34,"group":-30},
+  {"isGroup":true,"text":"Year 4","horiz":true,"key":-35,"group":-74},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-36,"group":-35},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-37,"group":-35},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-38,"group":-35},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-39,"group":-35},
+  {"isGroup":true,"text":"Year 5","horiz":true,"key":-40,"group":-74},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-41,"group":-40},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-42,"group":-40},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-43,"group":-40},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-44,"group":-40},
+  {"isGroup":true,"text":"Backlog","horiz":false,"key":-45,"group":-12},
+  {"isGroup":true,"text":"By Value Stream","horiz":false,"key":-73,"group":-20},
+  {"isGroup":true,"text":"Planned","horiz":false,"key":-74,"group":-12},
+  {"isGroup":true,"text":"Value Stream 2","horiz":true,"key":-46,"group":-73},
+  {"isGroup":true,"text":"Backlog","horiz":false,"key":-47,"group":-46},
+  {"isGroup":true,"text":"Planned","horiz":false,"key":-48,"group":-46},
+  {"isGroup":true,"text":"Year 1","horiz":true,"key":-49,"group":-48},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-50,"group":-49},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-51,"group":-49},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-52,"group":-49},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-53,"group":-49},
+  {"isGroup":true,"text":"Year 2","horiz":true,"key":-54,"group":-48},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-55,"group":-54},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-56,"group":-54},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-57,"group":-54},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-58,"group":-54},
+  {"isGroup":true,"text":"Year 3","horiz":true,"key":-59,"group":-48},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-60,"group":-59},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-61,"group":-59},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-62,"group":-59},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-63,"group":-59},
+  {"isGroup":true,"text":"Year 4","horiz":true,"key":-64,"group":-48},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-65,"group":-64},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-66,"group":-64},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-67,"group":-64},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-68,"group":-64},
+  {"isGroup":true,"text":"Year 5","horiz":true,"key":-69,"group":-48},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-70,"group":-69},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-71,"group":-69},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-72,"group":-69},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-75,"group":-69},
+  {"isGroup":true,"text":"Value Stream 3","horiz":true,"key":-76,"group":-73},
+  {"isGroup":true,"text":"Backlog","horiz":false,"key":-77,"group":-76},
+  {"isGroup":true,"text":"Planned","horiz":false,"key":-78,"group":-76},
+  {"isGroup":true,"text":"Year 1","horiz":true,"key":-79,"group":-78},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-80,"group":-79},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-81,"group":-79},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-82,"group":-79},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-83,"group":-79},
+  {"isGroup":true,"text":"Year 2","horiz":true,"key":-84,"group":-78},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-85,"group":-84},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-86,"group":-84},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-87,"group":-84},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-88,"group":-84},
+  {"isGroup":true,"text":"Year 3","horiz":true,"key":-89,"group":-78},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-90,"group":-89},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-91,"group":-89},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-92,"group":-89},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-93,"group":-89},
+  {"isGroup":true,"text":"Year 4","horiz":true,"key":-94,"group":-78},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-95,"group":-94},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-96,"group":-94},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-97,"group":-94},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-98,"group":-94},
+  {"isGroup":true,"text":"Year 5","horiz":true,"key":-99,"group":-78},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-100,"group":-99},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-101,"group":-99},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-102,"group":-99},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-103,"group":-99},
+  {"isGroup":true,"text":"Value Stream 4","horiz":true,"key":-104,"group":-73},
+  {"isGroup":true,"text":"Backlog","horiz":false,"key":-105,"group":-104},
+  {"isGroup":true,"text":"Planned","horiz":false,"key":-106,"group":-104},
+  {"isGroup":true,"text":"Year 1","horiz":true,"key":-107,"group":-106},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-108,"group":-107},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-109,"group":-107},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-110,"group":-107},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-111,"group":-107},
+  {"isGroup":true,"text":"Year 2","horiz":true,"key":-112,"group":-106},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-113,"group":-112},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-114,"group":-112},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-115,"group":-112},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-116,"group":-112},
+  {"isGroup":true,"text":"Year 3","horiz":true,"key":-117,"group":-106},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-118,"group":-117},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-119,"group":-117},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-120,"group":-117},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-121,"group":-117},
+  {"isGroup":true,"text":"Year 4","horiz":true,"key":-122,"group":-106},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-123,"group":-122},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-124,"group":-122},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-125,"group":-122},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-126,"group":-122},
+  {"isGroup":true,"text":"Year 5","horiz":true,"key":-127,"group":-106},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-128,"group":-127},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-129,"group":-127},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-130,"group":-127},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-131,"group":-127},
+  {"isGroup":true,"text":"Value Stream 5","horiz":true,"key":-132,"group":-73},
+  {"isGroup":true,"text":"Backlog","horiz":false,"key":-133,"group":-132},
+  {"isGroup":true,"text":"Planned","horiz":false,"key":-134,"group":-132},
+  {"isGroup":true,"text":"Year 1","horiz":true,"key":-135,"group":-134},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-136,"group":-135},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-137,"group":-135},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-138,"group":-135},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-139,"group":-135},
+  {"isGroup":true,"text":"Year 2","horiz":true,"key":-140,"group":-134},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-141,"group":-140},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-142,"group":-140},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-143,"group":-140},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-144,"group":-140},
+  {"isGroup":true,"text":"Year 3","horiz":true,"key":-145,"group":-134},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-146,"group":-145},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-147,"group":-145},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-148,"group":-145},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-149,"group":-145},
+  {"isGroup":true,"text":"Year 4","horiz":true,"key":-150,"group":-134},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-151,"group":-150},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-152,"group":-150},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-153,"group":-150},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-154,"group":-150},
+  {"isGroup":true,"text":"Year 5","horiz":true,"key":-155,"group":-134},
+  {"isGroup":true,"text":"Q1","horiz":true,"key":-156,"group":-155},
+  {"isGroup":true,"text":"Q2","horiz":true,"key":-157,"group":-155},
+  {"isGroup":true,"text":"Q3","horiz":true,"key":-158,"group":-155},
+  {"isGroup":true,"text":"Q4","horiz":true,"key":-159,"group":-155},
+  {"isGroup":true,"text":"Feature 1","horiz":false,"key":-164,"group":-336},
+  {"isGroup":true,"text":"Context View","horiz":false,"key":-165,"group":-164},
+  {"isGroup":true,"text":"Context Increment n View","horiz":true,"key":-166,"group":-165},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-167,"group":-165},
+  {"isGroup":true,"text":"Container View","horiz":false,"key":-168,"group":-164},
+  {"isGroup":true,"text":"Container Increment n View","horiz":true,"key":-169,"group":-168},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-170,"group":-168},
+  {"isGroup":true,"text":"Component View","horiz":false,"key":-171,"group":-164},
+  {"isGroup":true,"text":"Component n Increment n View","horiz":true,"key":-172,"group":-171},
+  {"isGroup":true,"text":"Component n Target View","horiz":true,"key":-173,"group":-171},
+  {"isGroup":true,"text":"Feature 2","horiz":false,"key":-160,"group":-336},
+  {"isGroup":true,"text":"Context View","horiz":false,"key":-161,"group":-160},
+  {"isGroup":true,"text":"Context Increment n View","horiz":true,"key":-162,"group":-161},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-163,"group":-161},
+  {"isGroup":true,"text":"Container View","horiz":false,"key":-174,"group":-160},
+  {"isGroup":true,"text":"Container Increment n View","horiz":true,"key":-175,"group":-174},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-176,"group":-174},
+  {"isGroup":true,"text":"Component View","horiz":false,"key":-177,"group":-160},
+  {"isGroup":true,"text":"Component n Increment n View","horiz":true,"key":-178,"group":-177},
+  {"isGroup":true,"text":"Component n Target View","horiz":true,"key":-179,"group":-177},
+  {"isGroup":true,"text":"Feature 3","horiz":false,"key":-180,"group":-336},
+  {"isGroup":true,"text":"Context View","horiz":false,"key":-181,"group":-180},
+  {"isGroup":true,"text":"Context Increment n View","horiz":true,"key":-182,"group":-181},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-183,"group":-181},
+  {"isGroup":true,"text":"Container View","horiz":false,"key":-184,"group":-180},
+  {"isGroup":true,"text":"Container Increment n View","horiz":true,"key":-185,"group":-184},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-186,"group":-184},
+  {"isGroup":true,"text":"Component View","horiz":false,"key":-187,"group":-180},
+  {"isGroup":true,"text":"Component n Increment n View","horiz":true,"key":-188,"group":-187},
+  {"isGroup":true,"text":"Component n Target View","horiz":true,"key":-189,"group":-187},
+  {"isGroup":true,"text":"Feature 4","horiz":false,"key":-190,"group":-336},
+  {"isGroup":true,"text":"Context View","horiz":false,"key":-191,"group":-190},
+  {"isGroup":true,"text":"Context Increment n View","horiz":true,"key":-192,"group":-191},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-193,"group":-191},
+  {"isGroup":true,"text":"Container View","horiz":false,"key":-194,"group":-190},
+  {"isGroup":true,"text":"Container Increment n View","horiz":true,"key":-195,"group":-194},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-196,"group":-194},
+  {"isGroup":true,"text":"Component View","horiz":false,"key":-197,"group":-190},
+  {"isGroup":true,"text":"Component n Increment n View","horiz":true,"key":-198,"group":-197},
+  {"isGroup":true,"text":"Component n Target View","horiz":true,"key":-199,"group":-197},
+  {"text":"Epix3","color":"#ACE600","key":-200,"group":-203},
+  {"text":"Epic2","color":"#ACE600","key":-201,"group":-203},
+  {"text":"Epic1","color":"#ACE600","key":-202,"group":-203},
+  {"isGroup":true,"text":"Epics","horiz":false,"key":-203,"group":-166},
+  {"text":"Value Stream 1","color":"#ACE600","key":-204,"group":-166},
+  {"text":"Value Stream 2","color":"#ACE600","key":-205,"group":-166},
+  {"isGroup":true,"text":"Infrastructure View","horiz":false,"key":-206,"group":-164},
+  {"isGroup":true,"text":"Infrastructure Increment n View","horiz":true,"key":-207,"group":-206},
+  {"isGroup":true,"text":"Infrastructure Target View","horiz":true,"key":-208,"group":-206},
+  {"isGroup":true,"text":"Infrastructure View","horiz":false,"key":-209,"group":-160},
+  {"isGroup":true,"text":"Infrastructure Increment n View","horiz":true,"key":-210,"group":-209},
+  {"isGroup":true,"text":"Infrastructure Target View","horiz":true,"key":-211,"group":-209},
+  {"isGroup":true,"text":"Infrastructure View","horiz":false,"key":-212,"group":-180},
+  {"isGroup":true,"text":"Infrastructure Increment n View","horiz":true,"key":-213,"group":-212},
+  {"isGroup":true,"text":"Infrastructure Target View","horiz":true,"key":-214,"group":-212},
+  {"isGroup":true,"text":"Infrastructure View","horiz":false,"key":-215,"group":-190},
+  {"isGroup":true,"text":"Infrastructure Increment n View","horiz":true,"key":-216,"group":-215},
+  {"isGroup":true,"text":"Infrastructure Target View","horiz":true,"key":-217,"group":-215},
+  {"isGroup":true,"text":"By Domain","horiz":false,"key":-218,"group":-19},
+  {"isGroup":true,"text":"Domain 1","horiz":true,"key":-219,"group":-218},
+  {"isGroup":true,"text":"Capability 1","horiz":false,"key":-220,"group":-223},
+  {"isGroup":true,"text":"Capability 4","horiz":false,"key":-221,"group":-224},
+  {"isGroup":true,"text":"Met","horiz":false,"key":-223,"group":-219},
+  {"isGroup":true,"text":"Unmet","horiz":false,"key":-224,"group":-219},
+  {"isGroup":true,"text":"Partially Met","horiz":false,"key":-225,"group":-219},
+  {"isGroup":true,"text":"Capability 2","horiz":false,"key":-226,"group":-225},
+  {"isGroup":true,"text":"Capability 3","horiz":false,"key":-227,"group":-225},
+  {"isGroup":true,"text":"Domain 2","horiz":true,"key":-222,"group":-218},
+  {"isGroup":true,"text":"Met","horiz":false,"key":-228,"group":-222},
+  {"isGroup":true,"text":"Capability 1","horiz":false,"key":-229,"group":-228},
+  {"isGroup":true,"text":"Partially Met","horiz":false,"key":-230,"group":-222},
+  {"isGroup":true,"text":"Capability 2","horiz":false,"key":-231,"group":-230},
+  {"isGroup":true,"text":"Capability 3","horiz":false,"key":-232,"group":-230},
+  {"isGroup":true,"text":"Unmet","horiz":false,"key":-233,"group":-222},
+  {"isGroup":true,"text":"Capability 4","horiz":false,"key":-234,"group":-233},
+  {"isGroup":true,"text":"Domain 3","horiz":true,"key":-235,"group":-218},
+  {"isGroup":true,"text":"Met","horiz":false,"key":-236,"group":-235},
+  {"isGroup":true,"text":"Capability 1","horiz":false,"key":-237,"group":-236},
+  {"isGroup":true,"text":"Partially Met","horiz":false,"key":-238,"group":-235},
+  {"isGroup":true,"text":"Capability 2","horiz":false,"key":-239,"group":-238},
+  {"isGroup":true,"text":"Capability 3","horiz":false,"key":-240,"group":-238},
+  {"isGroup":true,"text":"Unmet","horiz":false,"key":-241,"group":-235},
+  {"isGroup":true,"text":"Capability 4","horiz":false,"key":-242,"group":-241},
+  {"isGroup":true,"text":"Domain 4","horiz":true,"key":-243,"group":-218},
+  {"isGroup":true,"text":"Met","horiz":false,"key":-244,"group":-243},
+  {"isGroup":true,"text":"Capability 1","horiz":false,"key":-245,"group":-244},
+  {"isGroup":true,"text":"Partially Met","horiz":false,"key":-246,"group":-243},
+  {"isGroup":true,"text":"Capability 2","horiz":false,"key":-247,"group":-246},
+  {"isGroup":true,"text":"Capability 3","horiz":false,"key":-248,"group":-246},
+  {"isGroup":true,"text":"Unmet","horiz":false,"key":-249,"group":-243},
+  {"isGroup":true,"text":"Capability 4","horiz":false,"key":-250,"group":-249},
+  {"isGroup":true,"text":"Domain 5","horiz":true,"key":-251,"group":-218},
+  {"isGroup":true,"text":"Met","horiz":false,"key":-252,"group":-251},
+  {"isGroup":true,"text":"Capability 1","horiz":false,"key":-253,"group":-252},
+  {"isGroup":true,"text":"Partially Met","horiz":false,"key":-254,"group":-251},
+  {"isGroup":true,"text":"Capability 2","horiz":false,"key":-255,"group":-254},
+  {"isGroup":true,"text":"Capability 3","horiz":false,"key":-256,"group":-254},
+  {"isGroup":true,"text":"Unmet","horiz":false,"key":-257,"group":-251},
+  {"isGroup":true,"text":"Capability 4","horiz":false,"key":-258,"group":-257},
+  {"isGroup":true,"text":"Asset 1","horiz":false,"key":-259,"group":-335},
+  {"isGroup":true,"text":"Context View","horiz":false,"key":-260,"group":-259},
+  {"isGroup":true,"text":"Context Increment n View","horiz":true,"key":-261,"group":-260},
+  {"isGroup":true,"text":"Epics","horiz":false,"key":-262,"group":-261},
+  {"text":"Epic1","color":"#ACE600","key":-263,"group":-262},
+  {"text":"Epic2","color":"#ACE600","key":-264,"group":-262},
+  {"text":"Epix3","color":"#ACE600","key":-265,"group":-262},
+  {"text":"Value Stream 1","color":"#ACE600","key":-266,"group":-261},
+  {"text":"Value Stream 2","color":"#ACE600","key":-267,"group":-261},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-268,"group":-260},
+  {"isGroup":true,"text":"Container View","horiz":false,"key":-269,"group":-259},
+  {"isGroup":true,"text":"Container Increment n View","horiz":true,"key":-270,"group":-269},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-271,"group":-269},
+  {"isGroup":true,"text":"Component View","horiz":false,"key":-272,"group":-259},
+  {"isGroup":true,"text":"Component n Increment n View","horiz":true,"key":-273,"group":-272},
+  {"isGroup":true,"text":"Component n Target View","horiz":true,"key":-274,"group":-272},
+  {"isGroup":true,"text":"Infrastructure View","horiz":false,"key":-275,"group":-259},
+  {"isGroup":true,"text":"Infrastructure Increment n View","horiz":true,"key":-276,"group":-275},
+  {"isGroup":true,"text":"Infrastructure Target View","horiz":true,"key":-277,"group":-275},
+  {"isGroup":true,"text":"Asset 2","horiz":false,"key":-278,"group":-335},
+  {"isGroup":true,"text":"Context View","horiz":false,"key":-279,"group":-278},
+  {"isGroup":true,"text":"Context Increment n View","horiz":true,"key":-280,"group":-279},
+  {"isGroup":true,"text":"Epics","horiz":false,"key":-281,"group":-280},
+  {"text":"Epic1","color":"#ACE600","key":-282,"group":-281},
+  {"text":"Epic2","color":"#ACE600","key":-283,"group":-281},
+  {"text":"Epix3","color":"#ACE600","key":-284,"group":-281},
+  {"text":"Value Stream 1","color":"#ACE600","key":-285,"group":-280},
+  {"text":"Value Stream 2","color":"#ACE600","key":-286,"group":-280},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-287,"group":-279},
+  {"isGroup":true,"text":"Container View","horiz":false,"key":-288,"group":-278},
+  {"isGroup":true,"text":"Container Increment n View","horiz":true,"key":-289,"group":-288},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-290,"group":-288},
+  {"isGroup":true,"text":"Component View","horiz":false,"key":-291,"group":-278},
+  {"isGroup":true,"text":"Component n Increment n View","horiz":true,"key":-292,"group":-291},
+  {"isGroup":true,"text":"Component n Target View","horiz":true,"key":-293,"group":-291},
+  {"isGroup":true,"text":"Infrastructure View","horiz":false,"key":-294,"group":-278},
+  {"isGroup":true,"text":"Infrastructure Increment n View","horiz":true,"key":-295,"group":-294},
+  {"isGroup":true,"text":"Infrastructure Target View","horiz":true,"key":-296,"group":-294},
+  {"isGroup":true,"text":"Asset 3","horiz":false,"key":-297,"group":-335},
+  {"isGroup":true,"text":"Context View","horiz":false,"key":-298,"group":-297},
+  {"isGroup":true,"text":"Context Increment n View","horiz":true,"key":-299,"group":-298},
+  {"isGroup":true,"text":"Epics","horiz":false,"key":-300,"group":-299},
+  {"text":"Epic1","color":"#ACE600","key":-301,"group":-300},
+  {"text":"Epic2","color":"#ACE600","key":-302,"group":-300},
+  {"text":"Epix3","color":"#ACE600","key":-303,"group":-300},
+  {"text":"Value Stream 1","color":"#ACE600","key":-304,"group":-299},
+  {"text":"Value Stream 2","color":"#ACE600","key":-305,"group":-299},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-306,"group":-298},
+  {"isGroup":true,"text":"Container View","horiz":false,"key":-307,"group":-297},
+  {"isGroup":true,"text":"Container Increment n View","horiz":true,"key":-308,"group":-307},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-309,"group":-307},
+  {"isGroup":true,"text":"Component View","horiz":false,"key":-310,"group":-297},
+  {"isGroup":true,"text":"Component n Increment n View","horiz":true,"key":-311,"group":-310},
+  {"isGroup":true,"text":"Component n Target View","horiz":true,"key":-312,"group":-310},
+  {"isGroup":true,"text":"Infrastructure View","horiz":false,"key":-313,"group":-297},
+  {"isGroup":true,"text":"Infrastructure Increment n View","horiz":true,"key":-314,"group":-313},
+  {"isGroup":true,"text":"Infrastructure Target View","horiz":true,"key":-315,"group":-313},
+  {"isGroup":true,"text":"Asset 4","horiz":false,"key":-316,"group":-335},
+  {"isGroup":true,"text":"Context View","horiz":false,"key":-317,"group":-316},
+  {"isGroup":true,"text":"Context Increment n View","horiz":true,"key":-318,"group":-317},
+  {"isGroup":true,"text":"Epics","horiz":false,"key":-319,"group":-318},
+  {"text":"Epic1","color":"#ACE600","key":-320,"group":-319},
+  {"text":"Epic2","color":"#ACE600","key":-321,"group":-319},
+  {"text":"Epix3","color":"#ACE600","key":-322,"group":-319},
+  {"text":"Value Stream 1","color":"#ACE600","key":-323,"group":-318},
+  {"text":"Value Stream 2","color":"#ACE600","key":-324,"group":-318},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-325,"group":-317},
+  {"isGroup":true,"text":"Container View","horiz":false,"key":-326,"group":-316},
+  {"isGroup":true,"text":"Container Increment n View","horiz":true,"key":-327,"group":-326},
+  {"isGroup":true,"text":"Context Target View","horiz":true,"key":-328,"group":-326},
+  {"isGroup":true,"text":"Component View","horiz":false,"key":-329,"group":-316},
+  {"isGroup":true,"text":"Component n Increment n View","horiz":true,"key":-330,"group":-329},
+  {"isGroup":true,"text":"Component n Target View","horiz":true,"key":-331,"group":-329},
+  {"isGroup":true,"text":"Infrastructure View","horiz":false,"key":-332,"group":-316},
+  {"isGroup":true,"text":"Infrastructure Increment n View","horiz":true,"key":-333,"group":-332},
+  {"isGroup":true,"text":"Infrastructure Target View","horiz":true,"key":-334,"group":-332},
+  {"isGroup":true,"text":"By Asset","horiz":false,"key":-335,"group":-21},
+  {"isGroup":true,"text":"By Feature","horiz":false,"key":-336,"group":-21},
+  {"isGroup":true,"text":"Architectural Perspectives","horiz":false,"key":-337}
+  ],
+    "linkDataArray": []}
+</textarea>
+          
+</div>
+  </body>
+  </html>
