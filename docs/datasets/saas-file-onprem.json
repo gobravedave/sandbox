@@ -2,10 +2,11 @@
   "nodeDataArray": [
     {"text":"Source", "key":-9999},
   {"key":4, "text":"stargate", "isGroup":true, "category":"OfGroups"},
+  {"key":5, "text":"onprem", "isGroup":true, "category":"OfGroups"},
   {"text":"stargate", "group":4, "key":400},
   {"text":"adf", "group":4, "key":401},
   {"text":"connect:direct", "group":4, "key":402},
-  {"text":"Target", "key":9999}
+  {"text":"CTM", "key":9999, "group":5}
   ],
   "linkDataArray": [ 
     { "from": -9999, "to": 400 },
