@@ -219,7 +219,7 @@
           { relinkableFrom: true, relinkableTo: true, corner: 50 },
           $(go.Shape, {strokeWidth: 2}, new go.Binding('stroke', 'color')),
           $(go.Shape, { toArrow: 'Standard' }, new go.Binding('fill', 'color'), new go.Binding('stroke', 'color')),
-          $(go.TextBlock,"left",
+          $(go.TextBlock,
                     {
                     margin: 5,
                     editable: true,
@@ -278,20 +278,25 @@
         <h2>Integration Pattern Proposal</h2>
         <label for="sourceSystem">Select Source System:</label>
         <select id="sourceSystem">
+            <option value="browser">Browser</option>
             <option value="mobile">Mobile</option>
-            <option value="webapp">WebApp</option>
-            <option value="salesforce">Salesforce</option>
-            <option value="fabric">Fabric</option>
-            <option value="lightning">Lightning</option>
-            <option value="zafin">Zafin</option>
+            <option value="gcp">GCP</option>
+            <option value="onprem">On-Prem</option>
+            <option value="saas">SaaS</option>
+        </select>
+        <label for="mode">Select Integration Mode Type:</label>
+        <select id="mode">
+            <option value="web">Web</option>
+            <option value="message">Message</option>
+            <option value="event">Event</option>
+            <option value="file">File</option>
         </select>
         <label for="targetSystem">Select Target System:</label>
         <select id="targetSystem">
-            <option value="fabric">Fabric</option>
-            <option value="lightning">Lightning</option>
-            <option value="cap">CAP</option>
-            <option value="zafin">Zafin</option>
-            <option value="ctm">CTM</option>
+            <option value="gcp">GCP</option>
+            <option value="onprem">On-Prem</option>
+            <option value="saas">SaaS</option>
+            <option value="marketplace">marketplace</option>
         </select>
         <button onclick="proposeIntegrationPattern()">Propose Integration Pattern</button>
         <br></br>
@@ -307,21 +312,25 @@
     <script>
         function proposeIntegrationPattern() {
             var sourceSystem = document.getElementById("sourceSystem").value;
+            var mode = document.getElementById("mode").value;
             var targetSystem = document.getElementById("targetSystem").value;
 
             var integrationPattern;
 
             // Simple logic for proposing integration pattern
             var table = {
-                "mobile,fabric": "ld-pat-01",
-                "webapp,fabric": "ld-pat-01",
-                "fabric,cap": "int-pat-03",
-                "fabric,ctm": "int-pat-03",
-                "lightning,cap": "int-pat-03",
-                "lightning,zafin": "int-pat-02",
-                "zafin,ctm": "int-pat-04"
+                "browser,web,gcp": "browser-web-gcp",
+                "browser,web,saas": "browser-web-saas",
+                "mobile,message,gcp": "mobile-message-gcp",
+                "mobile,message,marketplace": "mobile-message-marketplace",
+                "gcp,event,gcp": "gcp-event-gcp",
+                "gcp,message,gcp": "gcp-message-gcp",
+                "gcp,message,onprem": "gcp-message-onprem",
+                "onprem,event,gcp": "onprem-event-gcp",
+                "gcp,message,saas": "gcp-message-saas",
+                "saas,file,onprem": "saas-file-onprem"
             };
-            integrationPattern = table[sourceSystem + "," + targetSystem] || "nopat4u";
+            integrationPattern = table[sourceSystem + "," + mode + "," + targetSystem] || "nopat4u";
             document.getElementById("integrationPattern").innerHTML = "<strong>Proposed Integration Pattern:</strong> " + integrationPattern;
             //todo: check if myDiagram object exists.. if it doesn't run init function
             if (!window.myDiagram) {

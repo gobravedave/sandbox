@@ -15,7 +15,7 @@
   {"text":"Market Place", "group":3, "key":"303"}
   ],
   "linkDataArray": [
-  { "from": 0, "to": 2,"text": "INT-PAT-01" },
-  { "from": 2, "to": 3,"text": "INT-PAT-02" }
+  { "from": 0, "to": 2,"text": "consumers" },
+  { "from": 2, "to": 3,"text": "provides" }
 ]
 }

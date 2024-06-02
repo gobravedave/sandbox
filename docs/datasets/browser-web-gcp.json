@@ -1,6 +1,6 @@
 { "class": "go.GraphLinksModel",
   "nodeDataArray": [
-  {"text":"Source", "key":-9999},
+  {"text":"Browser", "key":-9999},
   {"key":1, "text":"gprc", "isGroup":true, "category":"OfGroups"},
   {"text":"WAF", "group":1, "key":100},
   {"text":"GLB", "group":1, "key":101},
@@ -10,11 +10,11 @@
   {"key":3, "text":"GKE","group": 2, "isGroup":true, "category":"OfNodes"},
   {"key":4, "text":"Cloudrun","group": 2, "isGroup":true, "category":"OfNodes"},
   {"text":"l7ilb", "group":4, "key":301},
-  {"text":"to cloudrun", "group":4, "key":302},
-  {"text":"to gke", "group":3, "key":401}
+  {"text":"cloudrun provider", "group":4, "key":302},
+  {"text":"gke provider", "group":3, "key":401}
   ],
   "linkDataArray": [
-  { "from": -9999, "to": 100 },
+  { "from": -9999, "to": 100, "text": "HTTPs" },
   { "from": 100, "to": 101 },
   { "from": 101, "to": 102 },
   { "from": 102, "to": 103 },

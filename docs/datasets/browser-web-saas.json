@@ -1,0 +1,15 @@
+{ "class": "go.GraphLinksModel",
+  "nodeDataArray": [
+  {"text":"Browser", "key":-9999},
+  {"key":1, "text":"web", "isGroup":true, "category":"OfGroups"},
+  {"text":"WAF", "group":1, "key":100},
+  {"text":"Forward Proxy", "group":1, "key":101},
+  {"key":2, "text":"SaaS", "isGroup":true, "category":"OfNodes"},
+  {"text":"AEM ", "group":2, "key":201}
+  ],
+  "linkDataArray": [
+  { "from": -9999, "to": 100, "text": "HTTPs" },
+  { "from": 100, "to": 101 },
+  { "from": 101, "to": 201 }
+]
+}
