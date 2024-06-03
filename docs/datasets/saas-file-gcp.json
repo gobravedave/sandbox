@@ -1,0 +1,15 @@
+{ "class": "go.GraphLinksModel",
+  "nodeDataArray": [
+    {"text":"Source", "key":-9999},
+  {"key":4, "text":"stargate", "isGroup":true, "category":"OfGroups"},
+  {"key":5, "text":"gcp", "isGroup":true, "category":"OfGroups"},
+  {"text":"stargate", "group":4, "key":400},
+  {"text":"adf", "group":4, "key":401},
+  {"text":"cosmos", "key":9999, "group":5}
+  ],
+  "linkDataArray": [ 
+    { "from": -9999, "to": 400 },
+    { "from": 400, "to": 401 },
+    { "from": 400, "to": 9999 }
+]
+}
