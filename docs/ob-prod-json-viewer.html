@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Open Banking Product Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2, h3, h4 {
+            color: #004A8F;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h3 {
+            margin-bottom: 10px;
+        }
+        .section ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .section li {
+            margin-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+  
+    <script>
+      fetch('datasets/prod1.json').then(res => res.json()).then(data => {
+        renderProductDetails(data);
+      });
+    </script>
+
+
+    <h1>Open Banking Product Viewer</h1>
+    <div id="product-details"></div>
+    <script id="product-details-template" type="text/x-handlebars-template">
+      <div id="product-details-content">
+         <h3>{{name}}</h3>
+         <span>Description: {{description}}</span>
+        {{#if brand}}
+             <br>
+             <span><strong>Brand:  </strong> {{brand}}</span>
+        {{/if}}
+        {{#if brandName}}
+            <br>
+            <span><strong>BrandName: </strong>{{brandName}}</span>
+        {{/if}}
+        {{#if applicationUri}}
+            <br>
+            <span><a href="{{applicationUri}}">Apply</a></span>
+        {{/if}}
+        
+        {{#if cardArt}}
+            <br><span><strong>Card Art:</strong><br>
+            {{#each cardArt}}
+            <img src="{{imageUri}}" alt="{{title}}" style="padding:10px;">
+            {{/each}}
+            <br>
+        {{/if}}
+        
+        {{#if additionalInformation}}
+            <h4>Additional Information</h4>
+            <ul>
+            {{#if additionalInformation.overviewUri}}
+                <li><span><a href="{{additionalInformation.overviewUri}}">Overview</a></span></li>
+            {{/if}}
+            {{#if additionalInformation.termsUri}}
+                <li><span><a href="{{additionalInformation.termsUri}}">Terms and Conditions</a></span></li>
+            {{/if}}
+            {{#if additionalInformation.eligibilityUri}}
+                <li><span><a href="{{additionalInformation.eligibilityUri}}">Eligibility Criteria</a></span></li>
+            {{/if}}
+            {{#if additionalInformation.feesAndPricingUri}}
+                <li><span><a href="{{additionalInformation.feesAndPricingUri}}">Fees And Pricing</a></span></li>
+            {{/if}}
+    
+            {{#if bundleUri}}
+                <span><a href="{{bundleUri}}">Bundles</a></span>
+            {{/if}}
+            </ul>
+        {{/if}}
+        {{#if bundles}}
+            <h4>Bundles</h4>
+            <table>
+                  <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Additional Information</th>
+                  </tr>
+                   {{#each bundles}}
+                <tr>        
+                <td>{{name}}</td>
+                <td>{{#if description}} {{description}} {{/if}}</td>
+                <td><a href="{{additionalInfoUri}}">{{additionalInfo}}</a></td>
+                </tr>
+            {{/each}}
+                </table>
+            {{/if}}
+        
+        {{#if constraints}}
+            <h4>Constraints</h4>
+            <table>
+                  <tr>
+                <th>Type</th>
+                <th>Additional Value</th>
+                  </tr>
+                   {{#each constraints}}
+                <tr>        
+                <td>{{constraintType}}</td>
+                <td>{{additionalValue}}</td>
+                </tr>
+            {{/each}}
+                </table>
+            {{/if}}
+    
+    
+        {{#if eligibility}}
+            <h4>Eligibility Criteria</h4>
+            <table>
+                  <tr>
+                <th>Type</th>
+                <th>Additional Value</th>
+                <th>Additional Information</th>
+                  </tr>
+                   {{#each eligibility}}
+                <tr>        
+                <td>{{eligibilityType}}</td>
+                <td>{{#if additionalValue}} {{additionalValue}} {{/if}}</td>
+                <td>
+                {{#if additionalInfoUri}}<span><a href="{{additionalInfoUri}}">{{additionalInfo}}</a><span>{{else}}{{additionalInfo}}{{/if}}
+                </td>
+                </tr>
+            {{/each}}
+                </table>
+            {{/if}}
+        
+        {{#if features}}
+        <h4>Features</h4>
+        <table>
+          <tr>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Additional Information</th>
+          </tr>
+          {{#each features}}
+            <tr>
+              <td>{{featureType}}</td>
+              <td>{{additionalValue}}</td>
+              <td>
+          {{#if additionalInfoUri}}<span><a href="{{additionalInfoUri}}">{{additionalInfo}}</a><span>{{else}}{{additionalInfo}}{{/if}}
+          </td>
+    
+            </tr>
+          {{/each}}
+        </table>
+        {{/if}}
+    
+        {{#if fees}}
+        <h4>Fees</h4>
+        <table>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Additional Information</th>
+          </tr>
+          {{#each fees}}
+            <tr>
+              <td>{{name}}</td>
+              <td>{{feeType}}</td>
+              <td>
+          {{#if amount}} {{amount}} {{/if}}
+          {{#if transactionRate}} {{transactionRate}} {{/if}}
+          {{#if balanceRate}} {{balanceRate}} {{/if}}
+          {{#if accruedRate}} {{accruedRate}} {{/if}}
+        </td>
+            <td>
+          {{#if additionalInfoUri}}<span><a href="{{additionalInfoUri}}">{{additionalInfo}}</a><span>{{else}}{{additionalInfo}}{{/if}}
+         </td>
+            </tr>
+          {{/each}}
+        </table>
+        {{/if}}
+    
+        {{#if depositRates}}
+        <h4>Deposit Rates</h4>
+        <table>
+          <tr>
+            <th>Type</th>
+        <th>Calculated</th>
+        <th>Applied</th>
+            <th>Tiers</th>
+            <th>Rate</th>
+        <th>Additional Information</th>
+          </tr>
+          {{#each depositRates}}
+            <tr>
+              <td>{{depositRateType}}</td>
+          <td>{{calculationFrequency}}</td>
+          <td>{{applicationFrequency}}</td>
+         <td> 
+              {{#each tiers}}
+              <p>{{name}} </p>        
+              <p>Unit of Measure: {{unitOfMeasure}}</p> 
+              <p>Min Value: {{minimumValue}}</p> 
+              <p>Max Value: {{maximumValue}}</p>
+              <p>Rate Applicable Method: {{rateApplicationMethod}} </p>
+              {{/each}}
+          </td> 
+              <td>{{rate}}</td>
+             <td>
+         {{#if additionalInfoUri}}<span><a href="{{additionalInfoUri}}">{{additionalInfo}}</a><span>{{else}}{{additionalInfo}}{{/if}}
+         </td>
+            </tr>
+          {{/each}}
+        </table>
+        {{/if}}
+    
+        {{#if lendingRates}}
+        <h4>Lending Rates</h4>
+        <table>
+          <tr>
+            <th>Loan Purpose</th>
+            <th>Rate Type</th>
+        <th>Calculated</th>
+        <th>Applied</th>
+        <th>Tiers</th>
+            <th>Rate</th>
+            <th>Comparison Rate</th>
+            <th>Repayment Type</th>
+            <th>Additional Value</th>
+            <th>Additional Information</th>
+          </tr>
+          {{#each lendingRates}}
+            <tr>
+              <td>{{loanPurpose}}</td>
+              <td>{{lendingRateType}}</td>
+              <td>{{calculationFrequency}}</td>
+              <td>{{applicationFrequency}}</td>
+              <td> 
+              {{#each tiers}}
+              <p>{{name}} </p>        
+              <p>Unit of Measure: {{unitOfMeasure}}</p> 
+              <p>Min Value: {{minimumValue}}</p> 
+              <p>Max Value: {{maximumValue}}</p>
+              {{/each}}
+          </td> 
+          <td>{{rate}}</td>
+              <td>{{comparisonRate}}</td>
+              <td>{{repaymentType}}</td>
+              <td>{{additionalValue}}</td>
+             <td>
+         {{#if additionalInfoUri}}<span><a href="{{additionalInfoUri}}">{{additionalInfo}}</a><span>{{else}}{{additionalInfo}}{{/if}}
+         </td>
+            </tr>
+          {{/each}}
+        </table>
+        {{/if}}
+        
+      </div>
+    </script>
+
+    <script>
+        function renderProductDetails(jsonInput) {
+            console.log(jsonInput);
+            // const productDetails = JSON.parse(jsonInput);
+            // console.log(productDetails);
+            const templateSource = document.getElementById('product-details-template').innerHTML;
+            const template = Handlebars.compile(templateSource);
+            const html = template(jsonInput);
+
+            document.getElementById('product-details').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
+
+

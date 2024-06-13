@@ -1,0 +1,98 @@
+{
+    "name": "ANZ Variable Rate Personal Loan",
+    "description": "A flexible personal loan with a variable interest rate.",
+    "brand": "ANZ",
+    "brandName": "Australia and New Zealand Banking Group Limited",
+    "applicationUri": "https://www.anz.com/personal/loans/personal-loans/variable-rate/",
+    "cardArt": [
+      {
+        "imageUri": "https://www.anz.com/image/variable-rate-personal-loan.jpg",
+        "title": "ANZ Variable Rate Personal Loan Card"
+      }
+    ],
+    "additionalInformation": {
+      "overviewUri": "https://www.anz.com/personal/loans/personal-loans/overview/",
+      "termsUri": "https://www.anz.com/personal/loans/personal-loans/terms/",
+      "eligibilityUri": "https://www.anz.com/personal/loans/personal-loans/eligibility/",
+      "feesAndPricingUri": "https://www.anz.com/personal/loans/personal-loans/fees-pricing/"
+    },
+    "bundles": [
+      {
+        "name": "Loan and Credit Card Bundle",
+        "description": "Get a discount on your personal loan when you bundle with an ANZ credit card.",
+        "additionalInfoUri": "https://www.anz.com/bundles/loan-credit-card/"
+      }
+    ],
+    "constraints": [
+      {
+        "constraintType": "Minimum Loan Amount",
+        "additionalValue": "$5,000"
+      },
+      {
+        "constraintType": "Maximum Loan Amount",
+        "additionalValue": "$50,000"
+      }
+    ],
+    "eligibility": [
+      {
+        "eligibilityType": "Age",
+        "additionalValue": "18+ years old",
+        "additionalInfo": "You must be at least 18 years of age to apply."
+      },
+      {
+        "eligibilityType": "Income",
+        "additionalValue": "Stable income",
+        "additionalInfo": "Proof of stable income is required."
+      }
+    ],
+    "features": [
+      {
+        "featureType": "Redraw Facility",
+        "additionalValue": "Available",
+        "additionalInfo": "You can redraw any additional payments you've made."
+      },
+      {
+        "featureType": "Flexible Repayments",
+        "additionalValue": "Weekly, Fortnightly, Monthly",
+        "additionalInfo": "Choose a repayment schedule that suits you."
+      }
+    ],
+    "fees": [
+      {
+        "name": "Loan Establishment Fee",
+        "feeType": "One-time",
+        "amount": "$150",
+        "additionalInfo": "A one-time fee to set up your loan."
+      },
+      {
+        "name": "Monthly Service Fee",
+        "feeType": "Monthly",
+        "amount": "$10",
+        "additionalInfo": "A monthly fee for managing your loan."
+      }
+    ],
+    "depositRates": [],
+    "lendingRates": [
+      {
+        "loanPurpose": "Personal",
+        "lendingRateType": "Variable",
+        "calculationFrequency": "Daily",
+        "applicationFrequency": "Monthly",
+        "tiers": [
+          {
+            "name": "Standard Rate",
+            "unitOfMeasure": "Percentage",
+            "minimumValue": 0,
+            "maximumValue": null,
+            "rateApplicationMethod": "Flat"
+          }
+        ],
+        "rate": "13.99%",
+        "comparisonRate": "14.50%",
+        "repaymentType": "Principal and Interest",
+        "additionalValue": "N/A",
+        "additionalInfoUri": "https://www.anz.com/personal/loans/personal-loans/rates/"
+      }
+    ]
+  }
+  
