@@ -43,13 +43,37 @@
     </style>
 </head>
 <body>
-
+ <!-- File input to select JSON file -->
+ <input type="file" id="jsonFileInput" accept=".json">
+    
+ <div id="product-details"></div>
   
-    <script>
-      fetch('datasets/prod1.json').then(res => res.json()).then(data => {
-        renderProductDetails(data);
-      });
-    </script>
+<script>
+  document.getElementById('jsonFileInput').addEventListener('change', function(event) {
+      const file = event.target.files[0];
+      if (file) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              const jsonContent = e.target.result;
+              try {
+                  const jsonData = JSON.parse(jsonContent);
+                  renderProductDetails(jsonData);
+              } catch (err) {
+                  console.error('Error parsing JSON:', err);
+              }
+          };
+          reader.readAsText(file);
+      }
+  });
+
+  function renderProductDetails(jsonInput) {
+      console.log(jsonInput);
+      const templateSource = document.getElementById('product-details-template').innerHTML;
+      const template = Handlebars.compile(templateSource);
+      const html = template(jsonInput);
+      document.getElementById('product-details').innerHTML = html;
+  }
+</script>
 
 
     <h1>Open Banking Product Viewer</h1>
