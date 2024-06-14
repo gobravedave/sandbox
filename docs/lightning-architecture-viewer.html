@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+  <html lang="en">
+  <body>
+  <script src="https://unpkg.com/gojs@3.0.2/release/go.js"></script>
+  <div id="allSampleContent" class="p-4 w-full">
+<h1>Lightning Architecture Viewer</h1>          
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Lora&amp;display=swap" rel="stylesheet">
+<script id="code">
+  function init() {
+
+    myDiagram = new go.Diagram("myDiagramDiv",
+      {
+        "InitialLayoutCompleted": e => updateTotalGroupDepth(),
+        // when a drag-drop occurs in the Diagram's background, make it a top-level node
+        mouseDrop: e => finishDrop(e, null),
+        layout:  // Diagram has simple horizontal layout
+          new go.GridLayout(
+            { wrappingWidth: Infinity, alignment: go.GridAlignment.Position, cellSize: new go.Size(1, 1) }),
+        "commandHandler.archetypeGroupData": { isGroup: true, text: "Group", horiz: false },
+        "undoManager.isEnabled": true
+      });
+
+    const colors = {
+      white: '#fffcf6',
+      blue: '#cceeff',
+      darkblue: '#cceeff',
+      yellow: '#fcdba2',
+      gray: '#59524c',
+      black: '#000000'
+    }
+
+    // The one template for Groups can be configured to either layout out its members
+    // horizontally or vertically, each with a different default color.
+
+    function makeLayout(horiz) {  // a Binding conversion function
+      return new go.GridLayout(
+        {
+          wrappingColumn: horiz ? Infinity : 1,
+          alignment: go.GridAlignment.Position,
+          cellSize: new go.Size(1, 1),
+          spacing: horiz ? new go.Size(20, 20) : new go.Size(20, 20)
+        });
+    }
+
+    function defaultColor(horiz) {  // a Binding conversion function
+      return horiz ? colors.white : colors.darkblue;
+    }
+
+    // this function is used to highlight a Group that the selection may be dropped into
+    function highlightGroup(e, grp, show) {
+      if (!grp) return;
+      e.handled = true;
+      if (show) {
+        // cannot depend on the grp.diagram.selection in the case of external drag-and-drops;
+        // instead depend on the DraggingTool.draggedParts or .copiedParts
+        var tool = grp.diagram.toolManager.draggingTool;
+        var map = tool.draggedParts || tool.copiedParts;  // this is a Map
+        // now we can check to see if the Group will accept membership of the dragged Parts
+        if (grp.canAddMembers(map.toKeySet())) {
+          grp.isHighlighted = true;
+          return;
+        }
+      }
+      grp.isHighlighted = false;
+    }
+
+    // Upon a drop onto a Group, we try to add the selection as members of the Group.
+    // Upon a drop onto the background, or onto a top-level Node, make selection top-level.
+    // If this is OK, we're done; otherwise we cancel the operation to rollback everything.
+    function finishDrop(e, grp) {
+      var ok = (grp !== null
+        ? grp.addMembers(grp.diagram.selection, true)
+        : e.diagram.commandHandler.addTopLevelParts(e.diagram.selection, true));
+      if (!ok) e.diagram.currentTool.doCancel();
+      updateTotalGroupDepth();
+    }
+
+    myDiagram.groupTemplate =
+      new go.Group("Auto",
+        {
+          ungroupable: true,
+          // highlight when dragging into the Group
+          // mouseDragEnter: (e, grp, prev) => highlightGroup(e, grp, true),
+          // mouseDragLeave: (e, grp, next) => highlightGroup(e, grp, false),
+          computesBoundsAfterDrag: true,
+          computesBoundsIncludingLocation: true,
+          // when the selection is dropped into a Group, add the selected Parts into that Group;
+          // if it fails, cancel the tool, rolling back any changes
+          // mouseDrop: finishDrop,
+          handlesDragDropForMembers: true,  // don't need to define handlers on member Nodes and Links
+          // Groups containing Groups lay out their members horizontally
+          layout: makeLayout(false),
+          background: defaultColor(false) // default value if not specified in data
+        })
+        .bind("background", "horiz", defaultColor)
+        .bind("layout", "horiz", makeLayout)
+        .add(
+          new go.Shape("Rectangle",
+            { stroke: colors.gray, strokeWidth: 1, hasShadow: true })
+            .bindObject("fill", "isHighlighted", h => h ? 'rgba(0,255,0,.3)' : 'transparent'),
+          new go.Panel("Vertical")  // title above Placeholder
+            .add(
+              new go.Panel("Horizontal",  // button next to TextBlock
+                { stretch: go.Stretch.Horizontal })
+                .add(
+                  go.GraphObject.build("SubGraphExpanderButton", { alignment: go.Spot.Right, margin: 5 }),
+                  new go.TextBlock(
+                    {
+                      alignment: go.Spot.Left,
+                      editable: true,
+                      margin: new go.Margin(6, 10, 6, 1),
+                      font: "bold 16px Lora, serif",
+                      opacity: 0.95,  // allow some color to show through
+                      stroke: colors.black
+                    })
+                    .bind("font", "horiz", (horiz) => horiz ? "bold 20px Lora, serif" : "bold 16px Lora, serif")
+                    .bindTwoWay("text")
+                ),  // end Horizontal Panel
+              new go.Placeholder({ padding: 8, margin: 4, alignment: go.Spot.TopLeft })
+            )  // end Vertical Panel
+        )  // end Auto Panel
+
+    myDiagram.nodeTemplate =
+      new go.Node("Auto",
+        { // dropping on a Node is the same as dropping on its containing Group, even if it's top-level
+          // mouseDrop: (e, node) => finishDrop(e, node.containingGroup),
+          isShadowed: true,
+          shadowBlur: 0,
+          shadowColor: colors.gray,
+          shadowOffset: new go.Point(4.5, 3.5)
+        })
+        .add(new go.Shape("RoundedRectangle", { fill: colors.yellow, stroke: null, strokeWidth: 0 }))
+        .add(new go.TextBlock(
+          {
+            margin: 8,
+            editable: true,
+            font: "13px Lora, serif"
+          })
+          .bindTwoWay("text"))        
+    
+    myDiagram.linkTemplate =
+      new go.Link()
+        .add(
+            new go.Shape().bind("stroke", "color")
+,                           // this is the link shape (the line)
+            new go.Shape({ toArrow: "Standard" }).bind("stroke", "color").bind("fill", "color")
+,  // this is an arrowhead
+            new go.TextBlock({ background: 'white',segmentOffset: new go.Point(0, -10) })                        // this is a Link label
+              .bind("text", "text")
+              .bind("stroke", "color")
+          )
+          ;
+    // initialize the Palette and its contents
+    // myPalette =
+    //   new go.Palette("myPaletteDiv",
+    //     {
+    //       nodeTemplateMap: myDiagram.nodeTemplateMap,
+    //       groupTemplateMap: myDiagram.groupTemplateMap
+    //     });
+
+    // myPalette.model = new go.GraphLinksModel([
+    //   { text: "New Node", color: "#ACE600" },
+    //   { isGroup: true, text: "H Group", horiz: true },
+    //   { isGroup: true, text: "V Group", horiz: false }
+    // ]);
+
+    var slider = document.getElementById("levelSlider");
+    slider.addEventListener('change', reexpand);
+    slider.addEventListener('input', reexpand);
+
+    load();
+  }
+
+  function reexpand(e) {
+    myDiagram.commit(diag => {
+      var level = parseInt(document.getElementById("levelSlider").value);
+      diag.findTopLevelGroups().each(g => expandGroups(g, 0, level))
+    }, "reexpand");
+  }
+  function expandGroups(g, i, level) {
+    if (!(g instanceof go.Group)) return;
+    g.isSubGraphExpanded = i < level;
+    g.memberParts.each(m => expandGroups(m, i + 1, level))
+  }
+  function updateTotalGroupDepth() {
+    let d = 0;
+    myDiagram.findTopLevelGroups().each(g => d = Math.max(d, groupDepth(g)));
+    document.getElementById("levelSlider").max = Math.max(0, d);
+  }
+  function groupDepth(g) {
+    if (!(g instanceof go.Group)) return 0;
+    let d = 1;
+    g.memberParts.each(m => d = Math.max(d, groupDepth(m)+1));
+    return d;
+  }
+
+  function load() {
+    fetch("datasets/lightning-architecture.json")
+      .then(response => response.json())
+      .then(data => {
+        myDiagram.model = go.Model.fromJson(JSON.stringify(data));
+      });
+  }
+  window.addEventListener('DOMContentLoaded', init);
+</script>
+
+<div id="sample">
+  <div style="width: 100%; display: flex; justify-content: space-between">
+    <!-- <div id="myPaletteDiv" style="width: 130px; margin-right: 2px; background-color: rgb(223, 235, 229); border: 1px solid black; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0);"><canvas tabindex="0" width="256" height="996" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 128px; height: 498px;"></canvas><div style="position: absolute; overflow: auto; width: 128px; height: 498px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div> -->
+    <div id="myDiagramDiv" style="flex-grow: 1; height: 680px; background-color: rgb(223, 235, 229); border: 1px solid black; position: relative; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); cursor: auto;"><canvas tabindex="0" width="2228" height="996" style="position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 1114px; height: 498px; cursor: auto;"></canvas><div style="position: absolute; overflow: auto; width: 1114px; height: 498px; z-index: 1;"><div style="position: absolute; width: 1px; height: 1px;"></div></div></div>
+  </div>
+  <p>
+    The slider controls how many nested levels of Groups are expanded. <br>
+    Semantic zoom level: <input id="levelSlider" type="range" min="0" max="2">
+  </p>
+
+          
+</div>
+  </body>
+  </html>
