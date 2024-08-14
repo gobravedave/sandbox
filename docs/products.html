@@ -453,7 +453,10 @@ window.onload = async function () {
             <table>
               {{#each this.products}}
                 <tr>
-                  <td class="product-name" data-bank-id="{{../bankId}}" data-product-id="{{this.productId}}" title="{{this.description}}">{{this.name}}</td>
+                  <!-- <td class="product-name" data-bank-id="{{../bankId}}" data-product-id="{{this.productId}}" title="{{this.description}}">{{this.name}}</td> -->
+                  <td>
+                    <button class="product-name" data-bank-id="{{../bankId}}" data-product-id="{{this.productId}}" title="{{this.description}}">{{this.name}}</button>
+                  </td>
                 </tr>
               {{/each}}
             </table>
