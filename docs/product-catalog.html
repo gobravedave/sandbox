@@ -8,6 +8,7 @@
 let logConsole
 
 const BANKS = {
+  prod: { name: 'Prod', json: 'datasets/prod.json'},
   preprod: { name: 'Pre-Prod', json: 'datasets/preprod.json'},
   sitk: { name: 'SIT-K', json: 'datasets/sitk.json' },
   sitl: { name: 'SIT-L', json: 'datasets/sitl.json' },
@@ -65,8 +66,6 @@ async function getProducts(bank, category) {
     let response = await fetch(jsonUrl);
     let { data = {}, meta = {} } = await response.json();
     const duration = (new Date() - start) / 1000;
-
-    logToConsole(`response ${bank.name} in ${response.json}`);
 
     const res = { count: meta.totalRecords, products: data.products };
     logToConsole(`Got products for ${bank.name} in ${duration}s`);
@@ -189,7 +188,7 @@ window.onload = async function () {
 
 
 
-<h2>Product Catalog Viewer by Environment</h2>
+<h2>ANZx Product Catalog Viewer by Environment</h2>
 <p>
 - Wait for the table to load.<br />
 - Click on a product category to show products in each environment.<br />
