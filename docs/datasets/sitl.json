@@ -1,5 +1,5 @@
 {
-    "count": 3,
+    "data": {
     "products": [
         {
             "productId": "HLVAR01",
@@ -63,4 +63,8 @@
             ]
         }
     ]
+}
+"meta": {
+    "totalRecords": 3
+  }
 }

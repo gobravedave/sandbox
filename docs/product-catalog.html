@@ -58,16 +58,16 @@ function logToConsole(msg) {
 }
 
 async function getProducts(bank, category) {
-  let jsonUrl = `./${bank.json}`; // Path to the JSON file
+  let jsonUrl = `${bank.json}`; // Path to the JSON file
   try {
-    logToConsole(`Getting products from ${bank.name}`);
+    logToConsole(`Getting products for ${bank.name}`);
     const start = new Date();
     let response = await fetch(jsonUrl);
     let { data = {}, meta = {} } = await response.json();
     const duration = (new Date() - start) / 1000;
 
     const res = { count: meta.totalRecords, products: data.products };
-    logToConsole(`Got products from ${bank.json} in ${duration}s`);
+    logToConsole(`Got products for ${bank.name} in ${duration}s`);
     console.log(res);
     return res;
   } catch (err) {
@@ -431,7 +431,7 @@ window.onload = async function () {
 <script id="products-list-template" type="text/x-handlebars-template">
   <table style="width: 100%">
     <tr>
-      <th>Banks</th>
+      <th>Environment</th>
       {{#each BANKS}}
         <th>{{this.name}}</th>
       {{/each}}
