@@ -66,6 +66,8 @@ async function getProducts(bank, category) {
     let { data = {}, meta = {} } = await response.json();
     const duration = (new Date() - start) / 1000;
 
+    logToConsole(`response ${bank.name} in ${response.json}`);
+
     const res = { count: meta.totalRecords, products: data.products };
     logToConsole(`Got products for ${bank.name} in ${duration}s`);
     console.log(res);
