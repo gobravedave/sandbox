@@ -58,6 +58,7 @@ function logToConsole(msg) {
   logConsole.value += msg + '\n'
 }
 
+
 async function getProducts(bank, category) {
   let jsonUrl = `${bank.json}`; // Path to the JSON file
   try {
@@ -72,29 +73,32 @@ async function getProducts(bank, category) {
     console.log(res);
     return res;
   } catch (err) {
-    logToConsole(`Error getting data for ${bank.name} from ${jsonUrl}`);
+    logToConsole(`Error getting data for ${bank.name} from ${bank.json}`);
     console.error(err);
     return { products: [], count: 0 };
   }
 }
 
 async function getProductDetails(bank, productId) {
-  let jsonUrl = `./${bank.id}_${productId}.json`; // Path to a specific product JSON file
-  logToConsole(`Getting product details for ${productId} from ${bank.name}`);
+  let jsonUrl = `${bank.json}`; // Path to the JSON file // let jsonUrl = `${bank.json`; // Path to a specific product JSON file
+    logToConsole(`Getting product details for ${productId} from ${bank.name}`);
   
   try {
     let response = await fetch(jsonUrl);
-    let productDetails = await response.json();
-    logToConsole(`Got product details for ${productId} from ${bank.name}`);
-    console.log(productDetails);
+    let { data = [] } = await response.json();
+    let productDetails = data.products.find(p => p.productId === productId);
   
+    logToConsole(`Got product details for ${productId} from ${bank.json}`);
+    console.log(productDetails);
+
     return productDetails;
   } catch (err) {
-    logToConsole(`Error getting product details for ${productId} from ${bank.name}`);
+    logToConsole(`Error getting product details for ${productId} from ${bank.json}`);
     console.error(err);
     return null;
   }
 }
+
 
 function processProducts(products) {
   const byCategory = {}
@@ -173,9 +177,14 @@ window.onload = async function () {
       })
 
       let productDetails = await getProductDetails(BANKS[bankId], productId)
-      console.log(productDetails)
-
-      document.getElementById('product-details').innerHTML = productDetailsTpl(productDetails.data)
+      console.log('productDetails', productDetails)
+      
+      if (productDetails) {
+        document.getElementById('product-details').innerHTML = productDetailsTpl(productDetails);
+      } else {
+        document.getElementById('product-details').innerHTML = `<div id="product-details-content">Product details not found.<span id="product-details-close">&times;</span></div>`;
+      }
+      // document.getElementById('product-details').innerHTML = productDetailsTpl(productDetails.data)
 
       document.getElementById('product-details-close').addEventListener('click', function (e) {
         document.getElementById('product-details').style.display = 'none'
@@ -200,9 +209,12 @@ window.onload = async function () {
 <div id="products-list"></div>
 <div id="product-details"></div>
 
-<script id="product-details-template" type="text/x-handlebars-template">
+<script id="product-details-template" type="text/x-handlebars-template" >
   <div id="product-details-content">
     <span id="product-details-close">&times;</span>
+
+    <pre>{{log this}}</pre>
+    
 	 <h3>{{this.name}}</h3>
 	 <span>Description: {{this.description}}</span>
 	{{#if this.brand}}
