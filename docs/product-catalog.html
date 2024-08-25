@@ -5,7 +5,9 @@
 </head>
 <body>
 <script>
-let logConsole
+let logConsole;
+let selectedLeftProduct = null;
+let selectedRightProduct = null;
 
 const BANKS = {
   prod: { name: 'Prod', json: 'datasets/prod.json'},
@@ -24,30 +26,30 @@ const PRODUCTS = {
 	CRED_AND_CHRG_CARDS: {
     name: 'Credit and Charge Cards',
   },
-	TRAVEL_CARDS: {
-    name: 'Travel Cards',
-  },
+	// TRAVEL_CARDS: {
+  //   name: 'Travel Cards',
+  // },
 	RESIDENTIAL_MORTGAGES: {
     name: 'Residential Mortgages',
   },
 	PERS_LOANS: {
     name: 'Personal Loans',
   },
-	BUSINESS_LOANS: {
-    name: 'Business Loans',
-  },
-	MARGIN_LOANS: {
-    name: 'Margin Loans',
-  },
-	LEASES: {
-    name: 'Leases',
-  },
-	REGULATED_TRUST_ACCOUNTS: {
-    name: 'Regulated Trust',
-  },
-	TRADE_FINANCE: {
-    name: 'Trade Finance',
-  },
+	// BUSINESS_LOANS: {
+  //   name: 'Business Loans',
+  // },
+	// MARGIN_LOANS: {
+  //   name: 'Margin Loans',
+  // },
+	// LEASES: {
+  //   name: 'Leases',
+  // },
+	// REGULATED_TRUST_ACCOUNTS: {
+  //   name: 'Regulated Trust',
+  // },
+	// TRADE_FINANCE: {
+  //   name: 'Trade Finance',
+  // },
 	OVERDRAFTS: {
     name: 'Overdraft',
   },
@@ -57,7 +59,6 @@ function logToConsole(msg) {
   console.log(msg)
   logConsole.value += msg + '\n'
 }
-
 
 async function getProducts(bank, category) {
   let jsonUrl = `${bank.json}`; // Path to the JSON file
@@ -162,7 +163,6 @@ window.onload = async function () {
     })
   }
 
-
   let $prodNames = document.querySelectorAll('.product-name')
   for (let $prodName of $prodNames) {
     // clicking on product name will show product details
@@ -184,7 +184,6 @@ window.onload = async function () {
       } else {
         document.getElementById('product-details').innerHTML = `<div id="product-details-content">Product details not found.<span id="product-details-close">&times;</span></div>`;
       }
-      // document.getElementById('product-details').innerHTML = productDetailsTpl(productDetails.data)
 
       document.getElementById('product-details-close').addEventListener('click', function (e) {
         document.getElementById('product-details').style.display = 'none'
@@ -192,10 +191,40 @@ window.onload = async function () {
       })
     })
   }
-}
+
+
+document.addEventListener('contextmenu', function (e) {
+  if (e.target.classList.contains('product-name')) {
+    e.preventDefault();
+    const { bankId, productId } = e.target.dataset;
+
+    if (!selectedLeftProduct) {
+      selectedLeftProduct = { bankId, productId };
+      document.getElementById('compare-left').innerText = `Left: ${selectedLeftProduct.bankId} : ${selectedLeftProduct.productId}`;
+      logToConsole(`Selected left product: ${productId}`);
+    } else if (!selectedRightProduct) {
+      selectedRightProduct = { bankId, productId };
+      
+      document.getElementById('compare-right').innerText = `Right: ${selectedRightProduct.bankId} : ${selectedRightProduct.productId}`;
+      logToConsole(`Selected right product: ${productId}`);
+    }
+
+    if (selectedLeftProduct && selectedRightProduct) {
+      document.getElementById('compare-products').disabled = false;
+    }
+  }
+})
+
+document.getElementById('compare-products').addEventListener('click', async function () {
+  const leftProductDetails = await getProductDetails(BANKS[selectedLeftProduct.bankId], selectedLeftProduct.productId);
+  const rightProductDetails = await getProductDetails(BANKS[selectedRightProduct.bankId], selectedRightProduct.productId);
+  const comparisonUrl = `http://www.jsondiff.com/index.html?left=${encodeURIComponent(JSON.stringify(leftProductDetails))}&right=${encodeURIComponent(JSON.stringify(rightProductDetails))}`;
+  window.open(comparisonUrl, '_blank');
+});
+
+};
+
 </script>
-
-
 
 <h2>ANZx Product Catalog Viewer by Environment</h2>
 <p>
@@ -208,6 +237,12 @@ window.onload = async function () {
 
 <div id="products-list"></div>
 <div id="product-details"></div>
+</br>
+<div id="compare-controls">
+  <button id="compare-left" disabled>Select Left</button>
+  <button id="compare-right" disabled>Select Right</button>
+  <button id="compare-products" disabled>Compare</button>
+</div>
 
 <script id="product-details-template" type="text/x-handlebars-template" >
   <div id="product-details-content">
@@ -469,7 +504,6 @@ window.onload = async function () {
             <table>
               {{#each this.products}}
                 <tr>
-                  <!-- <td class="product-name" data-bank-id="{{../bankId}}" data-product-id="{{this.productId}}" title="{{this.description}}">{{this.name}}</td> -->
                   <td>
                     <button class="product-name" data-bank-id="{{../bankId}}" data-product-id="{{this.productId}}" title="{{this.description}}">{{this.name}}</button>
                   </td>
@@ -511,6 +545,9 @@ window.onload = async function () {
     border-radius: 8px;
     padding: 15px 32px;
     transition-duration: 0.4s;
+  }
+  button[disabled]:hover {
+    background: red;
   }
 
   button:hover {
