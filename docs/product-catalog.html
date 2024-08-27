@@ -5,15 +5,16 @@
 </head>
 <body>
 <script>
+  <script>
 let logConsole;
 let selectedLeftProduct = null;
 let selectedRightProduct = null;
 
 const BANKS = {
-  prod: { name: 'Prod', json: 'datasets/prod.json'},
-  preprod: { name: 'Pre-Prod', json: 'datasets/preprod.json'},
-  sitk: { name: 'SIT-K', json: 'datasets/sitk.json' },
-  sitl: { name: 'SIT-L', json: 'datasets/sitl.json' },
+  prod: { name: 'Prod', json: 'datasets/ob_prod.json'},
+  preprod: { name: 'Pre-Prod', json: 'datasets/ob_preprod.json'},
+  sitk: { name: 'SIT-K', json: 'datasets/ob_sitk.json' },
+  sitl: { name: 'SIT-L', json: 'datasets/ob_sitl.json' },
 }
 
 const PRODUCTS = {
@@ -58,6 +59,30 @@ const PRODUCTS = {
 function logToConsole(msg) {
   console.log(msg)
   logConsole.value += msg + '\n'
+}
+
+function populateBankDropdown(dropdownId) {
+  const dropdown = document.getElementById(dropdownId);
+
+  for (const key in BANKS) {
+    if (BANKS.hasOwnProperty(key)) {
+      const option = document.createElement('option');
+      option.value = key; // Use the key as the value
+      option.textContent = BANKS[key].name; // Use the name property as the display text
+      dropdown.appendChild(option);
+    }
+  }
+}
+
+function populateProductDropdown(dropdownId, products) {
+    const dropdown = document.getElementById(dropdownId);
+    dropdown.innerHTML = '<option value="">Select Product</option>';
+    products.forEach(product => {
+        const option = document.createElement('option');
+        option.value = product.id; // Assuming each product has an 'id' field
+        option.textContent = product.name; // Assuming each product has a 'name' field
+        dropdown.appendChild(option);
+    });
 }
 
 async function getProducts(bank, category) {
@@ -115,6 +140,9 @@ function processProducts(products) {
 }
 
 window.onload = async function () {
+  populateBankDropdown('compare-left-bank');
+  populateBankDropdown('compare-right-bank');
+
   let productListTpl = Handlebars.compile(document.getElementById('products-list-template').innerHTML)
   const $productsList = document.getElementById('products-list')
 
@@ -192,6 +220,13 @@ window.onload = async function () {
     })
   }
 
+document.getElementById('compare-left-bank').addEventListener('change', function() {
+    onBankSelect('compare-left-bank', 'compare-left-product');
+});
+
+document.getElementById('compare-right-bank').addEventListener('change', function() {
+    onBankSelect('compare-right-bank', 'compare-right-product');
+});
 
 document.addEventListener('contextmenu', function (e) {
   if (e.target.classList.contains('product-name')) {
@@ -234,15 +269,28 @@ document.getElementById('compare-products').addEventListener('click', async func
 </p>
 
 <textarea id="log-console" style="height: 100px; width: 500px;"></textarea>
-
+<div id="compare-controls">
+  <!--add logic to add the bank list from the BANKS const -->
+    <select id="compare-left-bank" style="width: 200px;">
+      <option value="">Select Left Environment</option>
+    </select>
+    <select id="compare-right-bank" style="width: 200px;">
+      <option value="">Select Right Environment</option>
+    </select>
+  </br>
+    <select id="compare-left-product" style="width: 200px;" disabled>
+      <option value="">Select Left Product</option>
+    </select>
+    <select id="compare-right-product" style="width: 200px;" disabled>
+      <option value="">Select Right Product</option>
+    </select>
+  </br>
+  <button id="compare-products" disabled>Compare</button>
+  </div>
+  
 <div id="products-list"></div>
 <div id="product-details"></div>
 </br>
-<div id="compare-controls">
-  <button id="compare-left" disabled>Select Left</button>
-  <button id="compare-right" disabled>Select Right</button>
-  <button id="compare-products" disabled>Compare</button>
-</div>
 
 <script id="product-details-template" type="text/x-handlebars-template" >
   <div id="product-details-content">
@@ -475,7 +523,6 @@ document.getElementById('compare-products').addEventListener('click', async func
   </div>
 </script>
 
-
 <script id="products-list-template" type="text/x-handlebars-template">
   <table style="width: 100%">
     <tr>
@@ -516,8 +563,6 @@ document.getElementById('compare-products').addEventListener('click', async func
     {{/each}}
 </table>
 </script>
-
-
 
 <style>
   body {

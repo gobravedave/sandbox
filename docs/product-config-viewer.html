@@ -1,0 +1,363 @@
+<html>
+<head>
+<title>Product Configuration Viewer</title>
+<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+</head>
+<body>
+<script>
+
+let logConsole;
+let selectedLeftProduct = null;
+let selectedRightProduct = null;
+
+const BANKS = {
+  prod: { name: 'Prod', json: 'datasets/prod.json'},
+  preprod: { name: 'Pre-Prod', json: 'datasets/preprod.json'},
+  sitk: { name: 'SIT-K', json: 'datasets/sitk.json' },
+  sitl: { name: 'SIT-L', json: 'datasets/sitl.json' },
+}
+
+const PRODUCTS = {
+  DEPOSIT: {
+    name: 'Deposits',
+  },
+	TERM_DEPOSITS: {
+    name: 'Term Deposits',
+  },
+	CRED_AND_CHRG_CARDS: {
+    name: 'Credit and Charge Cards',
+  },
+	MORTGAGE: {
+    name: 'Residential Mortgages',
+  },
+}
+
+function logToConsole(msg) {
+  console.log(msg)
+  logConsole.value += msg + '\n'
+}
+
+
+async function getProducts(bank) {
+  let jsonUrl = `${bank.json}`; // Path to the JSON file
+  try {
+    logToConsole(`Getting products for ${bank.name}`);
+    const start = new Date();
+    let response = await fetch(jsonUrl);
+    let jsonData = await response.json();
+    const duration = (new Date() - start) / 1000;
+
+    // Assuming you're interested in the first entry in the data array
+    const res = jsonData.data && jsonData.data[0] ? {
+      count: jsonData.data[0].productDetails.length,
+      products: jsonData.data[0].productDetails
+    } : { count: 0, products: [] };
+
+    logToConsole(`Got products for ${bank.name} in ${duration}s`);
+    console.log(res);
+    return res;
+  } catch (err) {
+    logToConsole(`Error getting data for ${bank.name} from ${bank.json}`);
+    console.error(err);
+    return { products: [], count: 0 };
+  }
+}
+
+function processProducts(products) {
+  const byCategory = {};
+  
+  // Initialize categories in byCategory object
+  for (let prodCat in PRODUCTS) {
+    byCategory[prodCat] = { count: 0, products: [] };
+  }
+
+  products.forEach((p) => {
+    const category = p.productClassification; // or the key you're using
+    
+    // Ensure the category exists in the PRODUCTS object
+    if (category && PRODUCTS[category]) {
+      byCategory[category].count++;
+      byCategory[category].products.push(p);
+    } else {
+      console.warn(`Product ${p.productName} has an unknown or missing category: ${category}`);
+    }
+  });
+  
+  return byCategory;
+}
+
+
+window.onload = async function () {
+  // populateBankDropdown('compare-left-bank');
+  // populateBankDropdown('compare-right-bank');
+
+  let productListTpl = Handlebars.compile(document.getElementById('products-list-template').innerHTML)
+  const $productsList = document.getElementById('products-list')
+
+  $productsList.innerHTML = productListTpl({})
+
+
+  let productDetailsTpl = Handlebars.compile(document.getElementById('product-details-template').innerHTML)
+
+  logConsole = document.getElementById('log-console')
+
+  await Promise.all(Object.entries(BANKS).map(async ([id, bank]) => {
+    BANKS[id].id = id
+    for (let prodCat in PRODUCTS) {
+      PRODUCTS[prodCat].banks = PRODUCTS[prodCat].banks || {}
+      PRODUCTS[prodCat].banks[id] = {
+        bankId: id,
+      }
+    }
+
+    const { count, products } = await getProducts(bank)
+    BANKS[bank.id].productsRaw = products
+    BANKS[bank.id].totalCount = count
+
+    // add banks product count and list to PRODUCTS
+    const byCategory = processProducts(products)
+    for (let prodCat in PRODUCTS) {
+      PRODUCTS[prodCat].banks[bank.id].count = byCategory[prodCat].count
+      PRODUCTS[prodCat].banks[bank.id].products = byCategory[prodCat].products
+    }
+
+    $productsList.innerHTML = productListTpl({ BANKS, PRODUCTS })
+  }))
+  logToConsole('Processed products from all banks')
+  console.log({ BANKS, PRODUCTS })
+
+  $productsList.innerHTML = productListTpl({ BANKS, PRODUCTS })
+
+  let $catRows = document.querySelectorAll('.category-row')
+  for (let $catRow of $catRows) {
+    // clicking on category row will show all products of that category
+    $catRow.addEventListener('click', function (e) {
+      let { catId } = e.target.parentNode.dataset
+      let $catProdsEl = document.querySelector(`#products-${catId}`)
+      $catRow.classList.toggle('expanded')
+      $catProdsEl.classList.toggle('hidden')
+    })
+  }
+
+  let $prodNames = document.querySelectorAll('.product-name')
+  for (let $prodName of $prodNames) {
+    // clicking on product name will show product details
+    $prodName.addEventListener('click', async function (e) {
+      let { bankId, productCode } = e.target.dataset
+
+      document.getElementById('product-details').innerHTML = '<div id="product-details-content">Fetching product details...<span id="product-details-close">&times;</span></div>'
+      document.getElementById('product-details').style.display = 'block'
+      document.getElementById('product-details-close').addEventListener('click', function (e) {
+        document.getElementById('product-details').style.display = 'none'
+        document.getElementById('product-details').innerHTML = ''
+      })
+
+      let productDetails = BANKS[bankId].productsRaw.find(prod => prod.productCode === productCode);
+      console.log({productDetails})
+
+      if (productDetails) {
+        document.getElementById('product-details').innerHTML = productDetailsTpl(productDetails);
+      } else {
+        document.getElementById('product-details').innerHTML = `<div id="product-details-content">Product details not found.<span id="product-details-close">&times;</span></div>`;
+      }
+
+      document.getElementById('product-details-close').addEventListener('click', function (e) {
+        document.getElementById('product-details').style.display = 'none'
+        document.getElementById('product-details').innerHTML = ''
+      })
+    })
+  }
+
+};
+
+</script>
+
+<h2>Product Configuration Viewer by Environment</h2>
+<p>
+- Wait for the table to load.<br />
+- Click on a product category to show product configuration in each environment.<br />
+- Click on a product title to show configuration of the product.<br />
+</p>
+
+<textarea id="log-console" style="height: 100px; width: 500px;"></textarea>  
+<div id="products-list"></div>
+<div id="product-details"></div>
+</br>
+
+<script id="product-details-template" type="text/x-handlebars-template">
+  <div id="product-details-content">
+    <span id="product-details-close">&times;</span>
+    <h3>{{this.productName}}</h3>
+    <span>Marketing Code: {{this.productCode}}</span><br>
+    <span>Classification: {{this.productClassification}}</span><br>
+    <span>Description: {{this.productDescription}}</span><br>
+  
+    {{#with this.productEligibilityDetails}}
+      <span>From Date: {{this.fromDate}}</span><br>
+      <span>To Date: {{this.toDate}}</span><br>
+      <span>Status: {{this.productStatus}}</span><br>
+  
+      <h4>Eligibility Criteria</h4>
+      <h5>Age</h5>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Code</th>
+          <th>From</th>
+          <th>To</th>
+        </tr>
+        {{#each this.eligibilityCriteria.ageGroup}}
+        <tr>		
+          <td>{{this.name}}</td>
+          <td>{{this.code}}</td>	
+          <td>{{this.fromValue}}</td>	
+          <td>{{this.toValue}}</td>	
+        </tr>
+        {{/each}}
+      </table>
+    {{/with}}
+  </div>
+  </script>
+  
+<script id="products-list-template" type="text/x-handlebars-template">
+  <table style="width: 100%">
+    <tr>
+      <th>Environment</th>
+      {{#each BANKS}}
+        <th>{{this.name}}</th>
+      {{/each}}
+    </tr>
+    <tr>
+      <td>Total Products</td>
+      {{#each BANKS}}
+        <td>{{this.totalCount}}</td>
+      {{/each}}
+    </tr>
+    {{#each PRODUCTS}}
+      <tr class="category-row" data-cat-id="{{@key}}">
+        <td class="category-title">{{this.name}}</td>
+        {{#each this.banks}}
+          <td>{{this.count}}</td>
+        {{/each}}
+      </tr>
+      <tr class="category-products-list hidden" id="products-{{@key}}">
+        <td></td>
+        {{#each this.banks}}
+          <td class="category-products-main">
+            <table>
+              {{#each this.products}}
+                <tr>
+                  <td>
+                    <button class="product-name" data-bank-id="{{../bankId}}" data-product-code="{{this.productCode}}" title="{{this.productDescription}}">{{this.productName}}</button>
+                  </td>
+                </tr>
+              {{/each}}
+            </table>
+          </td>
+        {{/each}}
+      </tr>
+    {{/each}}
+</table>
+</script>
+
+<style>
+  body {
+    font-family: Arial;
+  }
+  table {
+    border-collapse: collapse;
+  }
+  
+  th {
+    background: #eee;
+  }
+  th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    /* text-align: center; */
+    vertical-align: top;
+    font-size: 14px;
+  }
+  
+  button {
+    background-color: white; 
+    color: #3949ab;
+    border: 1px solid #3949ab;
+    border-radius: 8px;
+    padding: 15px 32px;
+    transition-duration: 0.4s;
+  }
+  button[disabled]:hover {
+    background: red;
+  }
+
+  button:hover {
+  background-color: #3949ab; /* purple */
+  color: white;
+}
+  .category-row.expanded {
+    background-color: #eee;
+  }
+  .category-row:hover {
+    background-color: #eee;
+  }
+  .category-title {
+    cursor: pointer;
+    width: 200px;
+  }
+  
+  .product-name {
+    cursor: pointer;
+  }
+
+
+  .category-products-main {
+    padding: 0;
+  }
+  .category-products-main table {
+    width: 100%;
+  }
+  .category-products-main table td {
+    border: 0;
+  }
+  .category-products-list.hidden {
+    display: none;
+  }
+  
+  
+  #product-details {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  #product-details-content {
+    background-color: #fefefe;
+    margin: 50px auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+  }
+  #product-details-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  #product-details-close:hover,
+  #product-details-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+</style>
+  
+</body>
+</html>
