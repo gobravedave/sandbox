@@ -2,6 +2,7 @@
 <head>
 <title>Product Configuration Viewer</title>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+<script src="https://unpkg.com/renderjson@1.3.0/renderjson.js"></script>
 </head>
 <body>
 <script>
@@ -16,6 +17,7 @@ const BANKS = {
   sitk: { name: 'SIT-K', json: 'datasets/sitk.json' },
   sitl: { name: 'SIT-L', json: 'datasets/sitl.json' },
 }
+let savedBankId
 
 const PRODUCTS = {
   DEPOSIT: {
@@ -60,6 +62,24 @@ async function getProducts(bank) {
     logToConsole(`Error getting data for ${bank.name} from ${bank.json}`);
     console.error(err);
     return { products: [], count: 0 };
+  }
+}
+
+async function toggleJson(productId) {
+  logToConsole(`Showing JSON for bank ${savedBankId} productId ${productId}`)
+  const jsonBtn = document.getElementById('json-btn');
+  if (jsonBtn.textContent === 'Show JSON') {
+    let productDetails = BANKS[savedBankId].productsRaw.find(prod => prod.productCode=== productId);
+
+    var pre = document.getElementById("product-details-json-content");
+    pre.innerHTML = ""; // Clear previous JSON content
+    renderjson.set_icons('▶', '▼');
+    renderjson.set_show_to_level(2);
+    pre.appendChild(renderjson(productDetails));
+    jsonBtn.textContent = 'Hide JSON';
+  } else {
+    document.getElementById("product-details-json-content").innerHTML = "";
+    jsonBtn.textContent = 'Show JSON';
   }
 }
 
@@ -144,7 +164,7 @@ window.onload = async function () {
     // clicking on product name will show product details
     $prodName.addEventListener('click', async function (e) {
       let { bankId, productCode } = e.target.dataset
-
+      savedBankId = bankId
       document.getElementById('product-details').innerHTML = '<div id="product-details-content">Fetching product details...<span id="product-details-close">&times;</span></div>'
       document.getElementById('product-details').style.display = 'block'
       document.getElementById('product-details-close').addEventListener('click', function (e) {
@@ -152,7 +172,10 @@ window.onload = async function () {
         document.getElementById('product-details').innerHTML = ''
       })
 
+      // find the product details for the clicked product in the array of products
+      // for the bank that the product belongs to
       let productDetails = BANKS[bankId].productsRaw.find(prod => prod.productCode === productCode);
+      console.log({productDetails}) // log the product details to the console for debugging
       console.log({productDetails})
 
       if (productDetails) {
@@ -186,7 +209,13 @@ window.onload = async function () {
 
 <script id="product-details-template" type="text/x-handlebars-template">
   <div id="product-details-content">
+    <button id="json-btn" onclick="toggleJson( '{{productCode}}')">Show JSON</button>
     <span id="product-details-close">&times;</span>
+    <div>
+    <pre id="product-details-json-content"></pre>
+    </div>
+    <div id="product-details-pretty-content"></div>
+
     <h3>{{this.productName}}</h3>
     <span>Marketing Code: {{this.productCode}}</span><br>
     <span>Classification: {{this.productClassification}}</span><br>
