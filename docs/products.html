@@ -96,6 +96,22 @@ async function getProductDetails(bank, productId) {
   return productDetails
 }
 
+async function toggleDiagram(productId) {
+  logToConsole(`Showing Diagram for bank ${savedBankId} productId ${productId}`)
+  const diagramBtn = document.getElementById('diagram-btn');
+  if (diagramBtn.textContent === 'Show Diagram') {
+    let productDetails = BANKS[savedBankId].productsRaw.find(prod => prod.productId === productId);
+
+    var pre = document.getElementById("product-details-diagram-content");
+    pre.innerHTML = ""; // Clear previous Diagram content
+    pre.appendChild(document.createTextNode("Coming soon..."));
+    diagramBtn.textContent = 'Hide Diagram';
+  } else {
+    document.getElementById("product-details-diagram-content").innerHTML = "";
+    diagramBtn.textContent = 'Show Diagram';
+  }
+}
+
 async function toggleJson(productId) {
   logToConsole(`Showing JSON for bank ${savedBankId} productId ${productId}`)
   const jsonBtn = document.getElementById('json-btn');
@@ -221,9 +237,12 @@ window.onload = async function () {
 
 <script id="product-details-template" type="text/x-handlebars-template">
     <div id="product-details-content">
-    <!-- <button id="diagram-btn" disabled>Show Diagram</button> -->
+    <button id="diagram-btn" onclick="toggleDiagram( '{{productId}}')" >Show Diagram</button>
     <button id="json-btn" onclick="toggleJson( '{{productId}}')">Show JSON</button>
       <span id="product-details-close">&times;</span>
+    <div>
+        <pre id="product-details-diagram-content"></pre>
+    </div>
     <div>
         <pre id="product-details-json-content"></pre>
     </div>
