@@ -142,8 +142,26 @@ function processProducts(products) {
   })
   return byCategory
 }
+function populateBankDropdown() {
+  const $bankDropdown = document.getElementById('compare-bank');
+  if ($bankDropdown) {
+    // Clear previous options first to avoid duplication
+    $bankDropdown.innerHTML = '<option value="">Compare with Bank</option>';
+
+    for (const key in BANKS) {
+      if (BANKS.hasOwnProperty(key)) {
+        const option = document.createElement('option');
+        option.value = key; // Use the key as the value
+        option.textContent = BANKS[key].name; // Use the name property as the display text
+        $bankDropdown.appendChild(option);
+      }
+    }
+  }
+}
+
 
 window.onload = async function () {
+
   let productListTpl = Handlebars.compile(document.getElementById('products-list-template').innerHTML)
   const $productsList = document.getElementById('products-list')
 
@@ -210,6 +228,8 @@ window.onload = async function () {
       console.log(productDetails)
 
       document.getElementById('product-details').innerHTML = productDetailsTpl(productDetails.data)
+      // Call the populateBankDropdown function here
+      populateBankDropdown();
 
       document.getElementById('product-details-close').addEventListener('click', function (e) {
         document.getElementById('product-details').style.display = 'none'
@@ -239,7 +259,15 @@ window.onload = async function () {
     <div id="product-details-content">
     <button id="diagram-btn" onclick="toggleDiagram( '{{productId}}')" >Show Diagram</button>
     <button id="json-btn" onclick="toggleJson( '{{productId}}')">Show JSON</button>
-      <span id="product-details-close">&times;</span>
+    <select id="compare-bank" style="width: 200px;">
+      <option value="">Compare with Bank</option>
+    </select>
+    <select id="compare-product" style="width: 200px;" disabled>
+      <option value="">Compare with Product</option>
+    </select>
+    <button id="compare-products" disabled>Compare</button>
+  
+    <span id="product-details-close">&times;</span>
     <div>
         <pre id="product-details-diagram-content"></pre>
     </div>
@@ -537,19 +565,54 @@ window.onload = async function () {
     font-size: 14px;
   }
   
-  button {
-    background-color: white; 
-    color: #3949ab;
-    border: 1px solid #3949ab;
-    border-radius: 8px;
-    padding: 10px 20px;
-    transition-duration: 0.4s;
-  }
+  select, button {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  padding: 10px 15px;
+  margin: 5px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f7f7f7;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
 
-  button:hover {
-  background-color: #3949ab; /* purple */
+select:focus, button:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+}
+
+select:hover, button:hover {
+  background-color: #eaeaea;
+}
+
+select:disabled, button:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+select {
+  width: auto;
+  min-width: 200px;
+  max-width: 100%;
+}
+
+button {
+  background-color: white;
+  color: black;
+}
+
+button:hover {
+  background-color: #0056b3;
   color: white;
 }
+
+button:disabled {
+  background-color: #cccccc;
+}
+
   .category-row.expanded {
     background-color: #eee;
   }
