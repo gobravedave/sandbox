@@ -21,6 +21,7 @@ const BANKS = {
 //  cwc: { name: 'Central West CUL', host: 'https://ib.cwcu.com.au/openbanking' },
 }
 let savedBankId
+let savedProductDetails
 
 const PRODUCTS = {
   TRANS_AND_SAVINGS_ACCOUNTS: {
@@ -100,8 +101,7 @@ async function toggleDiagram(productId) {
   logToConsole(`Showing Diagram for bank ${savedBankId} productId ${productId}`)
   const diagramBtn = document.getElementById('diagram-btn');
   if (diagramBtn.textContent === 'Show Diagram') {
-    let productDetails = BANKS[savedBankId].productsRaw.find(prod => prod.productId === productId);
-
+    let productDetails = await getProductDetails(BANKS[savedBankId], productId)
     var pre = document.getElementById("product-details-diagram-content");
     pre.innerHTML = ""; // Clear previous Diagram content
     pre.appendChild(document.createTextNode("Coming soon..."));
@@ -116,8 +116,7 @@ async function toggleJson(productId) {
   logToConsole(`Showing JSON for bank ${savedBankId} productId ${productId}`)
   const jsonBtn = document.getElementById('json-btn');
   if (jsonBtn.textContent === 'Show JSON') {
-    let productDetails = BANKS[savedBankId].productsRaw.find(prod => prod.productId === productId);
-
+    let productDetails = await getProductDetails(BANKS[savedBankId], productId)
     var pre = document.getElementById("product-details-json-content");
     pre.innerHTML = ""; // Clear previous JSON content
     renderjson.set_icons('▶', '▼');
@@ -158,7 +157,6 @@ function populateBankDropdown() {
     }
   }
 }
-
 
 window.onload = async function () {
 
@@ -226,7 +224,7 @@ window.onload = async function () {
 
       let productDetails = await getProductDetails(BANKS[bankId], productId)
       console.log(productDetails)
-
+      savedProductDetails = productDetails
       document.getElementById('product-details').innerHTML = productDetailsTpl(productDetails.data)
       // Call the populateBankDropdown function here
       populateBankDropdown();
