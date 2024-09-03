@@ -101,26 +101,115 @@ async function getProductDetails(bank, productId) {
 }
 
 async function toggleDiagram(productId) {
-    logToConsole(`Showing Diagram for bank ${savedBankId} productId ${productId}`);
-    const diagramBtn = document.getElementById('diagram-btn');
-    if (diagramBtn.textContent === 'Show Diagram') {
-        let productDetails = await getProductDetails(BANKS[savedBankId], productId);
+    const bankId = savedBankId;
+    const diagramButton = document.getElementById('diagram-btn');
 
-        // Clear previous Diagram content
-        document.getElementById("product-details-diagram-content").innerHTML = "";
+    if (diagramButton.textContent === 'Show Diagram') {
+        const productDetails = await getProductDetails(BANKS[bankId], productId);
+        const transformedData = transformProductDetails(productDetails);
 
-        // Convert productDetails to a format that D3 can use
         const data = {
             name: "Product Details",
-            children: Object.keys(productDetails.data).map(key => ({
+            children: Object.entries(transformedData).map(([key, value]) => ({
                 name: key,
-                children: Object.keys(productDetails.data[key]).map(subKey => ({
-                    name: subKey,
-                    value: productDetails.data[key][subKey]
-                }))
+                children: Array.isArray(value) ? value.map(attr => ({
+                    name: attr.name,
+                    value: attr.value
+                })) : []
             }))
         };
 
+        renderDiagram(data);  // Ensure this function uses the correct variable
+        diagramButton.textContent = 'Hide Diagram';
+    } else {
+        document.getElementById("product-details-diagram-content").innerHTML = "";
+        diagramButton.textContent = 'Show Diagram';
+    }
+}
+
+function transformProductDetails(productDetails) {
+    return {
+        name: productDetails.name || "N/A",  // Default to "N/A" if name is missing
+        attributes: [
+            { name: "Product ID", value: productDetails.productId || "N/A" },
+            { name: "Last Updated", value: productDetails.lastUpdated || "N/A" },
+            { name: "Product Category", value: productDetails.productCategory || "N/A" },
+            { name: "Description", value: productDetails.description || "N/A" },
+            { name: "Brand", value: productDetails.brand || "N/A" },
+            { name: "Application URI", value: productDetails.applicationUri || "N/A" },
+            { name: "Is Tailored", value: productDetails.isTailored !== undefined ? productDetails.isTailored.toString() : "N/A" },
+        ],
+        groups: [
+            {
+                name: "Additional Information",
+                attributes: Object.entries(productDetails.additionalInformation || {}).map(([key, value]) => ({
+                    name: key.replace(/Uri$/, ' URI'), // Rename keys for readability
+                    value: value || "N/A"
+                }))
+            },
+            {
+                name: "Features",
+                children: (productDetails.features || []).map(feature => ({
+                    name: feature.featureType || "N/A",
+                    attributes: [
+                        { name: "Additional Info", value: feature.additionalInfo || "N/A" },
+                        { name: "Additional Info URI", value: feature.additionalInfoUri || "N/A" }
+                    ]
+                }))
+            },
+            {
+                name: "Constraints",
+                children: (productDetails.constraints || []).map(constraint => ({
+                    name: constraint.constraintType || "N/A",
+                    attributes: [
+                        { name: "Additional Value", value: constraint.additionalValue || "N/A" }
+                    ]
+                }))
+            },
+            {
+                name: "Eligibility",
+                children: (productDetails.eligibility || []).map(eligibility => ({
+                    name: eligibility.eligibilityType || "N/A",
+                    attributes: [
+                        { name: "Additional Value", value: eligibility.additionalValue || "N/A" }
+                    ]
+                }))
+            },
+            {
+                name: "Fees",
+                children: (productDetails.fees || []).map(fee => ({
+                    name: fee.name || "N/A",
+                    attributes: [
+                        { name: "Fee Type", value: fee.feeType || "N/A" },
+                        { name: "Amount", value: fee.amount || "N/A" },
+                        { name: "Currency", value: fee.currency || "N/A" },
+                        { name: "Additional Info", value: fee.additionalInfo || "N/A" }
+                    ]
+                }))
+            },
+            {
+                name: "Lending Rates",
+                children: (productDetails.lendingRates || []).map(rate => ({
+                    name: rate.lendingRateType || "N/A",
+                    attributes: [
+                        { name: "Rate", value: rate.rate || "N/A" },
+                        { name: "Comparison Rate", value: rate.comparisonRate || "N/A" },
+                        { name: "Calculation Frequency", value: rate.calculationFrequency || "N/A" },
+                        { name: "Application Frequency", value: rate.applicationFrequency || "N/A" },
+                        { name: "Interest Payment Due", value: rate.interestPaymentDue || "N/A" },
+                        { name: "Repayment Type", value: rate.repaymentType || "N/A" },
+                        { name: "Loan Purpose", value: rate.loanPurpose || "N/A" },
+                        { name: "Additional Info", value: rate.additionalInfo || "N/A" },
+                        { name: "Additional Info URI", value: rate.additionalInfoUri || "N/A" }
+                    ]
+                }))
+            }
+        ]
+    };
+}
+
+function renderDiagram(data){
+  document.getElementById("product-details-diagram-content").innerHTML = "";
         // Setup D3.js diagram
         const width = 600;
         const height = 400;
@@ -163,12 +252,8 @@ async function toggleDiagram(productId) {
             .attr("y", d => d.x + 3)
             .text(d => d.data.name);
 
-        diagramBtn.textContent = 'Hide Diagram';
-    } else {
-        document.getElementById("product-details-diagram-content").innerHTML = "";
-        diagramBtn.textContent = 'Show Diagram';
-    }
-}
+};
+
 
 async function toggleJson(productId) {
   logToConsole(`Showing JSON for bank ${savedBankId} productId ${productId}`)
