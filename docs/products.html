@@ -6,6 +6,8 @@
 <!-- <script src="https://cdn.jsdelivr.net/npm/deep-diff@1.0.2/dist/deep-diff.min.js"></script> -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/jsondiffpatch@0.3.11/public/build/jsondiffpatch.min.js"></script> -->
 <!-- <script src="https://d3js.org/d3.v7.min.js"></script> -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+
 </head>
 <body>
 <script>
@@ -99,18 +101,73 @@ async function getProductDetails(bank, productId) {
 }
 
 async function toggleDiagram(productId) {
-  logToConsole(`Showing Diagram for bank ${savedBankId} productId ${productId}`)
-  const diagramBtn = document.getElementById('diagram-btn');
-  if (diagramBtn.textContent === 'Show Diagram') {
-    let productDetails = await getProductDetails(BANKS[savedBankId], productId)
-    var pre = document.getElementById("product-details-diagram-content");
-    pre.innerHTML = ""; // Clear previous Diagram content
-    pre.appendChild(document.createTextNode("Coming soon..."));
-    diagramBtn.textContent = 'Hide Diagram';
-  } else {
-    document.getElementById("product-details-diagram-content").innerHTML = "";
-    diagramBtn.textContent = 'Show Diagram';
-  }
+    logToConsole(`Showing Diagram for bank ${savedBankId} productId ${productId}`);
+    const diagramBtn = document.getElementById('diagram-btn');
+    if (diagramBtn.textContent === 'Show Diagram') {
+        let productDetails = await getProductDetails(BANKS[savedBankId], productId);
+
+        // Clear previous Diagram content
+        document.getElementById("product-details-diagram-content").innerHTML = "";
+
+        // Convert productDetails to a format that D3 can use
+        const data = {
+            name: "Product Details",
+            children: Object.keys(productDetails.data).map(key => ({
+                name: key,
+                children: Object.keys(productDetails.data[key]).map(subKey => ({
+                    name: subKey,
+                    value: productDetails.data[key][subKey]
+                }))
+            }))
+        };
+
+        // Setup D3.js diagram
+        const width = 600;
+        const height = 400;
+        const margin = { top: 20, right: 90, bottom: 30, left: 90 };
+
+        const svg = d3.select("#product-details-diagram-content").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        const root = d3.hierarchy(data);
+        const treeLayout = d3.tree().size([height, width]);
+
+        treeLayout(root);
+
+        // Nodes
+        svg.selectAll(".node")
+            .data(root.descendants())
+            .enter().append("circle")
+            .attr("cx", d => d.y)
+            .attr("cy", d => d.x)
+            .attr("r", 5);
+
+        // Links
+        svg.selectAll(".link")
+            .data(root.links())
+            .enter().append("line")
+            .attr("x1", d => d.source.y)
+            .attr("y1", d => d.source.x)
+            .attr("x2", d => d.target.y)
+            .attr("y2", d => d.target.x)
+            .attr("stroke", "black");
+
+        // Text labels
+        svg.selectAll(".label")
+            .data(root.descendants())
+            .enter().append("text")
+            .attr("x", d => d.y + 10)
+            .attr("y", d => d.x + 3)
+            .text(d => d.data.name);
+
+        diagramBtn.textContent = 'Hide Diagram';
+    } else {
+        document.getElementById("product-details-diagram-content").innerHTML = "";
+        diagramBtn.textContent = 'Show Diagram';
+    }
 }
 
 async function toggleJson(productId) {
