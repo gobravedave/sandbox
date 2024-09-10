@@ -5,8 +5,10 @@
 <script src="https://unpkg.com/renderjson@1.3.0/renderjson.js"></script>
 <!-- <script src="https://cdn.jsdelivr.net/npm/deep-diff@1.0.2/dist/deep-diff.min.js"></script> -->
 <!-- <script src="https://cdn.jsdelivr.net/npm/jsondiffpatch@0.3.11/public/build/jsondiffpatch.min.js"></script> -->
-<!-- <script src="https://d3js.org/d3.v7.min.js"></script> -->
 <script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="js/treegrid.js"></script>
+<link rel="stylesheet" type="text/css" href="css/treegrid.css">
+
 
 </head>
 <body>
@@ -17,14 +19,17 @@ const commonOpts = {
 }
 const BANKS = {
   anz: { name: 'ANZ', host: 'https://api.anz' },
-  anzx: { name: 'ANZ Plus', host: 'https://cdr.apix.anz' },
+  // anzx: { name: 'ANZ Plus', host: 'https://cdr.apix.anz' },
   nab: { name: 'NAB', host: 'https://openbank.api.nab.com.au' },
   wes: { name: 'Westpac', host: 'https://digital-api.westpac.com.au' },
-  com: { name: 'Comm Bank', host: 'https://api.commbank.com.au/public' },
+  // com: { name: 'Comm Bank', host: 'https://api.commbank.com.au/public' },
 //  cwc: { name: 'Central West CUL', host: 'https://ib.cwcu.com.au/openbanking' },
 }
-let savedBankId
-let savedProductDetails
+
+let savedBankId;
+let savedProductDetails;
+let treegrid;
+let treegridData;
 
 const PRODUCTS = {
   TRANS_AND_SAVINGS_ACCOUNTS: {
@@ -100,13 +105,123 @@ async function getProductDetails(bank, productId) {
   return productDetails
 }
 
+async function toggleTreegrid(productId) {
+    const bankId = savedBankId;
+    const treegridButton = document.getElementById('treegrid-btn');
+    const productDetails = await getProductDetails(BANKS[bankId], productId);
+    const transformedData = transformProductDetailsTreegrid(productDetails);
+
+    if (treegridButton.textContent === 'Show Treegrid') {
+      treegridButton.textContent = 'Hide Treegrid';
+      const productDetails = await getProductDetails(BANKS[bankId], productId);
+      const transformedData = transformProductDetailsTreegrid(productDetails);
+
+      console.log(transformedData);
+        // specify options
+        var options = {
+          'width': '1100px',
+          'height': '400px'
+        };  
+
+        // Instantiate our treegrid object.
+        var container = document.getElementById('product-details-treegrid-content');
+        treegrid = new links.TreeGrid(container, options);
+
+        treegridData = new links.DataTable(transformedData);
+
+        // Draw our treegrid with the created data and options 
+        treegrid.draw(treegridData);        
+
+    } else {
+        document.getElementById("product-details-treegrid-content").innerHTML = "";
+        treegridButton.textContent = 'Show Treegrid';
+    }
+}
+
+function transformProductDetailsTreegrid(data) {
+    if (!data || !data.data) {
+        return [];
+    }
+    const product = data.data; // Access the actual data
+    return [{
+        productId: product.productId,
+        lastUpdated: product.lastUpdated,
+        productCategory: product.productCategory,
+        name: product.name,
+        description: product.description,
+        brand: product.brand,
+        brandName: product.brandName,
+        applicationUri: product.applicationUri,
+        isTailored: product.isTailored,
+        additionalInformation: product.additionalInformation
+            ? Object.keys(product.additionalInformation).map(key => ({
+                type: key,
+                content: product.additionalInformation[key]
+            }))
+            : [],
+        features: product.features
+            ? product.features.map(feature => ({
+                featureType: feature.featureType,
+                additionalInfo: feature.additionalInfo,
+                additionalInfoUri: feature.additionalInfoUri || null,
+                additionalValue: feature.additionalValue || null
+            }))
+            : [],
+        constraints: product.constraints
+            ? product.constraints.map(constraint => ({
+                constraintType: constraint.constraintType,
+                additionalValue: constraint.additionalValue
+            }))
+            : [],
+        eligibility: product.eligibility
+            ? product.eligibility.map(eligibility => ({
+                eligibilityType: eligibility.eligibilityType,
+                additionalValue: eligibility.additionalValue || null,
+                additionalInfo: eligibility.additionalInfo || null,
+                additionalInfoUri: eligibility.additionalInfoUri || null
+            }))
+            : [],
+        fees: product.fees
+            ? product.fees.map(fee => ({
+                name: fee.name,
+                feeType: fee.feeType,
+                amount: fee.amount || null,
+                currency: fee.currency || null,
+                additionalInfo: fee.additionalInfo || null
+            }))
+            : [],
+        lendingRates: product.lendingRates ? product.lendingRates.map(rate => ({
+                lendingRateType: rate.lendingRateType,
+                rate: rate.rate,
+                comparisonRate: rate.comparisonRate,
+                calculationFrequency: rate.calculationFrequency,
+                applicationFrequency: rate.applicationFrequency,
+                interestPaymentDue: rate.interestPaymentDue,
+                repaymentType: rate.repaymentType,
+                loanPurpose: rate.loanPurpose,
+                additionalInfo: rate.additionalInfo,
+                additionalInfoUri: rate.additionalInfoUri || null
+            })) : undefined,
+        depositRates: product.depositRates ? product.depositRates.map(rate => ({
+                depositRateType: rate.depositRateType,
+                rate: rate.rate,
+                calculationFrequency: rate.calculationFrequency,
+                applicationFrequency: rate.applicationFrequency,
+                additionalInfo: rate.additionalInfo,
+                additionalInfoUri: rate.additionalInfoUri || null
+            })) : undefined
+
+    }];
+    }
+
+
 async function toggleDiagram(productId) {
     const bankId = savedBankId;
     const diagramButton = document.getElementById('diagram-btn');
 
     if (diagramButton.textContent === 'Show Diagram') {
         const productDetails = await getProductDetails(BANKS[bankId], productId);
-        const transformedData = transformProductDetails(productDetails);
+        const transformedData = transformProductDetailsDiagram(productDetails);
 
         const data = {
             name: "Product Details",
@@ -127,7 +242,7 @@ async function toggleDiagram(productId) {
     }
 }
 
-function transformProductDetails(productDetails) {
+function transformProductDetailsDiagram(productDetails) {
     return {
         name: productDetails.name || "N/A",  // Default to "N/A" if name is missing
         attributes: [
@@ -447,6 +562,7 @@ window.onload = async function () {
 <script id="product-details-template" type="text/x-handlebars-template">
     <div id="product-details-content">
     <button id="diagram-btn" onclick="toggleDiagram( '{{productId}}')" >Show Diagram</button>
+    <button id="treegrid-btn" onclick="toggleTreegrid( '{{productId}}')">Show Treegrid</button>
     <button id="json-btn" onclick="toggleJson( '{{productId}}')">Show JSON</button>
     <select id="compare-bank" style="width: 200px;">
       <option value="">Compare with Bank</option>
@@ -459,6 +575,9 @@ window.onload = async function () {
     <span id="product-details-close">&times;</span>
     <div>
         <pre id="product-details-diagram-content"></pre>
+    </div>
+    <div>
+        <pre id="product-details-treegrid-content"></pre>
     </div>
     <div>
         <pre id="product-details-json-content"></pre>
