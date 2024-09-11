@@ -19,7 +19,7 @@ const commonOpts = {
 }
 const BANKS = {
   anz: { name: 'ANZ', host: 'https://api.anz' },
-  // anzx: { name: 'ANZ Plus', host: 'https://cdr.apix.anz' },
+  anzx: { name: 'ANZ Plus', host: 'https://cdr.apix.anz' },
   nab: { name: 'NAB', host: 'https://openbank.api.nab.com.au' },
   wes: { name: 'Westpac', host: 'https://digital-api.westpac.com.au' },
   // com: { name: 'Comm Bank', host: 'https://api.commbank.com.au/public' },
@@ -119,12 +119,14 @@ async function toggleTreegrid(productId) {
       console.log(transformedData);
         // specify options
         var options = {
-          'width': '1100px',
+          'width': '1600px',
           'height': '400px'
         };  
 
         // Instantiate our treegrid object.
+        document.getElementById("product-details-treegrid-content").style.display = 'block'
         var container = document.getElementById('product-details-treegrid-content');
+
         treegrid = new links.TreeGrid(container, options);
 
         treegridData = new links.DataTable(transformedData);
@@ -134,6 +136,7 @@ async function toggleTreegrid(productId) {
 
     } else {
         document.getElementById("product-details-treegrid-content").innerHTML = "";
+        document.getElementById("product-details-treegrid-content").style.display = 'none';
         treegridButton.textContent = 'Show Treegrid';
     }
 }
@@ -152,7 +155,7 @@ function transformProductDetailsTreegrid(data) {
         brand: product.brand,
         brandName: product.brandName,
         applicationUri: product.applicationUri,
-        isTailored: product.isTailored,
+        // isTailored: product.isTailored,
         additionalInformation: product.additionalInformation
             ? Object.keys(product.additionalInformation).map(key => ({
                 type: key,
@@ -190,7 +193,7 @@ function transformProductDetailsTreegrid(data) {
                 additionalInfo: fee.additionalInfo || null
             }))
             : [],
-        lendingRates: product.lendingRates ? product.lendingRates.map(rate => ({
+            lendingRates: product.lendingRates ? product.lendingRates.map(rate => ({
                 lendingRateType: rate.lendingRateType,
                 rate: rate.rate,
                 comparisonRate: rate.comparisonRate,
@@ -201,16 +204,15 @@ function transformProductDetailsTreegrid(data) {
                 loanPurpose: rate.loanPurpose,
                 additionalInfo: rate.additionalInfo,
                 additionalInfoUri: rate.additionalInfoUri || null
-            })) : undefined,
-        depositRates: product.depositRates ? product.depositRates.map(rate => ({
+            })) : undefined,        
+          depositRates: product.depositRates ? product.depositRates.map(rate => ({
                 depositRateType: rate.depositRateType,
                 rate: rate.rate,
                 calculationFrequency: rate.calculationFrequency,
                 applicationFrequency: rate.applicationFrequency,
                 additionalInfo: rate.additionalInfo,
                 additionalInfoUri: rate.additionalInfoUri || null
-            })) : undefined
-
+            })) : undefined          
     }];
     }
 
@@ -486,6 +488,7 @@ window.onload = async function () {
       document.getElementById('product-details').innerHTML = productDetailsTpl(productDetails.data)
       // Call the populateBankDropdown function here
       populateBankDropdown();
+      document.getElementById('product-details-treegrid-content').style.display = 'none';
 
       document.getElementById('compare-bank').addEventListener('change', async function(e) {
   const selectedBankId = e.target.value;

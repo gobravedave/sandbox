@@ -1,9 +1,10 @@
-#mytreegrid {
-  width: 1200px;  /* or another value you want for the visible area */
-  height: 600px;
-  overflow-x: auto;  /* Enables horizontal scrolling */
-  overflow-y: auto;  /* Enables the vertical scrollbar */
-  white-space: nowrap; /* Prevent content from wrapping */
+#mytreegrid, #product-details-treegrid-content {
+  /* width: 1400px;  or another value you want for the visible area */
+  /* height: 400px; */
+  display: none; Hidden by default
+  overflow-x: scroll;  /* Enables horizontal scrolling */
+  overflow-y: scroll;  /* Enables the vertical scrollbar */
+  white-space: nowrap; Prevent content from wrapping
 }
 
 .treegrid-horizontalscroll-bar {
@@ -12,12 +13,12 @@
 }
 
 .treegrid-horizontalscroll-background {
-  width: 1100px;
-  height: 400px;
+  width: 100%;
+  height: 100%;
 }
 
 .treegrid-frame {
-  border: 1px solid #BEBEBE;
+  border: 1px solid #BEBEBE;  
   color: #1A1A1A;  
 } 
 
