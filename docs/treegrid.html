@@ -1,0 +1,273 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <title>TreeGrid demo</title>
+
+    <style>
+      body {
+        font-family: arial;
+        font-size: 10pt;
+      }
+    </style>
+
+    <script type="text/javascript" src="js/treegrid.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/treegrid.css">
+    
+    <script type="text/javascript">
+      let treegrid;
+      var treegridData;
+      
+      // Called when the page is 
+
+      function drawTreeGrid() {
+
+        const hlvar01  = {
+        "data": {
+        "productId": "HLVAR01",
+        "lastUpdated": "2024-08-01T00:00:00Z",
+        "productCategory": "RESIDENTIAL_MORTGAGES",
+        "name": "ANZ Plus Home Loan Variable",
+        "description": "ANZ Plus Home Loan Variable",
+        "brand": "ANZ Plus",
+        "brandName": "ANZ Plus",
+        "applicationUri": "https://www.anz.com.au/plus/digital-home-loans/",
+        "isTailored": false,
+        "additionalInformation": {
+            "overviewUri": "https://www.anz.com.au/plus/digital-home-loans/",
+            "termsUri": "https://anz.com/plus/homeloantncs",
+            "eligibilityUri": "https://www.anz.com.au/plus/support/home-loans/eligibility/eligibility-requirements/",
+            "feesAndPricingUri": "https://www.anz.com.au/plus/digital-home-loans/"
+        },
+        "features": [
+            {
+                "featureType": "REDRAW",
+                "additionalInfo": "ANZ Plus Redraw could let you access extra payments you've made to an eligible loan when you need to",
+                "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+            },
+            {
+                "featureType": "OFFSET",
+                "additionalInfo": "An offset account is a transaction account linked to an eligible home loan. The money you have in this account could offset the amount you owe on that loan, and you'll only be charged the interest on the difference",
+                "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+            },
+            {
+                "featureType": "CASHBACK_OFFER",
+                "additionalValue": "2000",
+                "additionalInfo": "Available to customers refinancing an eligible non-ANZ home loan that is greater than $250,000 for applications submitted before 30 September 2024. T&Cs apply.",
+                "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+            }
+        ],
+        "constraints": [
+            {
+                "constraintType": "MAX_LIMIT",
+                "additionalValue": "2000000"
+            },
+            {
+                "constraintType": "MIN_LIMIT",
+                "additionalValue": "10000"
+            }
+        ],
+        "eligibility": [
+            {
+                "eligibilityType": "NATURAL_PERSON"
+            },
+            {
+                "eligibilityType": "MIN_AGE",
+                "additionalValue": "18"
+            },
+            {
+                "eligibilityType": "RESIDENCY_STATUS",
+                "additionalValue": "Australian Citizen, New Zealand Citizen, Australian Permanent Resident"
+            },
+            {
+                "eligibilityType": "OTHER",
+                "additionalInfo": "Lending Eligibility Criteria",
+                "additionalInfoUri": "https://www.anz.com.au/plus/support/home-loans/eligibility/eligibility-requirements/"
+            }
+        ],
+        "fees": [
+            {
+                "name": "LATE PAYMENT FEE",
+                "feeType": "EVENT",
+                "amount": "20.00",
+                "currency": "AUD",
+                "additionalInfo": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears."
+            },
+            {
+                "name": "PRODUCTION FEE",
+                "feeType": "EVENT",
+                "amount": "150.00",
+                "currency": "AUD",
+                "additionalInfo": "This fee is payable each time ANZ produce title documents for you (in person, electronically or another way) on your request."
+            },
+            {
+                "name": "ANZ LOAN DISCHARGE FEE",
+                "feeType": "EVENT",
+                "amount": "350.00",
+                "currency": "AUD",
+                "additionalInfo": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required."
+            },
+            {
+                "name": "REGISTRATION OF MORTGAGE",
+                "feeType": "VARIABLE",
+                "currency": "AUD",
+                "additionalInfo": "Payable to the government body when registering a mortgage over a property. Refer to the relevant state/territory revenue office for the amount."
+            },
+            {
+                "name": "DISCHARGE OF MORTGAGE",
+                "feeType": "VARIABLE",
+                "currency": "AUD",
+                "additionalInfo": "Payable to the government body when discharging an existing mortgage over a property. Refer to the relevant state/territory revenue office for the amount."
+            }
+        ],
+        "lendingRates": [
+            {
+                "lendingRateType": "VARIABLE",
+                "rate": "0.0864",
+                "comparisonRate": "0.0864",
+                "calculationFrequency": "P1D",
+                "applicationFrequency": "P1M",
+                "interestPaymentDue": "IN_ARREARS",
+                "repaymentType": "PRINCIPAL_AND_INTEREST",
+                "loanPurpose": "OWNER_OCCUPIED",
+                "additionalInfo": "Principal and Interest, Owner Occupied, Index Rate",
+                "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+            },
+            {
+                "lendingRateType": "VARIABLE",
+                "rate": "0.0614",
+                "comparisonRate": "0.0615",
+                "calculationFrequency": "P1D",
+                "applicationFrequency": "P1M",
+                "interestPaymentDue": "IN_ARREARS",
+                "repaymentType": "PRINCIPAL_AND_INTEREST",
+                "loanPurpose": "OWNER_OCCUPIED",
+                "additionalInfo": "Principal and Interest, Owner Occupied, Discounted Rate",
+                "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+            }],
+        "depositRates": [
+            {
+                "applicationFrequency": "P1M",
+                "calculationFrequency": "P1D",
+                "depositRateType": "VARIABLE",
+                "rate": "0.015",
+                "tiers": []
+            },
+            {
+                "additionalValue": "P3M",
+                "applicationFrequency": "P1M",
+                "calculationFrequency": "P1D",
+                "depositRateType": "INTRODUCTORY",
+                "rate": "0.0215",
+                "tiers": []
+            }
+        ]
+        },
+        "links": {
+        "self": "https://cdr.apix.anz/cds-au/v1/banking/products/HLVAR01"
+        },
+        "meta": {}
+        }
+
+        productDetails = transformProductDetails(hlvar01);
+        console.log(productDetails);
+        // specify options
+        var options = {
+          'width': '1600px',
+          'height': '400px'
+        };  
+
+        // Instantiate our treegrid object.
+        var container = document.getElementById('mytreegrid');
+        document.getElementById('mytreegrid').style.display = 'block'
+
+        treegrid = new links.TreeGrid(container, options);
+
+        treegridData = new links.DataTable(productDetails);
+
+        // Draw our treegrid with the created data and options 
+        treegrid.draw(treegridData);        
+
+    }
+
+      function transformProductDetails(data) {
+    if (!data || !data.data) {
+        return [];
+    }
+    const product = data.data; // Access the actual data
+    return [{
+        productId: product.productId,
+        lastUpdated: product.lastUpdated,
+        productCategory: product.productCategory,
+        name: product.name,
+        description: product.description,
+        brand: product.brand,
+        brandName: product.brandName,
+        applicationUri: product.applicationUri,
+        isTailored: product.isTailored,
+        additionalInformation: product.additionalInformation
+            ? Object.keys(product.additionalInformation).map(key => ({
+                type: key,
+                content: product.additionalInformation[key]
+            }))
+            : [],
+        features: product.features
+            ? product.features.map(feature => ({
+                featureType: feature.featureType,
+                additionalInfo: feature.additionalInfo,
+                additionalInfoUri: feature.additionalInfoUri || null,
+                additionalValue: feature.additionalValue || null
+            }))
+            : [],
+        constraints: product.constraints
+            ? product.constraints.map(constraint => ({
+                constraintType: constraint.constraintType,
+                additionalValue: constraint.additionalValue
+            }))
+            : [],
+        eligibility: product.eligibility
+            ? product.eligibility.map(eligibility => ({
+                eligibilityType: eligibility.eligibilityType,
+                additionalValue: eligibility.additionalValue || null,
+                additionalInfo: eligibility.additionalInfo || null,
+                additionalInfoUri: eligibility.additionalInfoUri || null
+            }))
+            : [],
+        fees: product.fees
+            ? product.fees.map(fee => ({
+                name: fee.name,
+                feeType: fee.feeType,
+                amount: fee.amount || null,
+                currency: fee.currency || null,
+                additionalInfo: fee.additionalInfo || null
+            }))
+            : [],
+        lendingRates: product.lendingRates ? product.lendingRates.map(rate => ({
+                lendingRateType: rate.lendingRateType,
+                rate: rate.rate,
+                comparisonRate: rate.comparisonRate,
+                calculationFrequency: rate.calculationFrequency,
+                applicationFrequency: rate.applicationFrequency,
+                interestPaymentDue: rate.interestPaymentDue,
+                repaymentType: rate.repaymentType,
+                loanPurpose: rate.loanPurpose,
+                additionalInfo: rate.additionalInfo,
+                additionalInfoUri: rate.additionalInfoUri || null
+            })) : undefined,
+        depositRates: product.depositRates ? product.depositRates.map(rate => ({
+                depositRateType: rate.depositRateType,
+                rate: rate.rate,
+                calculationFrequency: rate.calculationFrequency,
+                applicationFrequency: rate.applicationFrequency,
+                additionalInfo: rate.additionalInfo,
+                additionalInfoUri: rate.additionalInfoUri || null
+            })) : undefined
+    }];
+    }
+   </script>
+  </head>
+
+  <body onload="drawTreeGrid();">
+    <h1>TreeGrid Demo</h1>
+    <div id="mytreegrid"></div>
+  </body>
+</html>
