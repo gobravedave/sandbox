@@ -22,7 +22,7 @@ const BANKS = {
   anzx: { name: 'ANZ Plus', host: 'https://cdr.apix.anz' },
   nab: { name: 'NAB', host: 'https://openbank.api.nab.com.au' },
   wes: { name: 'Westpac', host: 'https://digital-api.westpac.com.au' },
-  suncorp: { name: 'Suncorp', host: 'https://id-ob.suncorpbank.com.au' }
+  suncorp: { name: 'Suncorp', host: 'https://api.suncorp.com.au' }
   // com: { name: 'Comm Bank', host: 'https://api.commbank.com.au/public' },
 //  cwc: { name: 'Central West CUL', host: 'https://ib.cwcu.com.au/openbanking' },
 }
@@ -222,21 +222,31 @@ async function toggleDiagram(productId) {
     const diagramButton = document.getElementById('diagram-btn');
 
     if (diagramButton.textContent === 'Show Diagram') {
-        const productDetails = await getProductDetails(BANKS[bankId], productId);
-        const transformedData = transformProductDetailsDiagram(productDetails);
+      const note = document.createElement('h2');
+      note.style.color = 'black';
+      note.textContent = 'Diagram is a placeholder and does not reflect actual product details';
+      document.getElementById("product-details-diagram-content").appendChild(note);
+      
+      const iframe = document.createElement('iframe');
+      iframe.width = "80%";
+      iframe.height = "600";
+      iframe.frameBorder = "0";
+      iframe.src = "https://observablehq.com/embed/f3c7644126c40edc?cells=chart";
+      document.getElementById("product-details-diagram-content").appendChild(iframe);
+        // const transformedData = transformProductDetailsDiagram(productDetails);
 
-        const data = {
-            name: "Product Details",
-            children: Object.entries(transformedData).map(([key, value]) => ({
-                name: key,
-                children: Array.isArray(value) ? value.map(attr => ({
-                    name: attr.name,
-                    value: attr.value
-                })) : []
-            }))
-        };
+        // const data = {
+        //     name: "Product Details",
+        //     children: Object.entries(transformedData).map(([key, value]) => ({
+        //         name: key,
+        //         children: Array.isArray(value) ? value.map(attr => ({
+        //             name: attr.name,
+        //             value: attr.value
+        //         })) : []
+        //     }))
+        // };
 
-        renderDiagram(data);  // Ensure this function uses the correct variable
+        // renderDiagram(data);  // Ensure this function uses the correct variable
         diagramButton.textContent = 'Hide Diagram';
     } else {
         document.getElementById("product-details-diagram-content").innerHTML = "";
