@@ -223,15 +223,15 @@ async function toggleDiagram(productId) {
 
     if (diagramButton.textContent === 'Show Diagram') {
       const note = document.createElement('h2');
-      note.style.color = 'black';
+      note.style.color = 'blue';
       note.textContent = 'Diagram is a placeholder and does not reflect actual product details';
       document.getElementById("product-details-diagram-content").appendChild(note);
       
       const iframe = document.createElement('iframe');
       iframe.width = "80%";
-      iframe.height = "600";
+      iframe.height = "400";
       iframe.frameBorder = "0";
-      iframe.src = "https://observablehq.com/embed/f3c7644126c40edc?cells=chart";
+      iframe.src = "https://observablehq.com/embed/@d3/collapsible-tree@latest?cells=chart";
       document.getElementById("product-details-diagram-content").appendChild(iframe);
         // const transformedData = transformProductDetailsDiagram(productDetails);
 
