@@ -22,6 +22,7 @@ const BANKS = {
   anzx: { name: 'ANZ Plus', host: 'https://cdr.apix.anz' },
   nab: { name: 'NAB', host: 'https://openbank.api.nab.com.au' },
   wes: { name: 'Westpac', host: 'https://digital-api.westpac.com.au' },
+  suncorp: { name: 'Suncorp', host: 'https://id-ob.suncorpbank.com.au' }
   // com: { name: 'Comm Bank', host: 'https://api.commbank.com.au/public' },
 //  cwc: { name: 'Central West CUL', host: 'https://ib.cwcu.com.au/openbanking' },
 }
@@ -132,8 +133,7 @@ async function toggleTreegrid(productId) {
         treegridData = new links.DataTable(transformedData);
 
         // Draw our treegrid with the created data and options 
-        treegrid.draw(treegridData);        
-
+        treegrid.draw(treegridData);  
     } else {
         document.getElementById("product-details-treegrid-content").innerHTML = "";
         document.getElementById("product-details-treegrid-content").style.display = 'none';
