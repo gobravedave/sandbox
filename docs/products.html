@@ -22,7 +22,7 @@ const BANKS = {
   anzx: { name: 'ANZ Plus', host: 'https://cdr.apix.anz' },
   nab: { name: 'NAB', host: 'https://openbank.api.nab.com.au' },
   wes: { name: 'Westpac', host: 'https://digital-api.westpac.com.au' },
-  suncorp: { name: 'Suncorp', host: 'https://api.suncorp.com.au' }
+  suncorp: { name: 'Suncorp', host: 'https://id-ob.suncorpbank.com.au' }
   // com: { name: 'Comm Bank', host: 'https://api.commbank.com.au/public' },
 //  cwc: { name: 'Central West CUL', host: 'https://ib.cwcu.com.au/openbanking' },
 }
@@ -222,16 +222,20 @@ async function toggleDiagram(productId) {
     const diagramButton = document.getElementById('diagram-btn');
 
     if (diagramButton.textContent === 'Show Diagram') {
-      const note = document.createElement('h2');
-      note.style.color = 'blue';
-      note.textContent = 'Diagram is a placeholder and does not reflect actual product details';
-      document.getElementById("product-details-diagram-content").appendChild(note);
+      const h2 = document.createElement('h2');
+      // h2.style.color = 'blue';
+      h2.textContent = 'Diagram is a placeholder and does not reflect actual product details';
+      document.getElementById("product-details-diagram-content").appendChild(h2);
       
+      const h3 = document.createElement('h3');
+      h3.textContent = 'Observable D3 Collapsable Treeview Example';
+      document.getElementById("product-details-diagram-content").appendChild(h3);
+
       const iframe = document.createElement('iframe');
       iframe.width = "80%";
       iframe.height = "400";
       iframe.frameBorder = "0";
-      iframe.src = "https://observablehq.com/embed/381ca6fe3e10da50?cells=chart";
+      iframe.src = "https://observablehq.com/embed/381ca6fe3e10da50@523?cells=chart";
       document.getElementById("product-details-diagram-content").appendChild(iframe);
         // const transformedData = transformProductDetailsDiagram(productDetails);
 
@@ -247,9 +251,24 @@ async function toggleDiagram(productId) {
         // };
 
         // renderDiagram(data);  // Ensure this function uses the correct variable
+        
+        const gojsH3 = document.createElement('h3');
+        gojsH3.textContent = 'GOJS Colapsable Treeview Example';
+        document.getElementById("product-details-gojs-diagram-content").appendChild(gojsH3);
+        const iframe2 = document.createElement('iframe');
+        iframe2.width = "80%";
+        iframe2.height = "400";
+        iframe2.frameBorder = "0";
+        iframe2.src = "https://gobravedave.github.io/sandbox/gojs-product.html";
+        iframe2.onload = () => {
+          // console.log('gojs iframe loaded');
+        };
+        document.getElementById("product-details-gojs-diagram-content").appendChild(iframe2);
+  
         diagramButton.textContent = 'Hide Diagram';
     } else {
         document.getElementById("product-details-diagram-content").innerHTML = "";
+        document.getElementById("product-details-gojs-diagram-content").innerHTML = "";
         diagramButton.textContent = 'Show Diagram';
     }
 }
@@ -590,6 +609,9 @@ window.onload = async function () {
         <pre id="product-details-diagram-content"></pre>
     </div>
     <div>
+      <pre id="product-details-gojs-diagram-content"></pre>
+  </div>
+  <div>
         <pre id="product-details-treegrid-content"></pre>
     </div>
     <div>
