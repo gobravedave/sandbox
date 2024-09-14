@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<script src="https://unpkg.com/gojs@3.0.11/release/go.js"></script>
+
+<div id="allSampleContent" class="p-4 w-full">
+<script src="https://unpkg.com/create-gojs-kit@3.0.11/dist/extensions/Figures.js"></script>
+<script src="https://unpkg.com/create-gojs-kit@3.0.11/dist/extensions/Themes.js"></script>
+<script id="code">
+  function init() {
+    const myDiagram = new go.Diagram('myDiagramDiv', {
+      allowCopy: false,
+      'draggingTool.dragsTree': true,
+      'commandHandler.deletesTree': true,
+      layout: new go.TreeLayout({ angle: 0, arrangement: go.TreeArrangement.FixedRoots }),
+      'undoManager.isEnabled': true,
+      'themeManager.themeMap': new go.Map([
+        { key: 'light', value: Modern },
+        { key: 'dark', value: ModernDark }
+      ]),
+      'themeManager.changesDivBackground': true,
+      'themeManager.currentTheme': document.getElementById('theme').value
+    });
+
+    myDiagram.themeManager.set('', {
+      colors: {
+        primary: '#1e7fbf' // a darker blue
+      }
+    });
+
+    // each action is represented by a shape and some text
+    var actionTemplate = new go.Panel('TableRow')
+        .add(
+            new go.Shape({ column: 0, width: 20, height: 20, fill: null }).bind('figure').theme('stroke', 'text'),
+            new go.TextBlock({ column: 1 }, { font: '11pt Verdana, sans-serif' }).bind('text').theme('stroke', 'text'),
+            new go.TextBlock({ column: 2 }, { font: '11pt Verdana, sans-serif' }).bind('text', 'value').theme('stroke', 'text')
+        );
+
+    // Template for each regular Node
+    myDiagram.nodeTemplate = new go.Node('Horizontal', { selectionObjectName: 'BODY' })
+      .add(
+        new go.Panel('Auto', { name: 'BODY' })
+          .add(
+            new go.Shape('RoundedRectangle', { strokeWidth: 0 }).theme('fill', 'primary'),
+            new go.Panel('Vertical', { margin: 3 })
+              .add(
+                new go.TextBlock({
+                  stretch: go.Stretch.Horizontal,
+                  font: 'bold 12pt Verdana, sans-serif',
+                  stroke: 'white'
+                }).bind('text', 'thing'),
+                new go.Panel('Vertical', {
+                  stretch: go.Stretch.Horizontal,
+                  visible: false
+                }) // Not visible unless there is at least one action
+                  .bind('visible', 'element', (acts) => Array.isArray(acts) && acts.length > 0)
+                  .add(
+                    new go.Panel('Table', { stretch: go.Stretch.Horizontal })
+                      .add(
+                        new go.TextBlock({
+                          alignment: go.Spot.Left,
+                          font: '10pt Verdana, sans-serif',
+                          stroke: 'white'
+                        }),
+                        go.GraphObject.build('PanelExpanderButton',
+                          {
+                            column: 1,
+                            alignment: go.Spot.Right,
+                            'ButtonIcon.stroke': 'white'
+                          },
+                          'COLLAPSIBLE'
+                        )
+                      ),
+                    new go.Panel('Table', {
+                      name: 'COLLAPSIBLE',
+                      padding: 2,
+                      stretch: go.Stretch.Horizontal,
+                      defaultAlignment: go.Spot.Left,
+                      defaultSeparatorPadding: 3,
+                      itemTemplate: actionTemplate
+                    }).theme('background', 'div').bind('itemArray', 'element')
+                  )
+              )
+          ),
+        new go.Panel({ height: 17 }) // This is underneath the "BODY"
+          .add(go.GraphObject.build('TreeExpanderButton'))
+      );
+
+    // Set the TreeExpanderButton behavior so that only the root node is expanded initially
+    myDiagram.nodeTemplate.bind('isTreeExpanded', '', (data) => {
+      return data.key === 'root'; // Only expand the root node
+    });
+
+    myDiagram.linkTemplate = new go.Link(
+      { routing: go.Routing.Orthogonal, deletable: false, corner: 10, toShortLength: 4 }
+    )
+      .add(
+        new go.Shape({ strokeWidth: 2 }).theme('stroke', 'link'),
+        new go.Shape({ toArrow: 'Standard', strokeWidth: 0 }).theme('fill', 'link')
+      );
+
+    var nodeDataArray = [
+      {
+        key: "root",
+        thing: 'Product',
+        element: [
+          { text: 'Code', figure: 'BpmnEventConditional', value: 'demo' },
+          { text: 'Name', figure: 'BpmnEventConditional', value: 'demo product' },
+          { text: 'Description', figure: 'BpmnEventConditional', value: 'demo product does this' }
+        ]
+      },
+      {
+        key: 'ec',
+        thing: 'Eligibility Criteria'
+      },
+      { key: 'ec1', thing: 'Age',
+        element: [
+          { text: 'min age', figure: 'BpmnEventConditional', value: '10' }
+        ]
+      },
+      { key: 'ec2', thing: 'Residency Status',
+        element: [
+          { text: 'You must have evidence of ', figure: 'BpmnEventConditional', value: 'Australian Residency' }
+        ]
+      },
+      {
+        key: "con",
+        thing: 'Constraints'
+      },
+      { key: 'con1', thing: 'Min Loan Amount' ,
+        element: [
+          { text: 'greater than', figure: 'BpmnEventConditional', value: '$100k' }
+        ]
+      },
+      { key: 'con2', thing: 'Max Loan Amount', 
+        element: [
+          { text: 'less than', figure: 'BpmnEventConditional', value: '$1M' }
+        ]
+      },
+      { 
+        key: "feat", thing: 'Features'
+      },
+      {
+        key: 'feat1',
+        thing: 'Save More',
+        element: [
+          { text: 'hit your saving goals', figure: 'BpmnEventConditional' }
+        ]
+      },
+      {
+        key: 'fees',
+        thing: 'Fees'
+      },
+      {
+        key: 'fee1',
+        thing: 'ATM Fees',
+        element: [
+          { text: 'you may be charged', figure: 'Hand', value: '$5' }
+        ]
+      },
+      {
+        key: 'rates',
+        thing: 'Rates'
+      },
+      {
+        key: 'rate1',
+        thing: 'Base Rate',
+        element: [
+          { text: 'balance from 0 to 250k', figure: 'BpmnEventConditional', value: '%5' },
+          { text: 'balance over 250k', figure: 'BpmnEventConditional', value: '%1' }
+        ]
+      },
+      {
+        key: 'rate2',
+        thing: 'Bonus Rate',
+        element: [
+          { text: 'grow balance by $200', figure: 'BpmnEventConditional', value: '+%1' }
+        ]
+      }
+
+    ];
+
+    var linkDataArray = [
+      { from: 'root', to: 'ec' },
+      { from: 'root', to: 'con' },
+      { from: 'root', to: 'feat'},
+      { from: 'root', to: 'fees'},
+      { from: 'root', to: 'rates'},
+      { from: 'ec', to: 'ec1' },
+      { from: 'ec', to: 'ec2' },
+      { from: 'feat', to: 'feat1'},
+      { from: 'con', to: 'con1'},
+      { from: 'con', to: 'con2'},
+      { from: "fees", to:"fee1"},
+      { from: "rates", to: "rate1"},
+      { from: "rates", to:"rate2"}
+    ];
+
+    // Create the model 
+    myDiagram.model = new go.GraphLinksModel({
+      copiesArrays: true,
+      copiesArrayObjects: true,
+      nodeDataArray: nodeDataArray,
+      linkDataArray: linkDataArray
+    });
+  }
+
+  const changeTheme = () => {
+    const myDiagram = go.Diagram.fromDiv('myDiagramDiv');
+    if (myDiagram) {
+      myDiagram.themeManager.currentTheme = document.getElementById('theme').value;
+    }
+  };
+
+  window.addEventListener('DOMContentLoaded', init);
+</script>
+
+<div id="sample">
+  <div id="myDiagramDiv" style="border: solid 1px black; width: 100%; height: 800px"></div>
+  Theme:
+  <select id="theme" onchange="changeTheme()">
+    <option value="system">System</option>
+    <option value="light">Light</option>
+    <option value="dark">Dark</option>
+  </select>
+</div>
+</div>
+</body>
+</html>
