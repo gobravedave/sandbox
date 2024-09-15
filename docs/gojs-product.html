@@ -53,7 +53,7 @@
                   stretch: go.Stretch.Horizontal,
                   visible: false
                 }) // Not visible unless there is at least one action
-                  .bind('visible', 'element', (acts) => Array.isArray(acts) && acts.length > 0)
+                  .bind('visible', 'item', (acts) => Array.isArray(acts) && acts.length > 0)
                   .add(
                     new go.Panel('Table', { stretch: go.Stretch.Horizontal })
                       .add(
@@ -78,7 +78,7 @@
                       defaultAlignment: go.Spot.Left,
                       defaultSeparatorPadding: 3,
                       itemTemplate: actionTemplate
-                    }).theme('background', 'div').bind('itemArray', 'element')
+                    }).theme('background', 'div').bind('itemArray', 'item')
                   )
               )
           ),
@@ -103,7 +103,7 @@
       {
         key: "root",
         thing: 'Product',
-        element: [
+        item: [
           { text: 'Code', figure: 'BpmnEventConditional', value: 'demo' },
           { text: 'Name', figure: 'BpmnEventConditional', value: 'demo product' },
           { text: 'Description', figure: 'BpmnEventConditional', value: 'demo product does this' }
@@ -114,12 +114,12 @@
         thing: 'Eligibility Criteria'
       },
       { key: 'ec1', thing: 'Age',
-        element: [
+        item: [
           { text: 'min age', figure: 'BpmnEventConditional', value: '10' }
         ]
       },
       { key: 'ec2', thing: 'Residency Status',
-        element: [
+        item: [
           { text: 'You must have evidence of ', figure: 'BpmnEventConditional', value: 'Australian Residency' }
         ]
       },
@@ -128,12 +128,12 @@
         thing: 'Constraints'
       },
       { key: 'con1', thing: 'Min Loan Amount' ,
-        element: [
+        item: [
           { text: 'greater than', figure: 'BpmnEventConditional', value: '$100k' }
         ]
       },
       { key: 'con2', thing: 'Max Loan Amount', 
-        element: [
+        item: [
           { text: 'less than', figure: 'BpmnEventConditional', value: '$1M' }
         ]
       },
@@ -143,7 +143,7 @@
       {
         key: 'feat1',
         thing: 'Save More',
-        element: [
+        item: [
           { text: 'hit your saving goals', figure: 'BpmnEventConditional' }
         ]
       },
@@ -154,7 +154,7 @@
       {
         key: 'fee1',
         thing: 'ATM Fees',
-        element: [
+        item: [
           { text: 'you may be charged', figure: 'Hand', value: '$5' }
         ]
       },
@@ -165,7 +165,7 @@
       {
         key: 'rate1',
         thing: 'Base Rate',
-        element: [
+        item: [
           { text: 'balance from 0 to 250k', figure: 'BpmnEventConditional', value: '%5' },
           { text: 'balance over 250k', figure: 'BpmnEventConditional', value: '%1' }
         ]
@@ -173,7 +173,7 @@
       {
         key: 'rate2',
         thing: 'Bonus Rate',
-        element: [
+        item: [
           { text: 'grow balance by $200', figure: 'BpmnEventConditional', value: '+%1' }
         ]
       }
