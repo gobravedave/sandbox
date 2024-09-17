@@ -51,9 +51,10 @@ async function getProducts(bank) {
 
     // Assuming you're interested in the first entry in the data array
     const res = jsonData.data && jsonData.data[0] ? {
+      asofDate: jsonData.requestDate,
       count: jsonData.data[0].productDetails.length,
       products: jsonData.data[0].productDetails
-    } : { count: 0, products: [] };
+    } : { asofDate: null, count: 0, products: [] };
 
     logToConsole(`Got products for ${bank.name} in ${duration}s`);
     console.log(res);
@@ -130,9 +131,10 @@ window.onload = async function () {
       }
     }
 
-    const { count, products } = await getProducts(bank)
+    const { asofDate, count, products } = await getProducts(bank)
     BANKS[bank.id].productsRaw = products
     BANKS[bank.id].totalCount = count
+    BANKS[bank.id].asofDate = asofDate
 
     // add banks product count and list to PRODUCTS
     const byCategory = processProducts(products)
@@ -176,10 +178,9 @@ window.onload = async function () {
       // for the bank that the product belongs to
       let productDetails = BANKS[bankId].productsRaw.find(prod => prod.productCode === productCode);
       console.log({productDetails}) // log the product details to the console for debugging
-      console.log({productDetails})
 
       if (productDetails) {
-        document.getElementById('product-details').innerHTML = productDetailsTpl(productDetails);
+        document.getElementById('product-details').innerHTML = productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate });
       } else {
         document.getElementById('product-details').innerHTML = `<div id="product-details-content">Product details not found.<span id="product-details-close">&times;</span></div>`;
       }
@@ -215,13 +216,12 @@ window.onload = async function () {
     <pre id="product-details-json-content"></pre>
     </div>
     <div id="product-details-pretty-content"></div>
-
-    <h3>{{this.productName}}</h3>
-    <span>Marketing Code: {{this.productCode}}</span><br>
-    <span>Classification: {{this.productClassification}}</span><br>
-    <span>Description: {{this.productDescription}}</span><br>
+    <h3>{{product.productName}} as at {{asofDate}}</h3>
+    <span>Marketing Code: {{product.productCode}}</span><br>
+    <span>Classification: {{product.productClassification}}</span><br>
+    <span>Description: {{product.productDescription}}</span><br>
   
-    {{#with this.productEligibilityDetails}}
+    {{#with product.productEligibilityDetails}}
       <span>From Date: {{this.fromDate}}</span><br>
       <span>To Date: {{this.toDate}}</span><br>
       <span>Status: {{this.productStatus}}</span><br>
