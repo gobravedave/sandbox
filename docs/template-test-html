@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Handlebars Partials Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+</head>
+<body>
+  <div id="wrapper"></div>
+
+  <!-- Product Parameters Partial -->
+  <script id="product-parameters-template" type="text/x-handlebars-template">
+    <div>
+      <h3>Product: {{productName}}</h3>
+      <p>Code: {{productCode}}</p>
+      <p>Status: {{productEligibilityDetails.productStatus}}</p>
+      <p>Eligibility from: {{productEligibilityDetails.fromDate}}</p>
+      <p>Eligibility to: {{productEligibilityDetails.toDate}}</p>
+    </div>
+  </script>
+
+  <!-- Product Features Partial -->
+  <script id="product-features-template" type="text/x-handlebars-template">
+    <ul>
+      {{#each features}}
+        <li>{{this.name}}: {{this.value}}</li>
+      {{/each}}
+    </ul>
+  </script>
+
+  <!-- Product Fees Partial -->
+  <script id="product-fees-template" type="text/x-handlebars-template">
+    <ul>
+      {{#each fees}}
+        <li>{{this.feeType}}: {{this.amount}}</li>
+      {{/each}}
+    </ul>
+  </script>
+
+  <!-- Product Rate Plans Partial -->
+  <script id="product-rateplans-template" type="text/x-handlebars-template">
+    <ul>
+      {{#each lendingRates}}
+        <li>Rate: {{this.rate}}% - Type: {{this.rateType}}</li>
+      {{/each}}
+    </ul>
+  </script>
+
+  <!-- Main Product Template -->
+  <script id="product-template" type="text/x-handlebars-template">
+    <div class="product">
+      {{> product-parameters-template}}
+      <h4>Features:</h4>
+      {{> product-features-template}}
+
+      <h4>Fees:</h4>
+      {{> product-fees-template}}
+
+      <h4>Rate Plans:</h4>
+      {{> product-rateplans-template}}
+    </div>
+  </script>
+
+  <script>
+    // Product data example
+    const productData = {
+      productCode: "HLVAR01",
+      productName: "ANZ Plus Home Loan Variable",
+      productEligibilityDetails: {
+        fromDate: "2021-07-16T00:00:00Z",
+        toDate: "9999-01-01T23:59:59Z",
+        productStatus: "ON_SALE"
+      },
+      features: [
+        { name: "Redraw Facility", value: "Available" },
+        { name: "Offset Account", value: "Not Available" }
+      ],
+      fees: [
+        { feeType: "Monthly Fee", amount: "10.00" },
+        { feeType: "Early Termination Fee", amount: "500.00" }
+      ],
+      lendingRates: [
+        { rateType: "Variable", rate: "3.45" },
+        { rateType: "Fixed", rate: "4.00" }
+      ]
+    };
+
+    // Register partials
+    Handlebars.registerPartial('product-parameters-template', document.getElementById('product-parameters-template').innerHTML);
+    Handlebars.registerPartial('product-features-template', document.getElementById('product-features-template').innerHTML);
+    Handlebars.registerPartial('product-fees-template', document.getElementById('product-fees-template').innerHTML);
+    Handlebars.registerPartial('product-rateplans-template', document.getElementById('product-rateplans-template').innerHTML);
+
+    // Compile the main product template
+    const productTemplateSource = document.getElementById('product-template').innerHTML;
+    const productTemplate = Handlebars.compile(productTemplateSource);
+
+    // Render the template with product data
+    const renderedProductHTML = productTemplate(productData);
+    document.getElementById('wrapper').innerHTML = renderedProductHTML;
+  </script>
+</body>
+</html>

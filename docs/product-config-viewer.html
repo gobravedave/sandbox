@@ -112,6 +112,11 @@ window.onload = async function () {
   // populateBankDropdown('compare-left-bank');
   // populateBankDropdown('compare-right-bank');
 
+  // Register a helper to format a date
+  Handlebars.registerHelper('formatDate', function(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-AU');
+  });
   let productListTpl = Handlebars.compile(document.getElementById('products-list-template').innerHTML)
   const $productsList = document.getElementById('products-list')
 
@@ -194,6 +199,7 @@ window.onload = async function () {
 
 };
 
+  
 </script>
 
 <h2>Product Configuration Viewer by Environment</h2>
@@ -209,6 +215,7 @@ window.onload = async function () {
 </br>
 
 <script id="product-details-template" type="text/x-handlebars-template">
+
   <div id="product-details-content">
     <button id="json-btn" onclick="toggleJson( '{{productCode}}')">Show JSON</button>
     <span id="product-details-close">&times;</span>
@@ -216,14 +223,15 @@ window.onload = async function () {
     <pre id="product-details-json-content"></pre>
     </div>
     <div id="product-details-pretty-content"></div>
-    <h3>{{product.productName}} as at {{asofDate}}</h3>
+
+    <h3>{{product.productName}} as at {{formatDate asofDate}}</h3>
     <span>Marketing Code: {{product.productCode}}</span><br>
     <span>Classification: {{product.productClassification}}</span><br>
     <span>Description: {{product.productDescription}}</span><br>
   
     {{#with product.productEligibilityDetails}}
-      <span>From Date: {{this.fromDate}}</span><br>
-      <span>To Date: {{this.toDate}}</span><br>
+      <span>From Date: {{formatDate this.fromDate}}</span><br>
+      <span>To Date: {{formatDate this.toDate}}</span><br>
       <span>Status: {{this.productStatus}}</span><br>
   
       <h4>Eligibility Criteria</h4>
@@ -245,6 +253,7 @@ window.onload = async function () {
         {{/each}}
       </table>
     {{/with}}
+  
   </div>
   </script>
   
