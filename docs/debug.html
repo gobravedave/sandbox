@@ -1,0 +1,581 @@
+<head>
+    <title>Product Configuration Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src="https://unpkg.com/renderjson@1.3.0/renderjson.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    </head>
+    <body>
+
+  <!-- Product Name Partial -->
+  <script id="product-name-template" type="text/x-handlebars-template">
+    <div>
+      <h2>{{product.productName}} as at {{formatDate asofDate}}</h2>
+    </div>
+  </script>
+
+  <!-- Eligibility Partial -->
+  <script id="eligibility-template" type="text/x-handlebars-template">
+    <div>
+    <h3>Life Cycle</h3>
+    <table>
+      <tr>
+        <th>Status</th>
+        <th>From Date</th>
+        <th>To Date</th>
+      </tr>
+      <tr>
+        <td>{{#if productStatus}} {{productStatus}} {{/if}}
+            {{#if serviceStatus}} {{serviceStatus}} {{/if}}
+        </td>
+        <td>{{formatDate this.fromDate}}</td>
+        <td>{{formatDate this.toDate}}</td>
+      </tr>
+      </table>
+
+</div>
+  </script>
+
+  <!-- Deposit Product Config Partial -->
+  <script id="deposit-product-config-template" type="text/x-handlebars-template">
+    {{#with product.productConfiguration.productParameters}}
+    <h3>Product Parameters</h3>
+
+    {{/with}}
+{{#with product.productConfiguration.financialParameters}}
+{{> financial-parameters-template}}
+{{/with}}
+
+{{#with product.productConfiguration.entitlementParameters}}
+{{> entitlements-template}}
+{{/with}}
+
+{{#with product.productConfiguration.regulatoryParameters}}
+{{> regulatory-parameters-template}}
+{{/with}}
+
+
+{{#with product.productConfiguration.documentations}}
+{{> documentation-template}}
+{{/with}}
+
+  </script>
+  <!-- Lending Product Config Partial -->
+  <script id="lending-product-config-template" type="text/x-handlebars-template">
+    {{#with product.mortgageProductConfiguration.productParameters}}
+    <h3>Product Parameters</h3>
+    {{/with}}
+
+    {{#with product.mortgageProductConfiguration.financialParameters}}
+    {{> financial-parameters-template}}
+    {{/with}}
+
+    {{#with product.mortgageProductConfiguration.entitlementParameters}}
+    {{> entitlements-template}}
+    {{/with}}
+
+    {{#with product.mortgageProductConfiguration.regulatoryParameters}}
+    {{> regulatory-parameters-template}}
+    {{/with}}
+
+    {{#with product.mortgageProductConfiguration.documentations}}
+    {{> documentation-template}}
+    {{/with}}
+
+  </script>
+
+  <!-- Financial Parameters Partial -->
+  <script id="financial-parameters-template" type="text/x-handlebars-template">
+    <h3>Financial Parameters</h3>
+
+  </script>
+
+  <!-- Regulatory Parameters Partial -->
+  <script id="regulatory-parameters-template" type="text/x-handlebars-template">
+  <h3>Regulatory Parameters</h3>
+  </script>
+
+  <!-- Product Fees Partial -->
+  <script id="product-fees-template" type="text/x-handlebars-template">
+    {{#with product.feePlans}}
+    {{#each data}}
+    {{#each feePlans}}
+    {{/each}}
+    {{/each}}
+    {{/with}}
+  </script>
+
+  <!-- Deposit Product Rate Plan Partial -->
+  <script id="deposit-product-rateplan-template" type="text/x-handlebars-template">
+      {{#with product.ratePlans.data.[0].ratePlanAssociation.depositStandardRatePlanDetails}}
+      <h2>Deposit Rate Plan</h2>
+      {{/with}}
+  </script>
+
+  <!-- Lending Product Rate Plan Partial -->
+  <script id="lending-product-rateplan-template" type="text/x-handlebars-template">
+    {{#with product.ratePlans}}
+    {{#each this.data}}
+    {{#with this.ratePlanAssociation}}
+    {{#if this.standardRatePlan.mortgageStandardRatePlanDetails}}
+    <h2>Mortgage Rate Plan</h2>
+    {{/if}}
+    {{/with}}
+    {{/each}}
+    {{/with}}
+  </script>
+
+  <!-- Services Partial -->
+  <script id="services-template" type="text/x-handlebars-template">
+    {{#with product.serviceAssociation}}
+    {{#if multiUseProducts}}
+    <h3>MultiUse Products</h3>
+    {{/if}}
+
+    {{#if services}}
+    <h3>Services</h3>
+    {{/if}}
+    {{/with}}
+  </script>
+
+  <!-- Entitlements Partial -->
+  <script id="entitlements-template" type="text/x-handlebars-template">
+    <h3>Entitlement Parameters</h3>
+  </script>
+
+  <!-- Documention Partial -->
+  <script id="documentation-template" type="text/x-handlebars-template">
+    <h3>Documentation</h3>
+  </script>
+
+  <!-- External Product Code Mapping Partial -->
+  <script id="external-product-code-mapping-template" type="text/x-handlebars-template">
+  </script>
+
+  <!-- Impacted Systems Partial -->
+  <script id="impacted-systems-template" type="text/x-handlebars-template">
+  </script>
+
+  <!-- Product Open Banking Partial -->
+  <script id="product-openbanking-template" type="text/x-handlebars-template">
+
+    {{#with product.openBankingConfiguration}}
+    {{#if this.features}}
+    <h3>Features</h3>
+    {{/if}}
+
+    {{#if this.feeItems}}
+    <h3>Fee Items</h3>
+    {{/if}}
+    {{/with}}
+  </script>
+
+  <script>
+    // Register helpers
+    Handlebars.registerHelper('formatDate', function(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-AU');
+    });
+
+    // Register partials
+    Handlebars.registerPartial('product-name-template', document.getElementById('product-name-template').innerHTML);
+    Handlebars.registerPartial('eligibility-template', document.getElementById('eligibility-template').innerHTML);
+    Handlebars.registerPartial('deposit-product-config-template', document.getElementById('deposit-product-config-template').innerHTML);
+    Handlebars.registerPartial('lending-product-config-template', document.getElementById('lending-product-config-template').innerHTML);
+    Handlebars.registerPartial('financial-parameters-template', document.getElementById('financial-parameters-template').innerHTML);
+    Handlebars.registerPartial('regulatory-parameters-template', document.getElementById('regulatory-parameters-template').innerHTML);
+    Handlebars.registerPartial('product-fees-template', document.getElementById('product-fees-template').innerHTML);
+    Handlebars.registerPartial('deposit-product-rateplan-template', document.getElementById('deposit-product-rateplan-template').innerHTML);
+    Handlebars.registerPartial('lending-product-rateplan-template', document.getElementById('lending-product-rateplan-template').innerHTML);
+    Handlebars.registerPartial('services-template', document.getElementById('services-template').innerHTML);
+    Handlebars.registerPartial('entitlements-template', document.getElementById('entitlements-template').innerHTML);
+    Handlebars.registerPartial('documentation-template', document.getElementById('documentation-template').innerHTML);
+    Handlebars.registerPartial('product-openbanking-template', document.getElementById('product-openbanking-template').innerHTML);
+    Handlebars.registerPartial('external-product-code-mapping-template', document.getElementById('external-product-code-mapping-template').innerHTML);
+    Handlebars.registerPartial('impacted-systems-template', document.getElementById('impacted-systems-template').innerHTML);
+
+    let logConsole;
+
+    const BANKS = {
+      ready: { name: 'READY', json: 'datasets/demo.json' },
+      steady: { name: 'STEADY', json: 'datasets/demo.json'},
+      eddy: { name: 'EDDY', json: 'datasets/demo.json'},
+    }
+    let savedBankId
+
+    const PRODUCTS = {
+      DEPOSIT: {
+        name: 'Deposits',
+      },
+        MORTGAGE: {
+        name: 'Residential Mortgages',
+      },
+    }
+    function logToConsole(msg) {
+      console.log(msg)
+      logConsole.value += msg + '\n'
+    }
+    async function getProducts(bank) {
+      let jsonUrl = `${bank.json}`; // Path to the JSON file
+      try {
+        logToConsole(`Getting products for ${bank.name}`);
+        const start = new Date();
+        let response = await fetch(jsonUrl);
+        let jsonData = await response.json();
+        const duration = (new Date() - start) / 1000;
+
+        // Assuming you're interested in the first entry in the data array
+        const res = jsonData.data && jsonData.data[0] ? {
+          asofDate: jsonData.requestDate,
+          count: jsonData.data[0].productDetails.length,
+          products: jsonData.data[0].productDetails
+        } : { asofDate: null, count: 0, products: [] };
+
+        logToConsole(`Got products for ${bank.name} in ${duration}s`);
+        console.log(res);
+        return res;
+      } catch (err) {
+        logToConsole(`Error getting data for ${bank.name} from ${bank.json}`);
+        console.error(err);
+        return { products: [], count: 0 };
+      }
+    }
+
+    function processProducts(products) {
+      const byCategory = {};
+
+      // Initialize categories in byCategory object
+      for (let prodCat in PRODUCTS) {
+        byCategory[prodCat] = { count: 0, products: [] };
+      }
+
+      products.forEach((p) => {
+        const category = p.productClassification; // or the key you're using
+
+        // Ensure the category exists in the PRODUCTS object
+        if (category && PRODUCTS[category]) {
+          byCategory[category].count++;
+          byCategory[category].products.push(p);
+        } else {
+          console.warn(`Product ${p.productName} has an unknown or missing category: ${category}`);
+        }
+      });
+
+      return byCategory;
+    }
+
+    async function toggleDiagram(productId) {
+        const bankId = savedBankId;
+        const diagramButton = document.getElementById('diagram-btn');
+
+        if (diagramButton.textContent === 'Show Diagram') {
+          const h2 = document.createElement('h2');
+          // h2.style.color = 'blue';
+          h2.textContent = 'Diagram is a placeholder and does not reflect actual product details';
+          document.getElementById("product-details-diagram-content").appendChild(h2);
+          const iframe = document.createElement('iframe');
+          iframe.width = "80%";
+          iframe.height = "500";
+          iframe.frameBorder = "0";
+          iframe.src = "https://gobravedave.github.io/sandbox/gojs-product.html";
+          document.getElementById("product-details-diagram-content").appendChild(iframe);
+          diagramButton.textContent = 'Hide Diagram';
+        } else {
+            document.getElementById("product-details-diagram-content").innerHTML = "";
+            diagramButton.textContent = 'Show Diagram';
+        }
+    }
+    async function toggleJson(productId) {
+      logToConsole(`Showing JSON for bank ${savedBankId} productId ${productId}`)
+      const jsonBtn = document.getElementById('json-btn');
+      if (jsonBtn.textContent === 'Show JSON') {
+        let productDetails = BANKS[savedBankId].productsRaw.find(prod => prod.productCode=== productId);
+
+        var pre = document.getElementById("product-details-json-content");
+        pre.innerHTML = ""; // Clear previous JSON content
+        renderjson.set_icons('+', '-');
+        renderjson.set_show_to_level(2);
+        // renderjson.set_collapse_msg(function(len) { return len + " item" + (len==1 ? "" : "s") })
+        pre.appendChild(renderjson(productDetails));
+        jsonBtn.textContent = 'Hide JSON';
+      } else {
+        document.getElementById("product-details-json-content").innerHTML = "";
+        jsonBtn.textContent = 'Show JSON';
+      }
+    }
+
+    window.onload = async function () {
+
+      Handlebars.registerHelper('formatDate', function(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-AU');
+      });
+
+      let productListTpl = Handlebars.compile(document.getElementById('products-list-template').innerHTML)
+      const $productsList = document.getElementById('products-list')
+
+      $productsList.innerHTML = productListTpl({})
+      let productDetailsTpl = Handlebars.compile(document.getElementById('product-details-template').innerHTML)
+
+      logConsole = document.getElementById('log-console')
+      await Promise.all(Object.entries(BANKS).map(async ([id, bank]) => {
+        BANKS[id].id = id
+        for (let prodCat in PRODUCTS) {
+          PRODUCTS[prodCat].banks = PRODUCTS[prodCat].banks || {}
+          PRODUCTS[prodCat].banks[id] = {
+            bankId: id,
+          }
+        }
+        const { asofDate, count, products } = await getProducts(bank)
+        BANKS[bank.id].productsRaw = products
+        BANKS[bank.id].totalCount = count
+        BANKS[bank.id].asofDate = asofDate
+        // add banks product count and list to PRODUCTS
+        const byCategory = processProducts(products)
+        for (let prodCat in PRODUCTS) {
+          PRODUCTS[prodCat].banks[bank.id].count = byCategory[prodCat].count
+          PRODUCTS[prodCat].banks[bank.id].products = byCategory[prodCat].products
+        }
+        $productsList.innerHTML = productListTpl({ BANKS, PRODUCTS })
+      }))
+      logToConsole('Processed products from all banks')
+      console.log({ BANKS, PRODUCTS })
+
+      $productsList.innerHTML = productListTpl({ BANKS, PRODUCTS })
+      let $catRows = document.querySelectorAll('.category-row')
+      for (let $catRow of $catRows) {
+        // clicking on category row will show all products of that category
+        $catRow.addEventListener('click', function (e) {
+          let { catId } = e.target.parentNode.dataset
+          let $catProdsEl = document.querySelector(`#products-${catId}`)
+          $catRow.classList.toggle('expanded')
+          $catProdsEl.classList.toggle('hidden')
+        })
+      }
+      let $prodNames = document.querySelectorAll('.product-name')
+      for (let $prodName of $prodNames) {
+        // clicking on product name will show product details
+        $prodName.addEventListener('click', async function (e) {
+          let { bankId, productCode } = e.target.dataset
+          savedBankId = bankId
+          document.getElementById('product-details').innerHTML = '<div id="product-details-content">Fetching product details...<span id="product-details-close">&times;</span></div>'
+          document.getElementById('product-details').style.display = 'block'
+          document.getElementById('product-details-close').addEventListener('click', function (e) {
+            document.getElementById('product-details').style.display = 'none'
+            document.getElementById('product-details').innerHTML = ''
+          })
+          let productDetails = BANKS[bankId].productsRaw.find(prod => prod.productCode === productCode);
+          console.log({productDetails})
+          // Compile the main product template
+          // const productTemplateSource = document.getElementById('product-details-template').innerHTML;
+          // const productTemplate = Handlebars.compile('product-details-template');
+          
+          if (productDetails) {
+            document.getElementById('product-details').innerHTML = productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate });
+          } else {
+            document.getElementById('product-details').innerHTML = `<div id="product-details-content">Product details not found.<span id="product-details-close">&times;</span></div>`;
+          }
+          document.getElementById('product-details-close').addEventListener('click', function (e) {
+            document.getElementById('product-details').style.display = 'none'
+            document.getElementById('product-details').innerHTML = ''
+          })
+        })
+      }
+    };
+    </script>
+
+    <h1>Product Configuration Viewer by Environment</h1>
+
+    <textarea id="log-console" style="height: 100px; width: 500px;"></textarea>
+    <div id="products-list"></div>
+    <div id="product-details"></div>
+
+    <!-- Main Product Template -->
+    <script id="product-details-template" type="text/x-handlebars-template">
+      <div id="product-details-content">
+        <button id="diagram-btn" onclick="toggleDiagram( '{{product.productCode}}')" >Show Diagram</button>
+        <button id="json-btn" onclick="toggleJson( '{{product.productCode}}')">Show JSON</button>
+        <span id="product-details-close">&times;</span>
+        <div><pre id="product-details-diagram-content"></pre></div>
+        <div><pre id="product-details-json-content"></pre></div>
+
+      {{> product-name-template}}
+
+      <h2>Eligibility</h2>
+      {{#with product.productEligibilityDetails}}
+      {{> eligibility-template}}
+      {{/with}}
+
+      {{#if product.productConfiguration}}
+        <h2>Deposit Product Configuration</h2>
+        {{> deposit-product-config-template}}
+      {{/if}}
+
+      {{#if product.mortgageProductConfiguration}}
+        <h2>Lending Product Configuration</h2>
+        {{> lending-product-config-template}}
+      {{/if}}
+
+      <h2>Fee Plans</h2>
+      {{> product-fees-template}}
+
+      {{> deposit-product-rateplan-template}}
+      {{> lending-product-rateplan-template}}
+
+      <h2>Associated Services</h2>
+      {{> services-template}}
+
+      <h2>Open Banking</h2>
+      {{> product-openbanking-template}}
+
+      <h2>External Product Code Mapping</h2>
+      {{> external-product-code-mapping-template}}
+
+      <h2>Impacted Systems</h2>
+      {{> impacted-systems-template}}
+
+    </div>
+  </script>
+
+      </div>
+
+    <script id="products-list-template" type="text/x-handlebars-template">
+      <table style="width: 100%">
+        <tr>
+          <th>Environment</th>
+          {{#each BANKS}}
+            <th>{{this.name}}</th>
+          {{/each}}
+        </tr>
+        <tr>
+          <td>Total Products</td>
+          {{#each BANKS}}
+            <td>{{this.totalCount}}</td>
+          {{/each}}
+        </tr>
+        {{#each PRODUCTS}}
+          <tr class="category-row" data-cat-id="{{@key}}">
+            <td class="category-title">{{this.name}}</td>
+            {{#each this.banks}}
+              <td>{{this.count}}</td>
+            {{/each}}
+          </tr>
+          <tr class="category-products-list hidden" id="products-{{@key}}">
+            <td></td>
+            {{#each this.banks}}
+              <td class="category-products-main">
+                <table>
+                  {{#each this.products}}
+                    <tr>
+                      <td>
+                        <button class="product-name" data-bank-id="{{../bankId}}" data-product-code="{{this.productCode}}" title="{{this.productDescription}}">{{this.productName}}</button>
+                      </td>
+                    </tr>
+                  {{/each}}
+                </table>
+              </td>
+            {{/each}}
+          </tr>
+        {{/each}}
+    </table>
+    </script>
+
+    <style>
+      body {
+        font-family: Arial;
+      }
+      table {
+        border-collapse: collapse;
+      }
+
+      th {
+        background: #eee;
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        /* text-align: center; */
+        vertical-align: top;
+        font-size: 14px;
+      }
+
+      button {
+        background-color: white;
+        color: #3949ab;
+        border: 1px solid #3949ab;
+        border-radius: 8px;
+        padding: 10px 20px;
+        transition-duration: 0.4s;
+      }
+
+      button[disabled]:hover {
+        background: red;
+      }
+
+      button:hover {
+      background-color: #3949ab; /* purple */
+      color: white;
+    }
+      .category-row.expanded {
+        background-color: #eee;
+      }
+      .category-row:hover {
+        background-color: #eee;
+      }
+      .category-title {
+        cursor: pointer;
+        width: 200px;
+      }
+
+      .product-name {
+        cursor: pointer;
+      }
+
+      .category-products-main {
+        padding: 0;
+      }
+      .category-products-main table {
+        width: 100%;
+      }
+      .category-products-main table td {
+        border: 0;
+      }
+      .category-products-list.hidden {
+        display: none;
+      }
+
+      #product-details {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      }
+
+      #product-details-content {
+        background-color: #fefefe;
+        margin: 50px auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+      }
+      #product-details-close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      #product-details-close:hover,
+      #product-details-close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+    </body>
+    </html>
