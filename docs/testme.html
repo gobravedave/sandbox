@@ -1,0 +1,1179 @@
+<head>
+    <title>Product Configuration Viewer</title>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src="https://unpkg.com/renderjson@1.3.0/renderjson.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    </head>
+    <body>
+
+  <!-- Product Name Partial -->
+  <script id="product-name-template" type="text/x-handlebars-template">
+    <div>
+      <h2>{{product.productName}} as at {{formatDate asofDate}}</h2>
+      <table>
+        <tr>
+          <th>Code</th>
+          <th>Description</th>
+          <th>Classification</th>
+        </tr>
+        <tr>
+          <td>{{product.productCode}}</td>
+          <td>{{product.productDescription}}</td>
+          <td>{{product.productClassification}}</td>
+        </tr>
+        </table>
+    </div>
+  </script>
+
+  <!-- Eligibility Partial -->
+  <script id="eligibility-template" type="text/x-handlebars-template">
+    <div>
+    <h3>Life Cycle</h3>
+    <table>
+      <tr>
+        <th>Status</th>
+        <th>From Date</th>
+        <th>To Date</th>
+      </tr>
+      <tr>
+        <td>{{#if productStatus}} {{productStatus}} {{/if}}
+            {{#if serviceStatus}} {{serviceStatus}} {{/if}}
+        </td>
+        <td>{{formatDate this.fromDate}}</td>
+        <td>{{formatDate this.toDate}}</td>
+      </tr>
+      </table>
+
+    <h3>Eligibility Criteria</h3>
+    {{#with this.eligibilityCriteria}}
+    <table>
+      <tr><th>Type</th><th>Criteria</th></tr>
+      {{#if this.customerSegment}}
+      <tr>
+        <td>Customer Segment</td>
+        <td>
+        {{#each this.customerSegment}}
+            <li> Code = {{this.code}}, Name = {{this.customerSegmentName}}</li>
+        {{/each}}
+        </td>
+      </tr>
+      {{/if}}
+      {{#if this.customerRelationshipType}}
+      <tr>
+        <td>Relationship Type</td>
+        <td>
+        {{#each this.customerRelationshipType}}
+            <li>Code = {{this.code}}, Name = {{this.relationshipName}} </li>
+        {{/each}}
+    </td>
+    </tr>
+      {{/if}}
+      {{#if this.ageGroup}}
+      <tr>
+        <td>Age Group</td>
+        <td>
+        {{#each this.ageGroup}}
+            <li> Code = {{this.code}}, Name = {{this.name}}, From = {{this.fromValue}}, To = {{this.toValue}}</li>
+        {{/each}}
+        </td>
+      </tr>
+      {{/if}}
+      {{#if this.residencyStatus}}
+      <tr>
+        <td>Residency Status</td>
+        <td>
+        {{#each this.residencyStatus}}
+            <li> Code = {{this.code}}, Name = {{this.residenceStatusName}}</li>
+        {{/each}}
+        </td>
+      </tr>
+      {{/if}}
+      {{#if this.naturalPerson}}
+      <tr>
+        <td>Natural Person</td>
+        <td>
+        {{#each this.naturalPerson}}
+            <li> Code = {{this.code}}, Name = {{this.naturalPersonName}}</li>
+        {{/each}}
+        </td>
+      </tr>
+      {{/if}}
+    </table>
+    {{/with}}
+</div>
+  </script>
+
+  <!-- Deposit Product Config Partial -->
+  <script id="deposit-product-config-template" type="text/x-handlebars-template">
+    {{#with product.productConfiguration.productParameters}}
+    <h3>Product Parameters</h3>
+    <table>
+      <tr>
+        <th>Brand</th>
+        <th>Fee Cycle</th>
+        <th>Statement Cycle</th>
+        <th>Statement Type</th>
+        <th>CR Interest Cycle</th>
+        <th>DR Interest Cycle</th>
+        <th>Redirect Interest</th>
+    </tr>
+    <tr>
+        <td>Code = {{brand.code}} <br> Name = {{brand.name}}</td>
+        <td>
+        {{#each feeCycle}}
+        <li>{{code}}</li>
+        {{/each}}
+        </td>
+        <td>
+        {{#each statementCycle}}
+        <li>Code = {{code}}, Name = {{name}}, Frequency = {{frequency}} </li>
+        {{/each}}
+        </td>
+        <td>
+        {{#each statementType}}
+        <li>Code = {{code}}</li>
+        {{/each}}
+        </td>
+        <td>
+        {{#each creditInterestCycle}}
+        <li>Code = {{code}}, Name = {{name}}</li>
+        {{/each}}
+        </td>
+        <td>
+        {{#each debitInterestCycle}}
+        <li>Code = {{code}}, Name = {{name}}</li>
+        {{/each}}
+        </td>
+        <td>
+        <li>isRedirectCreditInterestAllowed = {{reDirectInterest.isRedirectCreditInterestAllowed}}</li>
+        <li>isRedirectDebitInterestAllowed = {{reDirectInterest.isRedirectDebitInterestAllowed}}</li>
+        </td>
+    </tr>
+</table>
+
+{{/with}}
+{{#with product.productConfiguration.financialParameters}}
+{{> financial-parameters-template}}
+{{/with}}
+
+<h3>Bahavioural Parameters</h3>
+{{#with product.productConfiguration.behaviourParameters}}
+<table>
+  <tr>
+    <th>Informal Overdraft</th>
+    <th>Overdraft Treatment</th>
+</tr>
+<tr>
+    <td>
+    <li>Information Overdraft Applicable = {{informalOverDraft.inFormalOverdraftApplicable}}</li>
+    <li>Information Overdraft Tolerance = {{informalOverDraft.inFormalOverdraftTolerance}}</li>
+  </td>
+  <td>
+    Code = {{informalOverDraft.overdrawnTreatment.code}}<br>
+    Name = {{informalOverDraft.overdrawnTreatment.name}}<br>
+    Description = {{informalOverDraft.overdrawnTreatment.description}}
+  </td>
+</tr>
+</table>
+{{/with}}
+
+{{#with product.productConfiguration.entitlementParameters}}
+{{> entitlements-template}}
+{{/with}}
+
+{{#with product.productConfiguration.regulatoryParameters}}
+{{> regulatory-parameters-template}}
+{{/with}}
+
+
+{{#with product.productConfiguration.documentations}}
+{{> documentation-template}}
+{{/with}}
+
+  </script>
+  <!-- Lending Product Config Partial -->
+  <script id="lending-product-config-template" type="text/x-handlebars-template">
+    {{#with product.mortgageProductConfiguration.productParameters}}
+    <h3>Product Parameters</h3>
+    <table>
+      <tr>
+        <th>Brand</th>
+        <th>Min Loan Term (Months)</th>
+        <th>Max Loan Term (Months)</th>
+        <th>Min Loan Amount</th>
+        <th>Max Loan Amount</th>
+        <th>Security Mandatory</th>
+        <th>Security Type</th>
+        <th>Loan Purpose Code</th>
+        <th>Payment Frequency</th>
+        <th>Payment Method</th>
+      </tr>
+      <tr>
+        <td>Code = {{brand.code}} <br> Name = {{brand.name}}</td>
+        <td>{{minimumLoanTermInMonths}}</td>
+        <td>{{maximumLoanTermInMonths}}</td>
+        <td>{{minimumLoanAmount}}</td>
+        <td>{{maximumLoanAmount}}</td>
+        <td>{{isSecurityMandatory}}</td>
+        <td>
+        {{#each securityType}}
+        <li>Code = {{this.code}}, Name = {{this.name}}</li>
+        {{/each}}
+        </td>
+        <td>
+        {{#each loanPurposeCode}}
+        <li>Code = {{this.code}}, Name = {{this.name}}</li>
+        {{/each}}
+        </td>
+        <td>
+        {{#each paymentFrequency}}
+        <li>Code = {{this.code}}, Name = {{this.name}}, (default={{this.isDefault}})</li>
+        {{/each}}
+        </td>
+        <td>
+        {{#each paymentmethod}}
+        <li>Code = {{this.code}}, Name = {{this.name}}, (default={{this.isDefault}})</li>
+        {{/each}}
+        </td>
+        </tr>
+    </table>
+    {{/with}}
+
+    {{#with product.mortgageProductConfiguration.financialParameters}}
+    {{> financial-parameters-template}}
+    {{/with}}
+
+    {{#with product.mortgageProductConfiguration.entitlementParameters}}
+    {{> entitlements-template}}
+    {{/with}}
+
+    {{#with product.mortgageProductConfiguration.regulatoryParameters}}
+    {{> regulatory-parameters-template}}
+    {{/with}}
+
+    {{#with product.mortgageProductConfiguration.documentations}}
+    {{> documentation-template}}
+    {{/with}}
+
+  </script>
+
+  <!-- Financial Parameters Partial -->
+  <script id="financial-parameters-template" type="text/x-handlebars-template">
+    <h3>Financial Parameters</h3>
+    <table>
+        <tr>
+          <th>Operating Segment</th>
+          <th>Account Servicing Model</th>
+          <th>Cost Center</th>
+          {{#if generalLedger}}
+          <th>General Ledger</th>
+          {{/if}}
+          {{#if variableGeneralLedger}}
+          <th>Variable General Ledger</th>
+          {{/if}}
+          {{#if collections}}
+          <th>Unproductive General Ledger</th>
+          <th>Collections Customer Credit Rating</th>
+          {{/if}}
+        </tr>
+        <tr>
+        <td>Code = {{this.operatingSegment.code}} <br> Name = {{this.operatingSegment.name}}</td>
+        <td>Code = {{this.accountServicingModel.code}} <br> Name = {{this.accountServicingModel.name}}</td>
+        <td>Code = {{this.costCenter.code}} <br> Name = {{this.costCenter.name}}</td>
+        {{#if generalLedger}}
+        <td>Code = {{this.generalLedger.code}} <br> Name = {{this.generalLedger.name}}</td>
+        {{/if}}
+        {{#if variableGeneralLedger}}
+        <td>Code = {{this.variableGeneralLedger.code}} <br> Name = {{this.variableGeneralLedger.name}}</td>
+        {{/if}}
+        {{#if collections}}
+        <td>Code = {{collections.unproductiveGeneralLedger.code}}, Name = {{collections.unproductiveGeneralLedger.name}}</td>
+        <td>Code = {{collections.collectionsCustomerCreditRating.code}}, Name = {{collections.collectionsCustomerCreditRating.name}}</td>
+        {{/if}}
+      </tr>
+    </table>
+
+  </script>
+
+  <!-- Regulatory Parameters Partial -->
+  <script id="regulatory-parameters-template" type="text/x-handlebars-template">
+  <h3>Regulatory Parameters</h3>
+  <table>
+      <tr>
+        <th>Configuration</th>
+        {{#if regulations.regulatoryReporting}}
+        <th>Regulatory Reporting</th>
+        {{/if}}
+      </tr>
+      <tr>
+      <td>
+      {{#if riskLevel}}
+      <li>Risk Level Code = {{riskLevel.code}}, Name = {{riskLevel.name}} <br> Description = {{riskLevel.description}}</li>
+      {{/if}}
+      {{#if regulations.regulatoryProductConfiguration.riskLevel}}
+      <li>Risk Level Code = {{regulations.regulatoryProductConfiguration.riskLevel.code}}, Name = {{regulations.regulatoryProductConfiguration.riskLevel.name}} <br> Description = {{regulations.regulatoryProductConfiguration.riskLevel.description}}</li>
+      {{/if}}
+      {{#if regulatedIndicator}}
+      {{#each regulatedIndicator}}
+      <li>Regulated Indicator Code = {{code}}, Name = {{name}}, Is Default = {{isDefault}}</li>
+      {{/each}}
+      {{/if}}
+      {{#if regulations.regulatoryProductCode}}
+      <li> Regulatory Product Code: {{regulations.regulatoryProductCode}}</li>
+      {{/if}}
+      {{#if regulations.regulatoryProductName}}
+      <li> Regulatory Product Name: {{regulations.regulatoryProductName}}</li>
+      {{/if}}
+      {{#if regulations.regulatoryProductDescription}}
+      <li> Regulatory Product Description: {{regulations.regulatoryProductDescription}}</li>
+      {{/if}}
+      {{#if egulations.regulatoryProductConfiguration.withHoldingTax}}
+      <li> Withholding Tax: {{regulations.regulatoryProductConfiguration.withHoldingTax}}</li>
+      {{/if}}
+      </td>
+      {{#if regulations.regulatoryReporting}}
+      <td>
+        <table>
+          <tr>
+            <th>Regulator</th>
+            <th>Report Series</th>
+          </tr>
+      {{#each regulations.regulatoryReporting}}
+      <tr>
+        <td>Code = {{code}}, Name = {{name}}</td>
+        <td>
+        {{#each reportSeries}}
+        <li>Code = {{code}}, Name = {{reportSeriesName}}, Reporting Classification = {{reportingProductClassificationCode}}</li>
+        {{/each}}
+        </td>
+      </tr>
+
+      {{/each}}
+      </td>
+      </table>
+      {{/if}}
+    </tr>
+  </table>
+  </script>
+
+  <!-- Product Fees Partial -->
+  <script id="product-fees-template" type="text/x-handlebars-template">
+    {{#with product.feePlans}}
+    {{#each data}}
+    {{#each feePlans}}
+        <table>
+        <tr>
+          <th>FeePlan</th>
+          <th>From Date</th>
+          <th>To Date</th>
+        </tr>
+        <tr>
+          <td>Code = {{this.code}} <br>Name = {{this.feePlanName}}</td>
+          <td>{{formatDate this.feeItemsStartDate}}</td>
+          <td>{{formatDate this.feeItemsEndDate}}</td>
+        </tr>
+        </table>
+        </br>
+        <table>
+            <tr>
+              <th>Fee Item</th>
+              <th>Type</th>
+              <th>Fee Code</th>
+              <th>Fee Amount Type</th>
+              <th>Fee Amount</th>
+            </tr>
+        {{#each feeItems}}
+            <tr>
+              <td>Code = {{this.code}} <br>Name = {{this.feeItemName}}</td>
+              <td>{{this.feeItemType}}</td>
+              <td>Code = {{this.feeCode.code}}<br>Name = {{this.feeCode.feeName}}</td>
+              <td>
+            {{#if simpleTransactionalFeeAmount}}Simple{{/if}}
+            {{#if tieredTransactionalFee}}Tiered{{/if}}
+              </td>
+              <td>
+                {{#if simpleTransactionalFeeAmount}}
+                <li>Amount Or Percentage= {{simpleTransactionalFeeAmount.amountOrPercentage}}</li>
+                <li>Amount = ${{simpleTransactionalFeeAmount.amount}}</li>
+                {{/if}}
+                {{#if tieredTransactionalFee}}
+                <li>Whole Or Progressive = {{tieredTransactionalFee.wholeOrProgressive}}</li>
+                <li>Volume Or Value = {{tieredTransactionalFee.volumeOrValue}}</li>
+                <li>Amount Or Percentage = {{tieredTransactionalFee.amountOrPercentage}}</li>
+                <li>Tiers End Points Value = {{tieredTransactionalFee.tiersEndPointsValue}}</li>
+                <br>
+                <table>
+                    <tr>
+                      <th>Amount</th>
+                      <th>From</th>
+                      <th>To</th>
+                    </tr>
+                {{#each tieredTransactionalFee.valueTiers}}
+                    <tr>
+                    <td>${{amount.value}}</td>
+                    <td>{{fromOperator}} {{fromValue}}</td>
+                    <td>{{toOperator}} {{toValueNumeric}}</td>
+                    </tr>
+                {{/each}}
+                </table>
+                {{/if}}
+              </td>
+            </tr>
+        {{/each}}
+    </table>
+    {{/each}}
+    {{/each}}
+    {{/with}}
+  </script>
+
+  <!-- Deposit Product Rate Plan Partial -->
+  <script id="deposit-product-rateplan-template" type="text/x-handlebars-template">
+      {{#with product.ratePlans.data.[0].ratePlanAssociation.depositStandardRatePlanDetails}}
+      <h2>Deposit Rate Plan</h2>
+      <table>
+        <tr>
+          <th>Rate</th>
+          {{#with rates.rateGrid.row.[0]}}
+            {{#each columns}}
+              <th>{{name}}</th>
+            {{/each}}
+          {{/with}}
+          <th>Bonus</th>
+        </tr>
+        {{#each row}}
+        <tr>
+          <td>{{rate}}</td>
+            {{#each columns}}
+              <td>{{operator}} {{value}}</td>
+            {{/each}}
+            <td>Add logic to get any bonus</td>
+          </tr>
+        {{/each}}
+      </table>
+      {{/with}}
+  </script>
+
+  <!-- Lending Product Rate Plan Partial -->
+  <script id="lending-product-rateplan-template" type="text/x-handlebars-template">
+    {{#with product.ratePlans}}
+    {{#each this.data}}
+    {{#with this.ratePlanAssociation}}
+    {{#if this.standardRatePlan.mortgageStandardRatePlanDetails}}
+    <h2>Mortgage Rate Plan</h2>
+
+    {{#with this.standardRatePlan.mortgageStandardRatePlanDetails.twoTermRates.firstPartTermRates.rateGrid}}
+    <h3>First Term Rate</h3>
+    <table>
+      <tr>
+        <th>Rate</th>
+        <th>Comparison Rate</th>
+        {{#with row.[0]}}
+          {{#each columns}}
+            <th>{{name}}</th>
+          {{/each}}
+        {{/with}}
+        <th>Discount</th>
+      </tr>
+      {{#each row}}
+      <tr>
+        <td>{{rate}}</td>
+        <td>{{comparisonRate}}</td>
+          {{#each columns}}
+            <td>{{operator}} {{value}}</td>
+          {{/each}}
+          <td>Add logic to get any discounts</td>
+        </tr>
+      {{/each}}
+    </table>
+  {{/with}}
+
+    {{#with this.standardRatePlan.mortgageStandardRatePlanDetails.twoTermRates.remainingPartTermRates.rateGrid}}
+    <h3>Remaining Term Rate</h3>
+    <table>
+        <tr>
+          <th>Rate</th>
+          <th>Comparison Rate</th>
+          {{#with row.[0]}}
+            {{#each columns}}
+              <th>{{name}}</th>
+            {{/each}}
+          {{/with}}
+        </tr>
+        {{#each row}}
+        <tr>
+          <td>{{rate}}</td>
+          <td>{{comparisonRate}}</td>
+            {{#each columns}}
+              <td>{{operator}} {{value}}</td>
+            {{/each}}
+          </tr>
+        {{/each}}
+      </table>
+      {{/with}}
+
+    {{/if}}
+    {{/with}}
+    {{/each}}
+    {{/with}}
+  </script>
+
+  <!-- Services Partial -->
+  <script id="services-template" type="text/x-handlebars-template">
+    {{#with product.serviceAssociation}}
+    {{#if multiUseProducts}}
+    <h3>MultiUse Products</h3>
+    <table>
+    <tr>
+    <th>Product</th>
+    <th>Classification</th>
+    <th>Life Cycle</th>
+    <th>Product Parameters</th>
+    <th>Financial Parameters</th>
+    </tr>
+    {{#each multiUseProducts }}
+    <tr>
+    <td>Code = {{productCode}}<br> Name = {{productName}} </td>
+    <td>{{productClassification}}</td>
+    <td>Status = {{productLifecycleDetails.productStatus}}<br>
+        From Date = {{formatDate productLifecycleDetails.fromDate}}<br>
+        To Date = {{formatDate productLifecycleDetails.toDate}}</td>
+    <td>
+    Linked Deposit Products:<br>
+    {{#each productConfiguration.offsetProductConfiguration.productParameters.linkedDepositProducts}}
+    <li>Code = {{code}}, Name = {{name}}, (is default = {{isDefault}})</li>
+    {{/each}}
+    Max Linked Account Count: {{productConfiguration.offsetProductConfiguration.productParameters.maximumNumberLinkedAccounts}}<br>
+    Billing Products:
+    {{#each productConfiguration.offsetProductConfiguration.productParameters.billingProducts}}
+    <li>Code = {{code}}, Name = {{name}}, (is default = {{isDefault}})</li>
+    {{/each}}
+    </td>
+    <td>
+    Cost Center = {{productConfiguration.offsetProductConfiguration.financialParameters.costCenter.code}} Name = {{productConfiguration.offsetProductConfiguration.financialParameters.costCenter.code}}<br>
+    General Ledger Code = {{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.code}} Name = {{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.code}}
+    </td>
+    </tr>
+    {{/each}}
+    </table>
+    {{/if}}
+
+    {{#if services}}
+    <h3>Services</h3>
+    <table>
+        <tr>
+        <th>Service</th>
+        <th>Category</th>
+        <th>Subscription Required</th>
+        <th>Eligibility</th>
+        <th>Service Configuration</th>
+        </tr>
+        {{#each services}}
+        <tr>
+        <td>Code = {{code}}<br> Name = {{name}} </td>
+        <td>{{serviceCategory}}</td>
+        <td>{{subscriptionRequired}}</td>
+        <td>
+        {{#with serviceDetails.[0].serviceEligibilityDetails}}
+        {{> eligibility-template}}
+        {{/with}}
+        </td>
+        <td>
+        {{#if serviceDetails.[0].serviceConfiguration.debitCard}}
+        Card Category Code = {{serviceDetails.[0].serviceConfiguration.debitCard.cardCategory.code}} , Name = {{serviceDetails.[0].serviceConfiguration.debitCard.cardCategory.name}} <br>
+        {{#each serviceDetails.[0].serviceConfiguration.debitCard.cardDesign }}
+        <li>Card Design Code = {{code}}, Name = {{name}} {{#if imageURL}}, imageURL={{imageURL}} {{/if}} </li>
+        {{/each}}
+        Daily Withdrawal Limit = {{serviceDetails.[0].serviceConfiguration.debitCard.dailyWithdrawalLimit}}
+        {{/if}}
+        {{#if serviceDetails.[0].serviceConfiguration.goalService}}
+        Service Category: {{serviceDetails.[0].serviceConfiguration.goalService.serviceCategory}} <br>
+        Max Goal Count: {{serviceDetails.[0].serviceConfiguration.goalService.maxNumberofGoals}} <br>
+        Goal Mapping:
+        {{#each serviceDetails.[0].serviceConfiguration.goalService.goalMapping}}
+            <li>Code = {{code}}, Name = {{name}}, Type= {{type}}, isBaseGaol={{isBaseGoal}}</li>
+        {{/each}}
+        {{/if}}
+        </td>
+        </tr>
+        {{/each}}
+        </table>
+        {{/if}}
+    {{/with}}
+  </script>
+
+  <!-- Entitlements Partial -->
+  <script id="entitlements-template" type="text/x-handlebars-template">
+    <h3>Entitlement Parameters</h3>
+    <table>
+        <tr>
+          <th>Enabled For Open Banking</th>
+          <th>Transact Options</th>
+        </tr>
+        <tr>
+        <td>{{this.enabledForOpenBanking}}</td>
+        <td>
+        {{#each transactOptions}}
+        <li>Code = {{this.code}}, Name = {{this.name}}</li>
+        {{/each}}
+        </td>
+        </tr>
+    </table>
+  </script>
+
+  <!-- Documention Partial -->
+  <script id="documentation-template" type="text/x-handlebars-template">
+    <h3>Documentation</h3>
+    <table>
+        <tr>
+          <th>Type</th>
+          <th>Document</th>
+          <th>Reference ID</th>
+          <th>External URL</th>
+        </tr>
+        {{#each termsAndConditions}}
+        <tr>
+        <td>Terms And Conditions</td>
+        <td>Code = {{this.code}} <br> Name = {{this.name}}</td>
+        <td>{{this.documentReferenceID}}</td>
+        <td>{{this.externalURL}}</td>
+        </tr>
+        {{/each}}
+        {{#each termsAndConditions}}
+        <tr>
+        <td>Marketing Collateral</td>
+        <td>Code = {{this.code}} <br> Name = {{this.name}}</td>
+        <td>{{this.documentReferenceID}}</td>
+        <td>{{this.externalURL}}</td>
+        </tr>
+        {{/each}}
+    </table>
+  </script>
+
+  <!-- External Product Code Mapping Partial -->
+  <script id="external-product-code-mapping-template" type="text/x-handlebars-template">
+    <table>
+      <tr>
+        <th>Product</th>
+        <th>System Of Record</th>
+      </tr>
+      <tr>
+      {{#each product.externalProductCodeMapping}}
+          <td>Code = {{this.code}} <br> Name = {{this.name}}</td>
+        <td>Code = {{systemOfRecord.code}} <br> Name = {{systemOfRecord.name}}</td>
+      </tr>
+      </table>
+      {{/each}}
+  </script>
+
+  <!-- Impacted Systems Partial -->
+  <script id="impacted-systems-template" type="text/x-handlebars-template">
+      <table>
+        <tr>
+          <th>System</th>
+          <th>Product Code</th>
+          <th>Product Name</th>
+          <th>Product Classification</th>
+        </tr>
+        <tr>
+        {{#each product.impactedSystems}}
+            <td>Code = {{this.code}} <br> Name = {{this.name}}</td>
+          <td>{{impactedSystemProductCode}}</td>
+          <td>{{impactedSystemProductName}}</td>
+          <td>{{impactedSystemProductClassification}}</td>
+        </tr>
+        </table>
+        {{/each}}
+  </script>
+
+  <!-- Product Open Banking Partial -->
+  <script id="product-openbanking-template" type="text/x-handlebars-template">
+
+    {{#with product.openBankingConfiguration}}
+    {{#if this.features}}
+    <h3>Features</h3>
+    <table>
+      <tr>
+        <th>Type</th>
+        <th>Additional Value</th>
+        <th>Additional Information</th>
+        <th>Additional Information Link</th>
+      </tr>
+      {{#each this.features}}
+        <tr>
+          <td>{{this.featureType}}</td>
+          <td>{{this.additionalValue}}</td>
+          <td>{{this.additionalInfo}}</td>
+          <td>{{this.additionalInfoUri}}</td>
+        </tr>
+      {{/each}}
+    </table>
+    {{/if}}
+
+    {{#if this.feeItems}}
+    <h3>Fee Items</h3>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Fee Item Type</th>
+        <th>Fee Type</th>
+        <th>Additional Information</th>
+        <th>Link</th>
+      </tr>
+      {{#each this.feeItems}}
+        <tr>
+          <td>{{this.feeItem.feeItemName}}</td>
+          <td>{{this.feeItem.feeItemDescription}}</td>
+          <td>{{this.feeItem.feeItemType}}</td>
+          <td>{{this.feeType}}</td>
+          <td>{{this.additionalInfo}}</td>
+          <td>{{this.additionalInfoUri}}</td>
+        </tr>
+      {{/each}}
+    </table>
+    {{/if}}
+    {{/with}}
+  </script>
+
+  <!-- Main Product Template -->
+  <script id="product-details-template" type="text/x-handlebars-template">
+    <div class="product">
+      {{> product-name-template}}
+
+      <h2>Eligibility</h2>
+      {{#with product.productEligibilityDetails}}
+      {{> eligibility-template}}
+      {{/with}}
+
+      {{#if product.productConfiguration}}
+        <h2>Deposit Product Configuration</h2>
+        {{> deposit-product-config-template}}
+      {{/if}}
+
+      {{#if product.mortgageProductConfiguration}}
+        <h2>Lending Product Configuration</h2>
+        {{> lending-product-config-template}}
+      {{/if}}
+
+      <h2>Fee Plans</h2>
+      {{> product-fees-template}}
+
+      {{> deposit-product-rateplan-template}}
+      {{> lending-product-rateplan-template}}
+
+      <h2>Associated Services</h2>
+      {{> services-template}}
+
+      <h2>Open Banking</h2>
+      {{> product-openbanking-template}}
+
+      <h2>External Product Code Mapping</h2>
+      {{> external-product-code-mapping-template}}
+
+      <h2>Impacted Systems</h2>
+      {{> impacted-systems-template}}
+
+    </div>
+  </script>
+  <script>
+    // Register helpers
+    Handlebars.registerHelper('formatDate', function(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-AU');
+    });
+
+    // Register partials
+    Handlebars.registerPartial('product-name-template', document.getElementById('product-name-template').innerHTML);
+    Handlebars.registerPartial('eligibility-template', document.getElementById('eligibility-template').innerHTML);
+    Handlebars.registerPartial('deposit-product-config-template', document.getElementById('deposit-product-config-template').innerHTML);
+    Handlebars.registerPartial('lending-product-config-template', document.getElementById('lending-product-config-template').innerHTML);
+    Handlebars.registerPartial('financial-parameters-template', document.getElementById('financial-parameters-template').innerHTML);
+    Handlebars.registerPartial('regulatory-parameters-template', document.getElementById('regulatory-parameters-template').innerHTML);
+    Handlebars.registerPartial('product-fees-template', document.getElementById('product-fees-template').innerHTML);
+    Handlebars.registerPartial('deposit-product-rateplan-template', document.getElementById('deposit-product-rateplan-template').innerHTML);
+    Handlebars.registerPartial('lending-product-rateplan-template', document.getElementById('lending-product-rateplan-template').innerHTML);
+    Handlebars.registerPartial('services-template', document.getElementById('services-template').innerHTML);
+    Handlebars.registerPartial('entitlements-template', document.getElementById('entitlements-template').innerHTML);
+    Handlebars.registerPartial('documentation-template', document.getElementById('documentation-template').innerHTML);
+    Handlebars.registerPartial('product-openbanking-template', document.getElementById('product-openbanking-template').innerHTML);
+    Handlebars.registerPartial('external-product-code-mapping-template', document.getElementById('external-product-code-mapping-template').innerHTML);
+    Handlebars.registerPartial('impacted-systems-template', document.getElementById('impacted-systems-template').innerHTML);
+
+    let logConsole;
+    // let selectedLeftProduct = null;
+    // let selectedRightProduct = null;
+
+    const BANKS = {
+      go: { name: 'GO', json: 'datasets/demo.json'},
+      steady: { name: 'STEADY', json: 'datasets/demo.json'},
+      ready: { name: 'READY', json: 'datasets/demo.json' },
+    }
+    let savedBankId
+
+    const PRODUCTS = {
+      DEPOSIT: {
+        name: 'Deposits',
+      },
+        TIME_DEPOSITS: {
+        name: 'Time Deposits',
+      },
+        CRED_AND_CHRG_CARDS: {
+        name: 'Credit and Charge Cards',
+      },
+        MORTGAGE: {
+        name: 'Residential Mortgages',
+      },
+    }
+
+    function logToConsole(msg) {
+      console.log(msg)
+      logConsole.value += msg + '\n'
+    }
+
+
+    async function getProducts(bank) {
+      let jsonUrl = `${bank.json}`; // Path to the JSON file
+      try {
+        logToConsole(`Getting products for ${bank.name}`);
+        const start = new Date();
+        let response = await fetch(jsonUrl);
+        let jsonData = await response.json();
+        const duration = (new Date() - start) / 1000;
+
+        // Assuming you're interested in the first entry in the data array
+        const res = jsonData.data && jsonData.data[0] ? {
+          asofDate: jsonData.requestDate,
+          count: jsonData.data[0].productDetails.length,
+          products: jsonData.data[0].productDetails
+        } : { asofDate: null, count: 0, products: [] };
+
+        logToConsole(`Got products for ${bank.name} in ${duration}s`);
+        console.log(res);
+        return res;
+      } catch (err) {
+        logToConsole(`Error getting data for ${bank.name} from ${bank.json}`);
+        console.error(err);
+        return { products: [], count: 0 };
+      }
+    }
+
+    function processProducts(products) {
+      const byCategory = {};
+
+      // Initialize categories in byCategory object
+      for (let prodCat in PRODUCTS) {
+        byCategory[prodCat] = { count: 0, products: [] };
+      }
+
+      products.forEach((p) => {
+        const category = p.productClassification; // or the key you're using
+
+        // Ensure the category exists in the PRODUCTS object
+        if (category && PRODUCTS[category]) {
+          byCategory[category].count++;
+          byCategory[category].products.push(p);
+        } else {
+          console.warn(`Product ${p.productName} has an unknown or missing category: ${category}`);
+        }
+      });
+
+      return byCategory;
+    }
+
+    async function toggleDiagram(productId) {
+        const bankId = savedBankId;
+        const diagramButton = document.getElementById('diagram-btn');
+
+        if (diagramButton.textContent === 'Show Diagram') {
+          const h2 = document.createElement('h2');
+          // h2.style.color = 'blue';
+          h2.textContent = 'Diagram is a placeholder and does not reflect actual product details';
+          document.getElementById("product-details-diagram-content").appendChild(h2);
+          const iframe = document.createElement('iframe');
+          iframe.width = "80%";
+          iframe.height = "500";
+          iframe.frameBorder = "0";
+          iframe.src = "https://gobravedave.github.io/sandbox/gojs-product.html";
+          document.getElementById("product-details-diagram-content").appendChild(iframe);
+          diagramButton.textContent = 'Hide Diagram';
+        } else {
+            document.getElementById("product-details-diagram-content").innerHTML = "";
+            diagramButton.textContent = 'Show Diagram';
+        }
+    }
+
+    async function toggleJson(productId) {
+      logToConsole(`Showing JSON for bank ${savedBankId} productId ${productId}`)
+      const jsonBtn = document.getElementById('json-btn');
+      if (jsonBtn.textContent === 'Show JSON') {
+        let productDetails = BANKS[savedBankId].productsRaw.find(prod => prod.productCode=== productId);
+
+        var pre = document.getElementById("product-details-json-content");
+        pre.innerHTML = ""; // Clear previous JSON content
+        renderjson.set_icons('+', '-');
+        renderjson.set_show_to_level(2);
+        // renderjson.set_collapse_msg(function(len) { return len + " item" + (len==1 ? "" : "s") })
+        pre.appendChild(renderjson(productDetails));
+        jsonBtn.textContent = 'Hide JSON';
+      } else {
+        document.getElementById("product-details-json-content").innerHTML = "";
+        jsonBtn.textContent = 'Show JSON';
+      }
+    }
+
+    window.onload = async function () {
+      // populateBankDropdown('compare-left-bank');
+      // populateBankDropdown('compare-right-bank');
+
+      Handlebars.registerHelper('formatDate', function(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-AU');
+      });
+      let productListTpl = Handlebars.compile(document.getElementById('products-list-template').innerHTML)
+      const $productsList = document.getElementById('products-list')
+
+      $productsList.innerHTML = productListTpl({})
+      let productDetailsTpl = Handlebars.compile(document.getElementById('product-details-template').innerHTML)
+
+      logConsole = document.getElementById('log-console')
+
+      await Promise.all(Object.entries(BANKS).map(async ([id, bank]) => {
+        BANKS[id].id = id
+        for (let prodCat in PRODUCTS) {
+          PRODUCTS[prodCat].banks = PRODUCTS[prodCat].banks || {}
+          PRODUCTS[prodCat].banks[id] = {
+            bankId: id,
+          }
+        }
+
+        const { asofDate, count, products } = await getProducts(bank)
+        BANKS[bank.id].productsRaw = products
+        BANKS[bank.id].totalCount = count
+        BANKS[bank.id].asofDate = asofDate
+
+        // add banks product count and list to PRODUCTS
+        const byCategory = processProducts(products)
+        for (let prodCat in PRODUCTS) {
+          PRODUCTS[prodCat].banks[bank.id].count = byCategory[prodCat].count
+          PRODUCTS[prodCat].banks[bank.id].products = byCategory[prodCat].products
+        }
+
+        $productsList.innerHTML = productListTpl({ BANKS, PRODUCTS })
+      }))
+      logToConsole('Processed products from all banks')
+      console.log({ BANKS, PRODUCTS })
+
+      $productsList.innerHTML = productListTpl({ BANKS, PRODUCTS })
+
+      let $catRows = document.querySelectorAll('.category-row')
+      for (let $catRow of $catRows) {
+        // clicking on category row will show all products of that category
+        $catRow.addEventListener('click', function (e) {
+          let { catId } = e.target.parentNode.dataset
+          let $catProdsEl = document.querySelector(`#products-${catId}`)
+          $catRow.classList.toggle('expanded')
+          $catProdsEl.classList.toggle('hidden')
+        })
+      }
+
+      let $prodNames = document.querySelectorAll('.product-name')
+      for (let $prodName of $prodNames) {
+        // clicking on product name will show product details
+        $prodName.addEventListener('click', async function (e) {
+          let { bankId, productCode } = e.target.dataset
+          savedBankId = bankId
+          document.getElementById('product-details').innerHTML = '<div id="product-details-content">Fetching product details...<span id="product-details-close">&times;</span></div>'
+          document.getElementById('product-details').style.display = 'block'
+          document.getElementById('product-details-close').addEventListener('click', function (e) {
+            document.getElementById('product-details').style.display = 'none'
+            document.getElementById('product-details').innerHTML = ''
+          })
+
+          let productDetails = BANKS[bankId].productsRaw.find(prod => prod.productCode === productCode);
+          console.log({productDetails})
+
+          // Compile the main product template
+          // const productTemplateSource = document.getElementById('product-details-template').innerHTML;
+          const productTemplate = Handlebars.compile('product-details-template');
+
+          if (productDetails) {
+            document.getElementById('product-details-pretty-content').innerHTML = productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate });
+          } else {
+            document.getElementById('product-details-pretty-content').innerHTML = `<div id="product-details-content">Product details not found.<span id="product-details-close">&times;</span></div>`;
+          }
+
+          document.getElementById('product-details-close').addEventListener('click', function (e) {
+            document.getElementById('product-details').style.display = 'none'
+            document.getElementById('product-details').innerHTML = ''
+          })
+        })
+      }
+
+    };
+
+    </script>
+
+    <h1>Product Configuration Viewer by Environment</h1>
+    <p>
+    - Wait for the table to load.<br />
+    - Click on a product category to show product configuration in each environment.<br />
+    - Click on a product title to show configuration of the product.<br />
+    </p>
+
+    <textarea id="log-console" style="height: 100px; width: 500px;"></textarea>
+    <div id="products-list"></div>
+    <div id="product-details"></div>
+    </br>
+      <div id="product-details-content">
+        <button id="diagram-btn" onclick="toggleDiagram( '{{product.productCode}}')" >Show Diagram</button>
+        <button id="json-btn" onclick="toggleJson( '{{product.productCode}}')">Show JSON</button>
+        <span id="product-details-close">&times;</span>
+        <div><pre id="product-details-diagram-content"></pre></div>
+        <div><pre id="product-details-json-content"></pre></div>
+        <div id="product-details-pretty-content"></div>
+      </div>
+
+    <script id="products-list-template" type="text/x-handlebars-template">
+      <table style="width: 100%">
+        <tr>
+          <th>Environment</th>
+          {{#each BANKS}}
+            <th>{{this.name}}</th>
+          {{/each}}
+        </tr>
+        <tr>
+          <td>Total Products</td>
+          {{#each BANKS}}
+            <td>{{this.totalCount}}</td>
+          {{/each}}
+        </tr>
+        {{#each PRODUCTS}}
+          <tr class="category-row" data-cat-id="{{@key}}">
+            <td class="category-title">{{this.name}}</td>
+            {{#each this.banks}}
+              <td>{{this.count}}</td>
+            {{/each}}
+          </tr>
+          <tr class="category-products-list hidden" id="products-{{@key}}">
+            <td></td>
+            {{#each this.banks}}
+              <td class="category-products-main">
+                <table>
+                  {{#each this.products}}
+                    <tr>
+                      <td>
+                        <button class="product-name" data-bank-id="{{../bankId}}" data-product-code="{{this.productCode}}" title="{{this.productDescription}}">{{this.productName}}</button>
+                      </td>
+                    </tr>
+                  {{/each}}
+                </table>
+              </td>
+            {{/each}}
+          </tr>
+        {{/each}}
+    </table>
+    </script>
+
+    <style>
+      body {
+        font-family: Arial;
+      }
+      table {
+        border-collapse: collapse;
+      }
+
+      th {
+        background: #eee;
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        /* text-align: center; */
+        vertical-align: top;
+        font-size: 14px;
+      }
+
+      button {
+        background-color: white;
+        color: #3949ab;
+        border: 1px solid #3949ab;
+        border-radius: 8px;
+        padding: 10px 20px;
+        transition-duration: 0.4s;
+      }
+
+      button[disabled]:hover {
+        background: red;
+      }
+
+      button:hover {
+      background-color: #3949ab; /* purple */
+      color: white;
+    }
+      .category-row.expanded {
+        background-color: #eee;
+      }
+      .category-row:hover {
+        background-color: #eee;
+      }
+      .category-title {
+        cursor: pointer;
+        width: 200px;
+      }
+
+      .product-name {
+        cursor: pointer;
+      }
+
+
+      .category-products-main {
+        padding: 0;
+      }
+      .category-products-main table {
+        width: 100%;
+      }
+      .category-products-main table td {
+        border: 0;
+      }
+      .category-products-list.hidden {
+        display: none;
+      }
+
+
+      #product-details {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      }
+
+      #product-details-content {
+        background-color: #fefefe;
+        margin: 50px auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Could be more or less, depending on screen size */
+      }
+      #product-details-close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      #product-details-close:hover,
+      #product-details-close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    </style>
+
+    </body>
+    </html>
