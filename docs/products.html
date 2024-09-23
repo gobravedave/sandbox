@@ -22,9 +22,8 @@ const BANKS = {
   anzx: { name: 'ANZ Plus', host: 'https://cdr.apix.anz' },
   nab: { name: 'NAB', host: 'https://openbank.api.nab.com.au' },
   wes: { name: 'Westpac', host: 'https://digital-api.westpac.com.au' },
-  // suncorp: { name: 'Suncorp', host: 'https://id-ob.suncorpbank.com.au' },
-  // com: { name: 'Comm Bank', host: 'https://api.commbank.com.au/public' },
-//  cwc: { name: 'Central West CUL', host: 'https://ib.cwcu.com.au/openbanking' },
+  suncorp: { name: 'Suncorp', host: 'https://id-ob.suncorpbank.com.au' },
+  com: { name: 'Comm Bank', host: 'https://api.commbank.com.au/public' },
 }
 
 let savedBankId;
@@ -459,6 +458,66 @@ window.onload = async function () {
 
   logConsole = document.getElementById('log-console')
 
+  // For each bank, go through each product category and
+  // add an empty object to hold the count and products
+  // for that bank. This is done so that we can easily
+  // add the count and products for each bank later
+  //
+  // Also, call the getProducts function for each bank
+  // and wait for all of them to finish before continuing
+  //
+  // Note that we're using Object.entries to get an array
+  // of [key, value] pairs from the BANKS object, where
+  // the key is the bank ID and the value is the bank object
+  //
+  // We use map to create an array of promises that we
+  // can then pass to Promise.all, which will wait for
+  // all of them to finish before continuing
+  //
+  // If any of the promises reject, the entire Promise.all
+  // call will reject, and the error will be propagated
+  // up the call stack. This is why we don't need to
+  // add any explicit error handling here
+  //
+  // If we wanted to handle errors differently, we could
+  // use a try/catch block around the Promise.all call,
+  // or we could use the catch method to add a rejection
+  // handler to each of the promises before passing them
+  // to Promise.all
+  //
+  // For example, if we wanted to log any errors that
+  // occur and then continue, we could do something like
+  //
+  // const promises = Object.entries(BANKS).map(async ([id, bank]) => {
+  //   try {
+  //     // code here
+  //   } catch (err) {
+  //     console.error(err)
+  //   }
+  // })
+  //
+  // await Promise.all(promises)
+  //
+  // Or if we wanted to rethrow any errors that occur
+  // after logging them, we could do something like
+  //
+  // const promises = Object.entries(BANKS).map(async ([id, bank]) => {
+  //   try {
+  //     // code here
+  //   } catch (err) {
+  //     console.error(err)
+  //     throw err
+  //   }
+  // })
+  //
+  // await Promise.all(promises).catch(err => {
+  //   throw err
+  // })
+  //
+  // But in this case, we're just going to let the
+  // errors propagate up the call stack and be caught
+  // by the global error handler
+  //
   await Promise.all(Object.entries(BANKS).map(async ([id, bank]) => {
     BANKS[id].id = id
     for (let prodCat in PRODUCTS) {
@@ -467,7 +526,6 @@ window.onload = async function () {
         bankId: id,
       }
     }
-
     const { count, products } = await getProducts(bank)
     BANKS[bank.id].productsRaw = products
     BANKS[bank.id].totalCount = count
