@@ -1,0 +1,55 @@
+@startuml
+hide circle
+hide empty members
+
+map product {
+    productId=>TRANSACT01
+    productCategory=>TRANS_AND_SAVINGS_ACCOUNTS
+    name=>ANZ Plus
+    lastUpdated=>2024-07-16
+    isTailored=>false
+} 
+
+class "BILL PAYMENT" as f1 {
+    additionalInfoUri=>https://anz.com/plus/products
+}
+
+class "CARD ACCESS" as f2 {
+    additionalValue=>Consumer Visa Debit Card Standard
+    additionalInfoUri=>https://anz.com/plus/products
+}
+
+
+class "NATURAL PERSON" as ec1
+
+class "MIN AGE" as ec2 {
+    additionalValue=>15
+}
+
+class fees
+class "OVERSEAS TRANSACTION FEE" as fee1 {
+    feeType=>TRANSACTIO
+    currency=>AUD
+    amount=>5.00
+    additionalInfoUri=>https://anz.com/plus/terms
+    additionalInfo=>See the ANZ Plus and ANZ Save Accounts T&Cs for details on fees
+}
+class "OFFSET FEE" as fee2 {
+    feeType=>EVENT
+    currency=>AUD
+    amount=>10.00
+    additionalInfoUri=>https://anz.com/plus/terms
+    additionalInfo=>See the ANZ Plus and ANZ Save Accounts T&Cs for details on fees
+}
+
+
+product -- "Eligibility Criteria"
+"Eligibility Criteria"--ec1
+"Eligibility Criteria"--ec2
+product -- features
+features -- f1
+features -- f2
+product -- fees
+fees -- fee1
+fees -- fee2
+@enduml
