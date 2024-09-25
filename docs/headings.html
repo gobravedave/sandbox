@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Heading Hierarchy</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1, h2, h3, h4 {
+            cursor: pointer;
+            color: #007bff;
+        }
+        .content {
+            display: block;
+            margin-left: 20px;
+        }
+        /* Add table styling to make grid visible */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Heading 1</h1>
+<div class="content">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus fermentum.</p>
+    
+    <h2>Heading 2</h2>
+    <div class="content">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla malesuada elit nec.</p>
+        
+        <h3>Heading 3</h3>
+        <div class="content">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur ac nisl ut metus.</p>
+            
+            <h4>Grid</h4>
+            <div class="content">
+                <table>
+                    <tr><th>Column1 heading</th><th>Column 2 heading</th></tr>
+                    <tr><td>Row 1, Column 1</td><td>Row 1, Column 2</td></tr>
+                    <tr><td>Row 2, Column 1</td><td>Row 2, Column 2</td></tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h1>Another Heading 1</h1>
+<div class="content">
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec in lacus et leo sodales pharetra.</p>
+    
+    <h2>Another Heading 2</h2>
+    <div class="content">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse potenti.</p>
+    </div>
+</div>
+
+<script>
+    // Add event listener to all headings
+    document.querySelectorAll('h1, h2, h3, h4').forEach(function(heading) {
+        heading.addEventListener('click', function() {
+            // Toggle visibility of the next element (content)
+            const nextContent = this.nextElementSibling;
+            if (nextContent && nextContent.classList.contains('content')) {
+                nextContent.style.display = nextContent.style.display === 'none' ? 'block' : 'none';
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

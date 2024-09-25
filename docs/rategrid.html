@@ -86,6 +86,24 @@
 
   <!-- Main Product Template -->
   <script id="product-template" type="text/x-handlebars-template">
+    <h1>Deposits1</h1>
+    <div class="product">
+      {{> deposit-product-rateplan-template}}
+    </div>
+    <h1>Deposits times two</h1>
+    <div class="product">
+      {{> deposit-product-rateplan-template}}
+    </div>
+    <div class="product">
+      {{> deposit-product-rateplan-template}}
+    </div>
+    <h1>Deposits times three</h1>
+    <div class="product">
+      {{> deposit-product-rateplan-template}}
+    </div>
+    <div class="product">
+      {{> deposit-product-rateplan-template}}
+    </div>
     <div class="product">
       {{> deposit-product-rateplan-template}}
     </div>
@@ -177,17 +195,7 @@
 
     // Render the template with product data
     const renderedProductHTML = productTemplate({ product: myTestData.data[0].productDetails[0], asofDate: myTestData.requestDate });
-
-    // After rendering Handlebars template
-    // $('#myTable').bootstrapTable({
-    // loadingText: "Ready for action..."
-    // });
-
     document.getElementById('wrapper').innerHTML = renderedProductHTML;
-
-    // Hide the loading message manually
-$('.fixed-table-loading').hide();
-
 
   </script>
 </body>
