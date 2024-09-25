@@ -4,10 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Handlebars Partials Test</title>
+
+  <!-- Bootstrap CSS for styling -->
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+  <!-- Bootstrap Table and Filter Control CSS -->
+  <link rel="stylesheet" href="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.1.0/css.min/bootstrap-table-filter-control.min.css">
+
+  <!-- Handlebars Library -->
   <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+
+  <!-- jQuery (required for Bootstrap Table) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Bootstrap JS for functionality -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Bootstrap Table and Filter Control JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 </head>
 <body>
   <div id="wrapper"></div>
+
   <!-- Deposit Product Rate Plan Partial -->
   <script id="deposit-product-rateplan-template" type="text/x-handlebars-template">
     {{log this}}
@@ -26,294 +47,128 @@
     {{/each}}
     {{/with}}
   </script>
-  <!-- Rate Base Offer Partial -->
-  <script id="ratebased-offer-template" type="text/x-handlebars-template">
-    {{log this}}
-    {{#if rateBasedOffers}}
-    <h3>Rate Based Offers</h3>
-    <table>
-      <tr>
-        <th>Offer</th>
-        <th>Status</th>
-        {{#if rateBasedOffers.[0].productOfferRatePlanMapping.offerRatePlanDetails.simpleRates}}
-        <th>Simple Rate</th>
-        {{/if}}
-        {{#if rateBasedOffers.[0].productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates}}
-        <th>First Term</th>
-        <th>Remaining Term</th>
-        {{/if}}
-      </tr>
-      {{#each rateBasedOffers}}
-      <tr>
-        <td>
-        <li>{{name}} ({{code}})</li>
-        <li>Publish Externally = {{publishExternally}}</li>
-        <li>{{offerCategory.name}} ({{offerCategory.code}})</li>
-        </td>
-        <td>
-        <li>{{status}}</li>
-        <li>Start Date: {{formatDate offerStartDate}}</li>
-        <li>End Date: {{formatDate offerEndDate}}</li>
-        </td>
-        {{!resolve rategrid with}}
-        {{#if productOfferRatePlanMapping.offerRatePlanDetails.simpleRates}}
-          <td>
-          {{#with productOfferRatePlanMapping.offerRatePlanDetails.simpleRates.rates.rateGrid}}
-         {{> rategrid-template}}
-          {{/with}}
-          </td>
-        {{/if}}
-        {{#if productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates}}
-        <td>
-          {{#with productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates.firstPartTermRates.rateGrid}}
-          {{> rategrid-template}}
-          {{/with}}
-        </td>
-        <td>
-          {{#with productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates.remainingPartTermRates.rateGrid}}
-          {{> rategrid-template}}
-          {{/with}}
-          </td>
-        {{/if}}
-      </tr>
-    {{/each}}
-  </table>
-  {{/if}}
-  </script>
+
   <!-- Rate Grid Partial -->
   <script id="rategrid-template" type="text/x-handlebars-template">
     {{log this}}
-    <table>
-      <tr>
-        {{#if row.[0].rate}}<th>Rate</th>{{/if}}
-        {{#if row.[0].adjustment}}<th>Adjustment</th>{{/if}}
-        {{#if row.[0].comparisonRate}}<th>Comparison Rate</th>{{/if}}
-        {{#each row.[0].columns}}
-          <th>{{name}}</th>
+    <table id="myTable" class="table table-striped table-bordered"
+    data-toggle="table"
+    data-filter-control="true"
+    data-search="false"
+    data-show-columns="false"
+    data-sortable="true"
+    data-show-loading="true">
+
+      <thead>
+        <tr>
+          {{#if row.[0].rate}}<th data-field="rate" data-sortable="true" data-filter-control="input">Rate</th>{{/if}}
+          {{#if row.[0].adjustment}}<th data-field="adjustment" data-sortable="true" data-filter-control="input">Adjustment</th>{{/if}}
+          {{#if row.[0].comparisonRate}}<th data-field="comparisonRate" data-sortable="true" data-filter-control="input">Comparison Rate</th>{{/if}}
+          {{#each row.[0].columns}}
+            <th data-field="{{name}}" data-sortable="true" data-filter-control="input">{{name}}</th>
+          {{/each}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each row}}
+        <tr>
+          {{#if rate}} <td>{{rate}}</td> {{/if}}
+          {{#if adjustment}}<td>{{adjustment}}</td>{{/if}}
+          {{#if comparisonRate}}<td>{{comparisonRate}}</td>{{/if}}
+          {{#each columns}}
+            <td>{{operator}} {{value}}</td>
+          {{/each}}
+        </tr>
         {{/each}}
-      </tr>
-      {{#each row}}
-      <tr>
-        {{#if rate}} <td>{{rate}}</td> {{/if}}
-        {{#if adjustment}}<td>{{adjustment}}</td>{{/if}}
-        {{#if comparisonRate}}<td>{{comparisonRate}}</td>{{/if}}
-        {{#each columns}}
-          <td>{{operator}} {{value}}</td>
-        {{/each}}
-      </tr>
-      {{/each}}
+      </tbody>
     </table>
   </script>
+
   <!-- Main Product Template -->
   <script id="product-template" type="text/x-handlebars-template">
     <div class="product">
       {{> deposit-product-rateplan-template}}
     </div>
   </script>
+
   <script>
     const myTestData = {
-  "requestDate": "2024-08-27T22:57:21Z",
-  "durationMs": 76,
-  "dataCount": 1,
-  "data": [
-    {
-      "eventStatus": "SUCCESS",
-      "productDetails": [
+      "requestDate": "2024-08-27T22:57:21Z",
+      "durationMs": 76,
+      "dataCount": 1,
+      "data": [
         {
-          "productCode": "HLVAR01",
-          "ratePlans": {
-              "dataCount": 1,
-              "data": [
-                {
-                  "eventStatus": "SUCCESS",
-                  "ratePlanAssociation": {
-                    "standardRatePlan": {
-                      "depositStandardRatePlanDetails": {
-                        "rates": {
-                          "rateGrid": {
-                            "row": [
-                              {
-                                "rowId": 1,
-                                "columns": [
-                                  {
-                                    "name": "Classification",
-                                    "operator": "=",
-                                    "value": "A"
-                                  },
-                                  {
-                                    "name": "Type",
-                                    "operator": "=",
-                                    "value": "B"
-                                  },
-                                  {
-                                    "name": "Purpose",
-                                    "operator": "=",
-                                    "value": "C"
-                                  },
-                                  {
-                                    "name": "Reason",
-                                    "operator": "=",
-                                    "value": "D"
-                                  },
-                                  {
-                                    "name": "When",
-                                    "operator": "=",
-                                    "value": "MATURITY"
-                                  }
-                                ],
-                                "rate": "1.25"
-                              },
-                              {
-                                "rowId": 17,
-                                "columns": [
-                                  {
-                                    "name": "Classification",
-                                    "operator": "=",
-                                    "value": "A"
-                                  },
-                                  {
-                                    "name": "Type",
-                                    "operator": "=",
-                                    "value": "Z"
-                                  },
-                                  {
-                                    "name": "Purpose",
-                                    "operator": "=",
-                                    "value": "R"
-                                  },
-                                  {
-                                    "name": "Reason",
-                                    "operator": "=",
-                                    "value": "G"
-                                  },
-                                  {
-                                    "name": "When",
-                                    "operator": "=",
-                                    "value": "MONTHLY"
-                                  }
-                                ],
-                                "rate": "4.17"
-                              },
-                              {
-                                "rowId": 18,
-                                "columns": [
-                                  {
-                                    "name": "Classification",
-                                    "operator": "=",
-                                    "value": "B"
-                                  },
-                                  {
-                                    "name": "Type",
-                                    "operator": "=",
-                                    "value": "B"
-                                  },
-                                  {
-                                    "name": "Purpose",
-                                    "operator": "=",
-                                    "value": "B"
-                                  },
-                                  {
-                                    "name": "Reason",
-                                    "operator": "=",
-                                    "value": "B"
-                                  },
-                                  {
-                                    "name": "When",
-                                    "operator": "=",
-                                    "value": "QUARTERLY"
-                                  }
-                                ],
-                                "rate": "4.17"
-                              },
-                              {
-                                "rowId": 19,
-                                "columns": [
-                                  {
-                                    "name": "Classification",
-                                    "operator": "=",
-                                    "value": "C"
-                                  },
-                                  {
-                                    "name": "Type",
-                                    "operator": "=",
-                                    "value": "C"
-                                  },
-                                  {
-                                    "name": "Purpose",
-                                    "operator": "=",
-                                    "value": "D"
-                                  },
-                                  {
-                                    "name": "Reason",
-                                    "operator": "=",
-                                    "value": "E"
-                                  },
-                                  {
-                                    "name": "When",
-                                    "operator": "=",
-                                    "value": "HALF_YEARLY"
-                                  }
-                                ],
-                                "rate": "4.19"
-                              },
-                              {
-                                "rowId": 254,
-                                "columns": [
-                                  {
-                                    "name": "Classification",
-                                    "operator": "=",
-                                    "value": "D"
-                                  },
-                                  {
-                                    "name": "Type",
-                                    "operator": "=",
-                                    "value": "F"
-                                  },
-                                  {
-                                    "name": "Purpose",
-                                    "operator": "=",
-                                    "value": "W"
-                                  },
-                                  {
-                                    "name": "Reason",
-                                    "operator": "=",
-                                    "value": "X"
-                                  },
-                                  {
-                                    "name": "When",
-                                    "operator": "=",
-                                    "value": "HALF_YEARLY"
-                                  }
-                                ],
-                                "rate": "3.96"
-                              },
-                            ]
+          "eventStatus": "SUCCESS",
+          "productDetails": [
+            {
+              "productCode": "HLVAR01",
+              "ratePlans": {
+                "dataCount": 1,
+                "data": [
+                  {
+                    "eventStatus": "SUCCESS",
+                    "ratePlanAssociation": {
+                      "standardRatePlan": {
+                        "depositStandardRatePlanDetails": {
+                          "rates": {
+                            "rateGrid": {
+                              "row": [
+                                {
+                                  "rowId": 1,
+                                  "columns": [
+                                    { "name": "Classification", "operator": "=", "value": "A" },
+                                    { "name": "Type", "operator": "=", "value": "B" },
+                                    { "name": "Purpose", "operator": "=", "value": "C" },
+                                    { "name": "Reason", "operator": "=", "value": "D" },
+                                    { "name": "When", "operator": "=", "value": "MATURITY" }
+                                  ],
+                                  "rate": "1.25"
+                                },
+                                {
+                                  "rowId": 17,
+                                  "columns": [
+                                    { "name": "Classification", "operator": "=", "value": "A" },
+                                    { "name": "Type", "operator": "=", "value": "Z" },
+                                    { "name": "Purpose", "operator": "=", "value": "R" },
+                                    { "name": "Reason", "operator": "=", "value": "G" },
+                                    { "name": "When", "operator": "=", "value": "MONTHLY" }
+                                  ],
+                                  "rate": "4.17"
+                                },
+                                {
+                                  "rowId": 18,
+                                  "columns": [
+                                    { "name": "Classification", "operator": "=", "value": "B" },
+                                    { "name": "Type", "operator": "=", "value": "B" },
+                                    { "name": "Purpose", "operator": "=", "value": "B" },
+                                    { "name": "Reason", "operator": "=", "value": "B" },
+                                    { "name": "When", "operator": "=", "value": "QUARTERLY" }
+                                  ],
+                                  "rate": "4.17"
+                                }
+                              ]
+                            }
                           }
                         }
                       }
-                    },
-                    "rateAdjustmentPlan": {
-                      "rateAdjustmentPlanAssociationStartDate": "2024-01-01T00:00:00Z",
-                      "rateAdjustmentPlanAssociationEndDate": "9999-01-01T23:59:59Z"
                     }
-                  },
-                  "errorCode": 0
-                }
-              ]
-            },
+                  }
+                ]
+              }
+            }
+          ]
         }
-    ]
-  }
-  ]
-  };
+      ]
+    };
+
     // Register helpers
     Handlebars.registerHelper('formatDate', function(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-AU');
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-AU');
     });
+
     // Register partials
     Handlebars.registerPartial('deposit-product-rateplan-template', document.getElementById('deposit-product-rateplan-template').innerHTML);
-    Handlebars.registerPartial('ratebased-offer-template', document.getElementById('ratebased-offer-template').innerHTML);
     Handlebars.registerPartial('rategrid-template', document.getElementById('rategrid-template').innerHTML);
 
     // Compile the main product template
@@ -321,29 +176,19 @@
     const productTemplate = Handlebars.compile(productTemplateSource);
 
     // Render the template with product data
-    console.log(myTestData.data[0].productDetails[0])
-    console.log(myTestData.requestDate)
-
     const renderedProductHTML = productTemplate({ product: myTestData.data[0].productDetails[0], asofDate: myTestData.requestDate });
+
+    // After rendering Handlebars template
+    // $('#myTable').bootstrapTable({
+    // loadingText: "Ready for action..."
+    // });
+
     document.getElementById('wrapper').innerHTML = renderedProductHTML;
+
+    // Hide the loading message manually
+$('.fixed-table-loading').hide();
+
+
   </script>
-  <style>
-    body {
-      font-family: Arial;
-    }
-    table {
-      border-collapse: collapse;
-    }
-    th {
-      background: #eee;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      /* text-align: center; */
-      vertical-align: top;
-      font-size: 14px;
-    }
-  </style>
 </body>
 </html>
