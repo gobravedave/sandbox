@@ -32,7 +32,7 @@
     }
     h1, h2, h3, h4 {
         cursor: pointer;
-        color: #007bff;
+        color: #371282;
     }
     .content {
         display: block;
@@ -44,16 +44,22 @@
         border-collapse: collapse;
         margin: 10px 0;
     }
+    
+   .thead-light th {
+        background-color: rgb(201, 208, 214);    
+    }
+
     th, td {
         border: 1px solid #ddd;
-        padding: 8px;
+        padding: 12px;
         text-align: left;
     }
     th {
         background-color: #f2f2f2;
     }
+
     tr:nth-child(even) {
-        background-color: #f9f9f9;
+        background-color: #848481c9;
     }
 </style>
 
@@ -93,7 +99,7 @@
     data-sortable="true"
     data-show-loading="true">
 
-      <thead>
+      <thead class="thead-light">
         <tr>
           {{#if row.[0].rate}}<th data-field="rate" data-sortable="true" data-filter-control="input">Rate</th>{{/if}}
           {{#if row.[0].adjustment}}<th data-field="adjustment" data-sortable="true" data-filter-control="input">Adjustment</th>{{/if}}
