@@ -1,21 +1,70 @@
 <html>
 <head>
 <title>Product Configuration Viewer</title>
-<script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
-<script src="https://unpkg.com/renderjson@1.3.0/renderjson.js"></script>
+<!-- jQuery (required for Bootstrap) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Bootstrap JS (after jQuery) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Bootstrap Table and Filter Control JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
+<!-- Bootstrap Table and Filter Control CSS -->
+<link rel="stylesheet" href="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.1.0/css.min/bootstrap-table-filter-control.min.css">
+
+  <!-- Bootstrap CSS for styling -->
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  
+  <!-- Handlebars Library -->
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+
+  <script src="https://unpkg.com/renderjson@1.3.0/renderjson.js"></script>
+
 </head>
 <body>
+  <script id="rategrid-template" type="text/x-handlebars-template">
+    {{log this}}
+    <table id="myTable" class="table table-bordered"
+    data-toggle="table"
+    data-filter-control="true"
+    data-search="false"
+    data-pagination="true"
+    data-show-pagination-switch="false"
+    data-show-columns="false"
+    data-sortable="true"
+    data-show-loading="true">
+  
+      <thead class="thead-light">
+        <tr>
+          <th data-field="rate" data-sortable="true" data-filter-control="input">Rate</th>
+          {{#each row.[0].columns}}
+            <th data-field="{{name}}" data-sortable="true" data-filter-control="input">{{name}} is {{operator}} </th>
+          {{/each}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each row}}
+        <tr>
+          <td>{{rate}}</td>
+          {{#each columns}}
+            <td>{{value}}</td>
+          {{/each}}
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+    {{initializeTable}} <!-- Call the helper here -->
+  </script>
+  
 <script>
 
 let logConsole;
-let selectedLeftProduct = null;
-let selectedRightProduct = null;
 
 const BANKS = {
   prod: { name: 'Prod', json: 'datasets/prod.json'},
-  preprod: { name: 'Pre-Prod', json: 'datasets/preprod.json'},
-  sitk: { name: 'SIT-K', json: 'datasets/sitk.json' },
-  sitl: { name: 'SIT-L', json: 'datasets/sitl.json' },
 }
 let savedBankId
 
@@ -33,6 +82,8 @@ const PRODUCTS = {
     name: 'Residential Mortgages',
   },
 }
+Handlebars.registerPartial('rategrid-template', document.getElementById('rategrid-template').innerHTML);
+
 
 function logToConsole(msg) {
   console.log(msg)
@@ -117,6 +168,15 @@ window.onload = async function () {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-AU');
   });
+
+  // Register a Handlebars helper to execute JavaScript code after rendering
+Handlebars.registerHelper('initializeTable', function() {
+  setTimeout(function() {
+    // Use setTimeout to ensure the table is reinitialized after rendering
+    $('#myTable').bootstrapTable(); // Reinitialize the Bootstrap table
+  }, 0);
+});
+
   let productListTpl = Handlebars.compile(document.getElementById('products-list-template').innerHTML)
   const $productsList = document.getElementById('products-list')
 
@@ -198,6 +258,10 @@ window.onload = async function () {
   }
 
 };
+$(document).ready(function () {
+    $('#myTable').bootstrapTable();
+});
+
 
   
 </script>
@@ -217,7 +281,7 @@ window.onload = async function () {
 <script id="product-details-template" type="text/x-handlebars-template">
 
   <div id="product-details-content">
-    <button id="json-btn" onclick="toggleJson( '{{productCode}}')">Show JSON</button>
+    <button id="json-btn" onclick="toggleJson( '{{product.productCode}}')">Show JSON</button>
     <span id="product-details-close">&times;</span>
     <div>
     <pre id="product-details-json-content"></pre>
@@ -233,28 +297,14 @@ window.onload = async function () {
       <span>From Date: {{formatDate this.fromDate}}</span><br>
       <span>To Date: {{formatDate this.toDate}}</span><br>
       <span>Status: {{this.productStatus}}</span><br>
-  
-      <h4>Eligibility Criteria</h4>
-      <h5>Age</h5>
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Code</th>
-          <th>From</th>
-          <th>To</th>
-        </tr>
-        {{#each this.eligibilityCriteria.ageGroup}}
-        <tr>		
-          <td>{{this.name}}</td>
-          <td>{{this.code}}</td>	
-          <td>{{this.fromValue}}</td>	
-          <td>{{this.toValue}}</td>	
-        </tr>
-        {{/each}}
-      </table>
     {{/with}}
   
-  </div>
+    <h4>Rate Grid</h4>
+    {{#with product.ratePlans.data.[0].ratePlanAssociation.standardRatePlan.depositStandardRatePlanDetails.rates.rateGrid}}
+    {{> rategrid-template}} 
+    {{/with}}
+
+    </div>
   </script>
   
 <script id="products-list-template" type="text/x-handlebars-template">
