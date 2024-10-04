@@ -50,23 +50,21 @@
 
   <!-- Eligibility Partial -->
   <script id="eligibility-template" type="text/x-handlebars-template">
-    <br><b>Life Cycle</b><br>
     <table>
       <tr>
-        <th>Status</th>
-        <th>From Date</th>
-        <th>To Date</th>
+        <th>Life Cycle</th>
+        <th>Eligibility Criteria</th>
       </tr>
       <tr>
-        <td>{{#if productStatus}} {{productStatus}} {{/if}}
-            {{#if serviceStatus}} {{serviceStatus}} {{/if}}
-        </td>
-        <td>{{formatDate this.fromDate}}</td>
-        <td>{{formatDate this.toDate}}</td>
-      </tr>
-      </table>
-
-    <br><b>Eligibility Criteria</b><br>
+        <td>
+        <table>
+          <tr><th>Status</th><td>{{#if productStatus}} {{productStatus}} {{/if}}
+            {{#if serviceStatus}} {{serviceStatus}} {{/if}}</td></tr>
+          <tr><th>From Date</th><td>{{formatDate this.fromDate}}</td></tr>
+          <tr><th>To Date</th><td>{{formatDate this.toDate}}</td></tr>
+        </table>
+      </td>
+      <td>
     {{#with this.eligibilityCriteria}}
     <table>
       <tr><th>Type</th><th>Criteria</th></tr>
@@ -122,7 +120,9 @@
       {{/if}}
     </table>
     {{/with}}
-  </script>
+  </td></tr>
+    </table>
+</script>
 
   <!-- Deposit Product Config Partial -->
   <script id="deposit-product-config-template" type="text/x-handlebars-template">
@@ -211,13 +211,14 @@
           {{> regulatory-parameters-template}}
           {{/with}}
         </td>
+        <td>
+          {{#with product.productConfiguration.documentations}}
+          {{> documentation-template}}
+          {{/with}}          
+        </td>
       </tr>
     </table>
     {{/with}}
-
-{{#with product.productConfiguration.documentations}}
-{{> documentation-template}}
-{{/with}}
 
   </script>
 
@@ -299,6 +300,7 @@
         <th>Financial Parameters</th>
         <th>Entitlement Parameters</th>
         <th>Regulatory Parameters</th>
+        <th>Documentation</th>
       </tr>
       <tr>
         <td>
@@ -360,12 +362,14 @@
     {{> regulatory-parameters-template}}
     {{/with}}
     </td>
+    <td>
+    {{#with product.mortgageProductConfiguration.documentations}}
+    {{> documentation-template}}
+    {{/with}}  
+    </td>
   </tr>
 </table>
 
-    {{#with product.mortgageProductConfiguration.documentations}}
-    {{> documentation-template}}
-    {{/with}}
 
   </script>
 
@@ -460,80 +464,97 @@
     {{#with product.feePlans}}
     {{#each data}}
     {{#each feePlans}}
-        <table>
+    <div class="table_wrapper">
+    <table>
+      <tr>
+      <th>FeePlan</th>
+      <th>Fee Items</th>
+      </tr>
+      <tr>
+      <td>
+      <table> <!-- Fee Plan -->
+        <tr><th>Name</th><td>{{this.feePlanName}} ({{this.code}})</td></tr>
+        <tr><th>From Date</th><td>{{formatDate this.feeItemsStartDate}}</td></tr>
+        <tr><th>To Date</th><td>{{formatDate this.feeItemsEndDate}}</td></tr>
+      </table>
+      </td>
+      <td>
+      <table> <!-- Fee Items -->
         <tr>
-          <th>FeePlan</th>
-          <th>From Date</th>
-          <th>To Date</th>
+        <th>Fee Item</th>
+        <th>Type</th>
+        <th>Fee Amount Type</th>
+        <th>Fee Amount</th>
         </tr>
-        <tr>
-          <td>{{this.feePlanName}} ({{this.code}})</td>
-          <td>{{formatDate this.feeItemsStartDate}}</td>
-          <td>{{formatDate this.feeItemsEndDate}}</td>
-        </tr>
-        </table>
-        </br>
-        <table>
-            <tr>
-              <th>Fee Item</th>
-              <th>Type</th>
-              <th>Fee Amount Type</th>
-              <th>Fee Amount</th>
-            </tr>
         {{#each feeItems}}
-            <tr>
-              <td>{{this.feeItemName}} ({{this.code}})</td>
-              <td>{{this.feeItemType}}</td>
-              <td>
+          <tr>
+          <td>{{this.feeItemName}} ({{this.code}})</td>
+          <td>{{this.feeItemType}}</td>
+          <td>
+            {{#if simpleFlatFee}}Simple{{/if}}
             {{#if simpleTransactionalFeeAmount}}Simple{{/if}}
             {{#if tieredTransactionalFee}}Tiered{{/if}}
-              </td>
-              <td>
-                {{#if simpleTransactionalFeeAmount}}
-                <li>Amount Or Percentage= {{simpleTransactionalFeeAmount.amountOrPercentage}}</li>
-                <li>Amount = ${{simpleTransactionalFeeAmount.amount}}</li>
-                {{/if}}
-                {{#if tieredTransactionalFee}}
-                <li>Whole Or Progressive = {{tieredTransactionalFee.wholeOrProgressive}}</li>
-                <li>Volume Or Value = {{tieredTransactionalFee.volumeOrValue}}</li>
-                <li>Amount Or Percentage = {{tieredTransactionalFee.amountOrPercentage}}</li>
-                <li>Tiers End Points Value = {{tieredTransactionalFee.tiersEndPointsValue}}</li>
-                <br>
-                <table>
-                    <tr>
-                      <th>Amount</th>
-                      <th>From is {{fromOperator}}</th>
-                      <th>To is {{toOperator}}</th>
-                    </tr>
-                {{#each tieredTransactionalFee.valueTiers}}
-                    <tr>
-                    <td>${{amount.value}}</td>
-                    <td>{{fromValue}}</td>
-                    <td>{{toValueNumeric}}</td>
-                    </tr>
-                {{/each}}
-                </table>
-                {{/if}}
-              </td>
+          </td>
+          <td>
+          <table> <!-- Fee Amount --> 
+          {{#if simpleFlatFee}}
+          <tr><th>Amount</th><td>${{simpleFlatFee.amount}}</td></tr>
+          {{/if}}
+          {{#if simpleTransactionalFeeAmount}}
+          <tr><th>Amount Or Percentage</th><td>{{simpleTransactionalFeeAmount.amountOrPercentage}}</td></tr>
+          <tr><th>Amount</th><td>${{simpleTransactionalFeeAmount.amount}}</td></tr>
+          {{/if}}
+          {{#if tieredTransactionalFee}}
+          <tr><th>Whole Or Progressive</th><td>{{tieredTransactionalFee.wholeOrProgressive}}</td></tr>
+          <tr><th>Volume Or Value</th><td>{{tieredTransactionalFee.volumeOrValue}}</td></tr>
+          <tr><th>Amount Or Percentage</th><td>{{tieredTransactionalFee.amountOrPercentage}}</td></tr>
+          <tr><th>Tiers End Points Value</th><td>{{tieredTransactionalFee.tiersEndPointsValue}}</td></tr>
+          <tr><th>Tiers</th>
+          <td>
+            <table> <!-- Tiers --> 
+            <tr>
+            <th>Amount</th>
+            <th>From is {{fromOperator}}</th>
+            <th>To is {{toOperator}}</th>
             </tr>
-        {{/each}}
-    </table>
-    {{/each}}
-    {{/each}}
-    {{/with}}
+            {{#each tieredTransactionalFee.valueTiers}}
+            <tr>
+            <td>${{amount.value}}</td>
+            <td>{{fromValue}}</td>
+            <td>{{toValueNumeric}}</td>
+            </tr>
+            {{/each}}
+            </table> <!-- End of Tiers -->
+          </td> 
+          {{/if}}
+          </table> <!-- End of Fee Amount --> 
+      {{/each}}
+      </table> <!-- End of Fee Items --> 
+  </table> <!-- End of Fee Plan --> 
+  </div>
+  {{/each}}
+  {{/each}}
+  {{/with}}
   </script>
 
   <!-- Deposit Product Rate Plan Partial -->
   <script id="deposit-product-rateplan-template" type="text/x-handlebars-template">
-    {{log this}}
     {{#with product.ratePlans}}
     {{#each this.data}}
       {{#with this.ratePlanAssociation}}
       {{#if standardRatePlan.depositStandardRatePlanDetails}}
       {{#with standardRatePlan.depositStandardRatePlanDetails}}
-        <h2>Deposit Rate Plan</h2>
-        <div class="content">
-        <table>
+      <h2>Deposit Rates</h2>
+      <div class="content">
+      <div class="table_wrapper">
+      <table>
+      <tr>
+      <th>Rate Plan</th>
+      <th>Rate Grid</th>
+      </tr>
+      <tr>
+      <td>
+      <table>
         {{#if name}} <tr><th>Name</th><td>{{name}} ({{code}})</td><tr>{{/if}}
         {{#if ratePlanType}}<tr><th>Rate Plan Type</th><td>{{ratePlanType}}</td><tr>{{/if}}
         {{#if rateType}}<tr><th>Rate Type</th><td>{{rateType}}</td><tr>{{/if}}
@@ -542,13 +563,16 @@
         {{#if debitBalanceRateTierType}}<tr><th> Debit Balance Rate Tier Type</th><td>{{debitBalanceRateTierType}}</td><tr>{{/if}}
         {{/with}}
         </table>
-        </div>
-        <h3>Deposit Rate Grid</h3>
-        <div class="content">
-        {{#with this.standardRatePlan.depositStandardRatePlanDetails.rates.rateGrid}}
-        {{> rategrid-template}}
-        {{/with}}
-        </div>
+      </td>        
+      <td>
+      <div class="table_wrapper">
+      {{#with this.standardRatePlan.depositStandardRatePlanDetails.rates.rateGrid}}
+      {{> rategrid-template}}
+      {{/with}}
+      </div>
+      </td>        
+      </tr>
+      </table>
       {{/if}}
       {{/with}}
     {{/each}}
@@ -564,6 +588,7 @@
       {{#with this.standardRatePlan.mortgageStandardRatePlanDetails}}
         <h2>Mortgage Rate Plan</h2>
         <div class="content">
+        <div class="table_wrapper">
         <table>
           <tr>
             <th>RatePlan</th>
@@ -571,17 +596,19 @@
             <th>Remaining Term</th>
           </tr>
           <td>
-            <li>{{name}} ({{code}})</li>
-            <li>Rate Plan Type: {{ratePlanType}}</li>
+            <table>
+            <tr><th>Name</th><td>{{name}} ({{code}})</td></tr>
+            <tr><th>Rate Plan Type</th><td>{{ratePlanType}}</td></tr>
+            <tr><th>First Term Rate Type</th><td>{{twoTermRates.firstPartTermRates.rateType}}</td></tr>
+            <tr><th>Remaining Term Rate Type</th><td>{{twoTermRates.remainingPartTermRates.rateType}}</td></tr>
+            </table>
           </td>
           <td>
-            <li>Rate Type: {{twoTermRates.firstPartTermRates.rateType}}</li>
             {{#with this.twoTermRates.firstPartTermRates.rateGrid}}
             {{> rategrid-template}}
             {{/with}}
           </td>
           <td>
-            <li>Rate Type: {{twoTermRates.remainingPartTermRates.rateType}}</li>
             {{#with this.twoTermRates.remainingPartTermRates.rateGrid}}
             {{> rategrid-template}}
             {{/with}}
@@ -592,20 +619,20 @@
       {{/with}}
       {{> ratebased-offer-template}}
       {{/with}}
+    </div>
     {{/each}}
     {{/with}}
   </script>
 
   <!-- Rate Base Offer Partial -->
   <script id="ratebased-offer-template" type="text/x-handlebars-template">
-    {{log this}}
     {{#if rateBasedOffers}}
     <h3>Rate Based Offers</h3>
     <div class="content">
+    <div class="table_wrapper">
     <table>
       <tr>
         <th>Offer</th>
-        <th>Status</th>
         {{#if rateBasedOffers.[0].productOfferRatePlanMapping.offerRatePlanDetails.simpleRates}}
         <th>Simple Rate</th>
         {{/if}}
@@ -617,21 +644,21 @@
       {{#each rateBasedOffers}}
       <tr>
         <td>
-        <li>{{name}} ({{code}})</li>
-        <li>Publish Externally = {{publishExternally}}</li>
-        <li>{{offerCategory.name}} ({{offerCategory.code}})</li>
+        <table>
+        <tr><th>Name</th><td>{{name}} ({{code}})</td></tr>
+        <tr><th>Publish Externally</th><td>{{publishExternally}}</td></tr>
+        <tr><th>Offer Category</th><td>{{offerCategory.name}} ({{offerCategory.code}})</td></tr>
+        <tr><th>Status</th><td>{{status}}</td></tr>
+        <tr></tr><th>Start Date</th><td>{{formatDate offerStartDate}}</td></tr>
+        <tr></tr><th>End Date</th><td>{{formatDate offerEndDate}}</td></tr>
+        </table>  
         </td>
-        <td>
-        <li>{{status}}</li>
-        <li>Start Date: {{formatDate offerStartDate}}</li>
-        <li>End Date: {{formatDate offerEndDate}}</li>
-        </td>
-        {{!resolve rategrid with}}
         {{#if productOfferRatePlanMapping.offerRatePlanDetails.simpleRates}}
           <td>
           {{#with productOfferRatePlanMapping.offerRatePlanDetails.simpleRates.rates.rateGrid}}
-         {{> rategrid-template}}
+          {{> rategrid-template}}
           {{/with}}
+          <br><b>Add logic to check if there are qualifier rules exist</b></td><br>
           </td>
         {{/if}}
         {{#if productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates}}
@@ -639,6 +666,8 @@
           {{#with productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates.firstPartTermRates.rateGrid}}
           {{> rategrid-template}}
           {{/with}}
+
+          <br><b>Add logic to check if there are qualifier rules exist</b></td><br>
         </td>
         <td>
           {{#with productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates.remainingPartTermRates.rateGrid}}
@@ -649,48 +678,57 @@
       </tr>
     {{/each}}
   </table>
-  </div>
+    </div>
+    </div>
   {{/if}}
   </script>
 
-<!-- Rate Grid Partial -->
-<script id="rategrid-template" type="text/x-handlebars-template">
-  {{log this}}
-  <table id="myTable" class="table table-bordered"
-  data-toggle="table"
-  data-filter-control="true"
-  data-search="false"
-  data-show-columns="false"
-  data-pagination="true"
-  data-page-size="10"
-  data-page-length="10"
-  data-sortable="true"
-  data-show-loading="true">
-    <thead class="thead-dark">
-      <tr>
-        {{#if row.[0].rate}}<th data-field="rate" data-sortable="true" data-filter-control="input">Rate</th>{{/if}}
-        {{#if row.[0].adjustment}}<th data-field="adjustment" data-sortable="true" data-filter-control="input">Adjustment</th>{{/if}}
-        {{#if row.[0].comparisonRate}}<th data-field="comparisonRate" data-sortable="true" data-filter-control="input">Comparison Rate</th>{{/if}}
-        {{#each row.[0].columns}}
-          <th data-field="{{name}}" data-sortable="true" data-filter-control="input">{{name}} is {{operator}} </th>
-        {{/each}}
-      </tr>
-    </thead>
-    <tbody>
-      {{#each row}}
-      <tr>
-        {{#if rate}} <td>{{rate}}</td> {{/if}}
-        {{#if adjustment}}<td>{{adjustment}}</td>{{/if}}
-        {{#if comparisonRate}}<td>{{comparisonRate}}</td>{{/if}}
-        {{#each columns}}
-          <td>{{value}}</td>
-        {{/each}}
-      </tr>
-      {{/each}}
-    </tbody>
-  </table>
-  {{initializeTable}} <!-- Call the helper here -->
-</script>
+  <script id="rategrid-template" type="text/x-handlebars-template">
+    <div class="table-responsive table_wrapper" style="overflow-x: auto;">
+      <table id="{{uniqueTableId}}" class="table table-sm table-bordered"
+        data-toggle="table"
+        data-filter-control="true"
+        data-search="false"
+        data-show-columns="false"
+        data-pagination="true"
+        data-page-size="25"
+        data-page-length="25"
+        data-sortable="true"
+        data-show-loading="true"
+        style="table-layout: fixed; width: 100%;">
+        <thead class="thead-dark">
+          <tr>
+            {{#if row.[0].rate}}
+              <th data-field="rate" data-sortable="true" data-filter-control="input" style="width: 100px; max-width: 100px;" title="Rate">Rate</th>
+            {{/if}}
+            {{#if row.[0].adjustment}}
+              <th data-field="adjustment" data-sortable="true" data-filter-control="input" style="width: 100px; max-width: 100px;" title="Adjustment">Adjustment</th>
+            {{/if}}
+            {{#if row.[0].comparisonRate}}
+              <th data-field="comparisonRate" data-sortable="true" data-filter-control="input" style="width: 100px; max-width: 100px;" title="Comparison Rate">Comparison Rate</th>
+            {{/if}}
+            {{#each row.[0].columns}}
+              <th data-field="{{name}}" data-sortable="true" data-filter-control="input" style="width: 100px; max-width: 100px;" title="{{name}} is {{operator}}">{{name}} is {{operator}}</th>
+            {{/each}}
+          </tr>
+        </thead>
+        <tbody>
+          {{#each row}}
+          <tr>
+            {{#if rate}} <td style="width: 100px; max-width: 100px;" title="{{rate}}">{{rate}}</td> {{/if}}
+            {{#if adjustment}}<td style="width: 100px; max-width: 100px;" title="{{adjustment}}">{{adjustment}}</td>{{/if}}
+            {{#if comparisonRate}}<td style="width: 100px; max-width: 100px;" title="{{comparisonRate}}">{{comparisonRate}}</td>{{/if}}
+            {{#each columns}}
+              <td style="width: 100px; max-width: 100px;" title="{{value}}">{{value}}</td>
+            {{/each}}
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+      {{initializeTable}} <!-- Call the helper here -->
+    </div>
+  </script>
+  
 
   <!-- Services Partial -->
   <script id="services-template" type="text/x-handlebars-template">
@@ -698,86 +736,135 @@
     {{#if multiUseProducts}}
     <h3>MultiUse Products</h3>
     <div class="content">
+    <div class="table_wrapper">
     <table>
     <tr>
     <th>Product</th>
-    <th>Classification</th>
-    <th>Life Cycle</th>
     <th>Product Parameters</th>
     <th>Financial Parameters</th>
+    <th>Fees</th>
+    <th>Rules</th>
     </tr>
     {{#each multiUseProducts }}
     <tr>
-    <td>{{productName}} ({{productCode}})</td>
-    <td>{{productClassification}}</td>
-    <td>Status = {{productLifecycleDetails.productStatus}}<br>
-        From Date = {{formatDate productLifecycleDetails.fromDate}}<br>
-        To Date = {{formatDate productLifecycleDetails.toDate}}</td>
     <td>
-    Linked Deposit Products:<br>
-    {{#each productConfiguration.offsetProductConfiguration.productParameters.linkedDepositProducts}}
-    <li>{{name}} ({{code}}), (is default = {{isDefault}})</li>
-    {{/each}}
-    Max Linked Account Count: {{productConfiguration.offsetProductConfiguration.productParameters.maximumNumberLinkedAccounts}}<br>
-    Billing Products:
-    {{#each productConfiguration.offsetProductConfiguration.productParameters.billingProducts}}
-    <li>{{name}} ({{code}}), (is default = {{isDefault}})</li>
-    {{/each}}
+    <table>  
+    <th>Name</th><td>{{productName}} ({{productCode}})</td></tr>
+    <tr><th>Classification</th><td>{{productClassification}}</td></tr>
+    <tr><th>Status</th><td>{{productLifecycleDetails.productStatus}}</td></tr>
+    <tr><th>From Date</th><td>{{formatDate productLifecycleDetails.fromDate}}</td></tr>
+    <tr><th>To Date</th><td>{{formatDate productLifecycleDetails.toDate}}</td></tr>
+    </table>
     </td>
     <td>
-    Cost Center = {{productConfiguration.offsetProductConfiguration.financialParameters.costCenter.name}} ({{productConfiguration.offsetProductConfiguration.financialParameters.costCenter.code}})<br>
-    General Ledger Code = {{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.name}} ({{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.code}})
+    <table>
+      <tr>
+      <th>Linked Deposit Products:</th>
+      <td>
+      {{#each productConfiguration.offsetProductConfiguration.productParameters.linkedDepositProducts}}
+      {{name}} ({{code}}) is default = {{isDefault}}<br>
+      {{/each}}
+      </td>
+      </tr>  
+      <tr><th>Max Linked Account Count</th><td>{{productConfiguration.offsetProductConfiguration.productParameters.maximumNumberLinkedAccounts}}</td></tr>
+      <tr>
+      <th>Billing Products</th>
+      <td>
+      {{#each productConfiguration.offsetProductConfiguration.productParameters.billingProducts}}
+      {{name}} ({{code}}) is default = {{isDefault}}<br>
+      {{/each}}
+      </td>
+      </tr>
+    </table>
     </td>
+    <td>
+    <table>
+    <tr><th>Cost Center</th><td>{{productConfiguration.offsetProductConfiguration.financialParameters.costCenter.name}} ({{productConfiguration.offsetProductConfiguration.financialParameters.costCenter.code}})</td></tr>
+    <tr><th>General Ledger Code</th><td>{{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.name}} ({{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.code}})</td></tr>
+    </table>
+    </td>
+    <td>If subscription required, add logic to look up fees..</td>
+    <td>Add logic to look up eligibility..</td>
     </tr>
     {{/each}}
     </table>
+    </div>
     </div>
     {{/if}}
 
     {{#if services}}
     <h3>Services</h3>
     <div class="content">
+    <div class="table_wrapper">
     <table>
         <tr>
         <th>Service</th>
-        <th>Category</th>
-        <th>Subscription Required</th>
         <th>Eligibility</th>
         <th>Service Configuration</th>
         </tr>
         {{#each services}}
         <tr>
-        <td>{{name}} ({{code}}) </td>
-        <td>{{serviceCategory}}</td>
-        <td>{{subscriptionRequired}}</td>
+        <td>
+        <table>
+          <tr><th>Name</th><td>{{name}} ({{code}})</td></tr>
+          <tr><th>Category</th><td>{{serviceCategory}}</td></tr>
+          <tr><th>Subscription Required</th><td>{{subscriptionRequired}}</td></tr>
+        </table>
+        </td>
         <td>
         {{#with serviceDetails.[0].serviceEligibilityDetails}}
         {{> eligibility-template}}
         {{/with}}
         </td>
         <td>
+        <table>
         {{#if serviceDetails.[0].serviceConfiguration.debitCard}}
-        Card Category = {{serviceDetails.[0].serviceConfiguration.debitCard.cardCategory.name}} ({{serviceDetails.[0].serviceConfiguration.debitCard.cardCategory.code}}) <br>
+        <tr><th>Card Category</th><td>{{serviceDetails.[0].serviceConfiguration.debitCard.cardCategory.name}} ({{serviceDetails.[0].serviceConfiguration.debitCard.cardCategory.code}})</td></tr>
+        <tr>
+        <th>Card Design</th>
+        <td>
         {{#each serviceDetails.[0].serviceConfiguration.debitCard.cardDesign }}
-        <li>Card Design = {{name}} ({{code}}) {{#if imageURL}}, imageURL = {{imageURL}}{{/if}}</li>
+        {{name}} ({{code}}) {{#if imageURL}}, imageURL = {{imageURL}}{{/if}}</br>
         {{/each}}
-        Daily Withdrawal Limit = {{serviceDetails.[0].serviceConfiguration.debitCard.dailyWithdrawalLimit}}
+        </td>
+        </tr>
+        <tr><th>Daily Withdrawal Limit</th><td>{{serviceDetails.[0].serviceConfiguration.debitCard.dailyWithdrawalLimit}}</td></tr>
         {{/if}}
         {{#if serviceDetails.[0].serviceConfiguration.goalService}}
-        Service Category: {{serviceDetails.[0].serviceConfiguration.goalService.serviceCategory}} <br>
-        Max Goal Count: {{serviceDetails.[0].serviceConfiguration.goalService.maxNumberofGoals}} <br>
-        Goal Mapping:
+        <tr><th>Service Category</th><td> {{serviceDetails.[0].serviceConfiguration.goalService.serviceCategory}}</td></tr>
+        <tr><th>Max Goal Count</th><td> {{serviceDetails.[0].serviceConfiguration.goalService.maxNumberofGoals}}</td></tr>
+        <tr> 
+        <th>Goal Mapping</th>
+        <td>
         {{#each serviceDetails.[0].serviceConfiguration.goalService.goalMapping}}
-            <li>{{name}} ({{code}}), Type= {{type}}, isBaseGaol={{isBaseGoal}}</li>
+        {{name}} ({{code}}), Type= {{type}}, isBaseGaol={{isBaseGoal}}<br>
         {{/each}}
+        </td>
+        </tr>
         {{/if}}
+        {{#if serviceDetails.[0].serviceConfiguration.creditCard}}
+        <tr><th>Card Category</th><td>{{serviceDetails.[0].serviceConfiguration.creditCard.cardCategory.name}} ({{serviceDetails.[0].serviceConfiguration.creditCard.cardCategory.code}})</td></tr>
+        <tr>
+        <th>Card Design</th>
+        <td>
+        {{#each serviceDetails.[0].serviceConfiguration.creditCard.cardDesign }}
+        {{name}} ({{code}}) {{#if imageURL}}<br><br> imageURL = {{imageURL}}{{/if}}<br><br>
+        {{/each}}
+        </td>
+        </tr>
+        <tr><th>Daily Withdrawal Limit</th><td>{{serviceDetails.[0].serviceConfiguration.creditCard.dailyWithdrawalLimit}}</td></tr>
+        <tr><th>Monthly Withdrawal Limit</th><td>{{serviceDetails.[0].serviceConfiguration.creditCard.monthlyWithdrawalLimit}}</td></tr>
+        </tr>
+        {{/if}}
+        </table>
         </td>
         </tr>
         {{/each}}
-        </table>
-        </div>
-        {{/if}}
-    {{/with}}
+    </table>
+    </div>
+    </div>
+  {{/if}}
+  {{/with}}
   </script>
 
   <!-- Entitlements Partial -->
@@ -798,8 +885,6 @@
 
   <!-- Documention Partial -->
   <script id="documentation-template" type="text/x-handlebars-template">
-    <h2>Documentation</h2>
-    <div class="content">
     <table>
         <tr>
           <th>Type</th>
@@ -824,7 +909,6 @@
         </tr>
         {{/each}}
     </table>
-    </div>
   </script>
 
   <!-- External Product Code Mapping Partial -->
@@ -946,7 +1030,7 @@
       preprod: { name: 'Pre-Prod', json: 'datasets/preprod.json'},
       sitk: { name: 'SIT-K', json: 'datasets/sitk.json'},
       sitl: { name: 'SIT-L', json: 'datasets/sitl.json'},
-      st: { name: 'ST', json: 'datasets/st2.json' },
+      st: { name: 'ST', json: 'datasets/st2.json'},
     }
     let savedBankId
 
@@ -967,7 +1051,7 @@
 
     function logToConsole(msg) {
       console.log(msg)
-      logConsole.value += msg + '\n'
+      // logConsole.value += msg + '\n'
     }
 
 
@@ -1073,12 +1157,20 @@
     return date.toLocaleDateString('en-AU');
     });
 
+    let tableIndex = 0; // Global counter for table IDs
+    Handlebars.registerHelper('uniqueTableId', function() {
+      return `table-${tableIndex++}`;
+    });
+
     // Register a Handlebars helper to execute JavaScript code after rendering
     Handlebars.registerHelper('initializeTable', function() {
-    setTimeout(function() {
-    // Use setTimeout to ensure the table is reinitialized after rendering
-    $('#myTable').bootstrapTable(); // Reinitialize the Bootstrap table
-    }, 0);
+    // After the DOM is updated, initialize each table separately
+      setTimeout(() => {
+        $('[id^=table-]').each(function() {
+          const tableId = $(this).attr('id');
+          $('#' + tableId).bootstrapTable(); // Initialize the Bootstrap Table
+        });
+      }, 100);
     });
 
       let productListTpl = Handlebars.compile(document.getElementById('products-list-template').innerHTML)
@@ -1087,7 +1179,7 @@
       $productsList.innerHTML = productListTpl({})
       let productDetailsTpl = Handlebars.compile(document.getElementById('product-details-template').innerHTML)
 
-      logConsole = document.getElementById('log-console')
+      // logConsole = document.getElementById('log-console')
 
       await Promise.all(Object.entries(BANKS).map(async ([id, bank]) => {
         BANKS[id].id = id
@@ -1181,7 +1273,7 @@
     - Click on a product title to show configuration of the product.<br />
     </p>
 
-    <textarea id="log-console" style="height: 100px; width: 500px;"></textarea>
+    <!-- <textarea id="log-console" style="height: 100px; width: 500px;"></textarea> -->
     <div id="products-list"></div>
     <div id="product-details"></div>
 
@@ -1206,21 +1298,27 @@
   {{#if product.productConfiguration}}
     <h2>Deposit Product Configuration</h2>
     <div class="content">
-    {{> deposit-product-config-template}}
+    <div class="table_wrapper">
+        {{> deposit-product-config-template}}
+    </div>
     </div>
   {{/if}}
 
   {{#if product.termDepositProductConfiguration}}
   <h2>Term Deposit Product Configuration</h2>
   <div class="content">
-  {{> term-deposit-product-config-template}}
+  <div class="table_wrapper">
+      {{> term-deposit-product-config-template}}
   </div>
+  </div>  
   {{/if}}
 
   {{#if product.mortgageProductConfiguration}}
     <h2>Lending Product Configuration</h2>
     <div class="content">
+    <div class="table_wrapper">
     {{> lending-product-config-template}}
+    </div>
     </div>
   {{/if}}
 
@@ -1313,6 +1411,50 @@
     .content {
         display: block;
         margin-left: 20px;
+    }
+
+   .table_wrapper{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    }
+/* Optional tooltip styling */
+.table th[title]:hover, 
+.table td[title]:hover {
+  position: relative;
+  cursor: pointer; /* Optional: add cursor pointer on hover */
+}
+
+.table th[title]:hover:after, 
+.table td[title]:hover:after {
+  content: attr(title);
+  position: absolute;
+  background-color: #333;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  top: -30px; /* Position above the element */
+  left: 50%; /* Center tooltip */
+  transform: translateX(-50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.table th[title]:hover:after, 
+.table td[title]:hover:after {
+  opacity: 1;
+}
+
+    .table th, .table td {
+      word-wrap: break-word;
+      white-space: normal !important; /* Allow text to wrap */;
+      width: 100px; /* Set this based on your requirement */
+      max-width: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis; /* Add ellipsis for overflow text */
     }
 
     table {
