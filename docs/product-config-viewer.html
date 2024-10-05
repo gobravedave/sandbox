@@ -1,5 +1,5 @@
 <head>
-  <title>Product Configuration Viewer</title>
+  <title>Zafin Product Configuration Viewer</title>
 
     <!-- Bootstrap CSS for styling -->
     <!-- jQuery (required for Bootstrap) -->
@@ -1041,6 +1041,9 @@
         MORTGAGE: {
         name: 'Residential Mortgages',
       },
+      OFFERS: {
+        name: 'Marketing Propositions',
+      },
     }
 
     function logToConsole(msg) {
@@ -1139,10 +1142,45 @@
       }
     }
 
-    window.onload = async function () {
-      // populateBankDropdown('compare-left-bank');
-      // populateBankDropdown('compare-right-bank');
+    async function toggleCheck(productId) {
+      logToConsole(`Showing Checker for bank ${savedBankId} productId ${productId}`)
+      const checkBtn = document.getElementById('check-btn');
+      if (checkBtn.textContent === 'Show Checker') {
+        let productDetails = BANKS[savedBankId].productsRaw.find(prod => prod.productCode=== productId);
 
+        var pre = document.getElementById("product-details-checker-content");
+        pre.innerHTML = ""; // Clear previous Checker content
+        const h2 = document.createElement('h2');
+        // h2.style.color = 'blue';
+        h2.textContent = 'Coming soon...';
+        document.getElementById("product-details-checker-content").appendChild(h2);
+        checkBtn.textContent = 'Hide Checker';
+      } else {
+        document.getElementById("product-details-checker-content").innerHTML = "";
+        checkBtn.textContent = 'Show Checker';
+      }
+    }
+
+    async function toggleCompare(productId) {
+      logToConsole(`Showing Compare for bank ${savedBankId} productId ${productId}`)
+      const compareBtn = document.getElementById('compare-btn');
+      if (compareBtn.textContent === 'Show Compare') {
+        let productDetails = BANKS[savedBankId].productsRaw.find(prod => prod.productCode=== productId);
+
+        var pre = document.getElementById("product-details-compare-content");
+        pre.innerHTML = ""; // Clear previous Compare content
+        const h2 = document.createElement('h2');
+        // h2.style.color = 'blue';
+        h2.textContent = 'Also coming soon...';
+        document.getElementById("product-details-compare-content").appendChild(h2);
+        compareBtn.textContent = 'Hide Compare';
+      } else {
+        document.getElementById("product-details-compare-content").innerHTML = "";
+        compareBtn.textContent = 'Show Compare';
+      }
+    }
+
+    window.onload = async function () {
 
     Handlebars.logger.level = 0; // for DEBUG
     // Register helpers
@@ -1260,15 +1298,15 @@
 
     </script>
 
-    <h1>Product Configuration Viewer by Environment</h1>
+    <h1>Zafin Product Configuration Viewer</h1>
     <div style="border-radius: 10px; border: 1px solid #212e01; padding: 10px; background-color: #acc8f1;margin-left: 5px;margin-right: 5px;">
-    <h4>Info about this page</h4>
+    <h4>About this page</h4>
     <div class="content">
     <ul style="list-style: square; padding-left: 10px;">
-      <li>This page is a static view of the product configurations across each environment. The data will be periodically updated as part of a product configuration relaese or upon request to <a href="mailto:david.anderson@anz.com">david.anderson@anz.com</a></li>
+      <li>This page is a static view of the product configurations from each Zafin environment. The data will be periodically updated as part of a product configuration relaese or upon request to <a href="mailto:david.anderson@anz.com">david.anderson@anz.com</a></li>
       <li>To use.. Click on a product category to show products in each environment. Click on a product button to show the product details.</li>
       <li>Known data gaps include multiuse product fees, rulesets, offers, credit card config etc</li>
-      <li>Backlog items include calling mulesoft to pull data, compare, config checker, diagram view</li>
+      <li>Backlog items include calling mulesoft to pull product data, compare, config checker, diagram view</li>
     </ul>
     </div>
     </div>
@@ -1283,9 +1321,13 @@
   <div id="product-details-content">
     <button id="diagram-btn" onclick="toggleDiagram( '{{product.productCode}}')" >Show Diagram</button>
     <button id="json-btn" onclick="toggleJson( '{{product.productCode}}')">Show JSON</button>
+    <button id="check-btn" onclick="toggleCheck( '{{product.productCode}}')">Show Checker</button>
+    <button id="compare-btn" onclick="toggleCompare( '{{product.productCode}}')">Show Compare</button>
     <span id="product-details-close">&times;</span>
     <div><pre id="product-details-diagram-content"></pre></div>
     <div><pre id="product-details-json-content"></pre></div>
+    <div><pre id="product-details-checker-content"></pre></div>
+    <div><pre id="product-details-compare-content"></pre></div>
 
   {{> product-name-template}}
 
@@ -1335,26 +1377,32 @@
   {{> deposit-product-rateplan-template}}
   {{> lending-product-rateplan-template}}
 
+  {{#if product.serviceAssociation}}
   <h2>Associated Services</h2>
   <div class="content">
   <div class="table_wrapper">    
   {{> services-template}}
   </div>
   </div>  
+  {{/if}}
 
+  {{#if product.openBankingConfiguration}}
   <h2>Open Banking</h2>
   <div class="content">
   <div class="table_wrapper">
       {{> product-openbanking-template}}
   </div>
   </div>
+  {{/if}}
 
+  {{#if product.externalProductCodeMapping}}
   <h2>External Product Code Mapping</h2>
   <div class="content">
   <div class="table_wrapper">
   {{> external-product-code-mapping-template}}
   </div>
   </div> 
+  {{/if}}
 
   {{#if product.impactedSystems}}
     <h2>Impacted Systems</h2>
@@ -1415,7 +1463,7 @@
     }
 
     h1, h2, h3, h4 {
-      padding-top: 20px;
+      padding-top: 12px;
       cursor: pointer;
       color: #371282;
     }
