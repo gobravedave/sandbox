@@ -132,7 +132,6 @@
       <tr>
         <th>Product Parameters</th>
         <th>Financial Parameters</th>
-        <th>Entitlement Parameters</th>
         <th>Regulatory Parameters</th>
       </tr>
       <tr>
@@ -200,8 +199,7 @@
           </tr>
           </table>
           {{/with}}
-        </td>
-        <td>
+          <br><b>Entitlement Parameters</b><br>   
           {{#with entitlementParameters}}
           {{> entitlements-template}}
           {{/with}}
@@ -210,9 +208,9 @@
           {{#with regulatoryParameters}}
           {{> regulatory-parameters-template}}
           {{/with}}
-        </td>
-        <td>
-          {{#with product.productConfiguration.documentations}}
+
+          <br><b>Documentation</b><br>  
+          {{#with documentations}}
           {{> documentation-template}}
           {{/with}}          
         </td>
@@ -225,13 +223,11 @@
   <!-- Term Deposit Product Config Partial -->
   <script id="term-deposit-product-config-template" type="text/x-handlebars-template">
     {{#with product.termDepositProductConfiguration}}
-    {{log this}}
     <table>
       <tr>
         <th>Product Parameters</th>
         <th>Investment Parameters</th>
         <th>Financial Parameters</th>
-        <th>Entitlement Parameters</th>
       </tr>
       <tr>
         <td>
@@ -279,9 +275,7 @@
         {{#with financialParameters}}
         {{> financial-parameters-template}}
         {{/with}}
-        </td>
-
-        <td>
+        <br><b>Entitlement Parameters</b><br> 
         {{#with entitlementParameters}}
         {{> entitlements-template}}
         {{/with}}
@@ -1267,11 +1261,16 @@
     </script>
 
     <h1>Product Configuration Viewer by Environment</h1>
-    <p>
-    - Wait for the table to load.<br />
-    - Click on a product category to show product configuration in each environment.<br />
-    - Click on a product title to show configuration of the product.<br />
-    </p>
+    <h4>Info about this page</h4>
+    <div class="content">
+    <ul style="list-style: square; padding-left: 20px;">
+      <li>This page is a static view of the product configurations across each environment. The data will be periodically updated as part of a product configuration relaese or upon request to <a href="mailto:david.anderson@anz.com">david.anderson@anz.com</a></li>
+      <li>To use.. Click on a product category to show product configuration in each environment.</li>
+      <li>Click on a product title to show configuration of the product.</li>
+      <li>Known data gaps include multiuse product fees, rulesets, offers, credit card config etc</li>
+      <li>Backlog items include calling mulesoft to pull data, compare, config checker, diagram view</li>
+    </ul>
+    </div>
 
     <!-- <textarea id="log-console" style="height: 100px; width: 500px;"></textarea> -->
     <div id="products-list"></div>
@@ -1323,10 +1322,12 @@
   {{/if}}
 
   {{#if product.feePlans}}
-  <h2>Fee Plans</h2>
-  <div class="content">
-  {{> product-fees-template}}
-  </div>
+    <h2>Fee Plans</h2>
+    <div class="content">
+    <div class="table_wrapper">
+    {{> product-fees-template}}
+    </div>
+    </div>
   {{/if}}
 
   {{> deposit-product-rateplan-template}}
@@ -1334,24 +1335,32 @@
 
   <h2>Associated Services</h2>
   <div class="content">
+  <div class="table_wrapper">    
   {{> services-template}}
   </div>
+  </div>  
 
   <h2>Open Banking</h2>
   <div class="content">
-  {{> product-openbanking-template}}
+  <div class="table_wrapper">
+      {{> product-openbanking-template}}
+  </div>
   </div>
 
   <h2>External Product Code Mapping</h2>
   <div class="content">
+  <div class="table_wrapper">
   {{> external-product-code-mapping-template}}
   </div>
+  </div> 
 
   {{#if product.impactedSystems}}
-  <h2>Impacted Systems</h2>
-  <div class="content">
-  {{> impacted-systems-template}}
-  </div>
+    <h2>Impacted Systems</h2>
+    <div class="content">
+    <div class="table_wrapper">
+    {{> impacted-systems-template}}
+    </div>
+    </div>
   {{/if}}
 </div>
 </script>
