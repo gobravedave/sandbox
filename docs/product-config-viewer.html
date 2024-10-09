@@ -32,7 +32,7 @@
   <!-- Product Name Partial -->
   <script id="product-name-template" type="text/x-handlebars-template">
     <div>
-      <h2>{{product.productName}} as at {{formatDate asofDate}}</h2>
+      <h2>({{place}}) {{product.productName}} as at {{formatDate asofDate}}</h2>
       <table>
         <tr>
           <th>Code</th>
@@ -1168,6 +1168,9 @@
         let productDetails = BANKS[savedBankId].productsRaw.find(prod => prod.productCode=== productId);
 
         var pre = document.getElementById("product-details-compare-content");
+        const compareWithSelect = document.getElementById("compare-with");
+        compareWithSelect.style.display = "block";
+        populateCompareDropdown();
         pre.innerHTML = ""; // Clear previous Compare content
         const h2 = document.createElement('h2');
         // h2.style.color = 'blue';
@@ -1176,9 +1179,28 @@
         compareBtn.textContent = 'Hide Compare';
       } else {
         document.getElementById("product-details-compare-content").innerHTML = "";
+        document.getElementById("compare-with").style.display = "none";
         compareBtn.textContent = 'Show Compare';
       }
     }
+
+    function populateCompareDropdown() {
+      const $compareDropdown = document.getElementById('compare-with');
+      if ($compareDropdown) {
+        // Clear previous options first to avoid duplication
+        $compareDropdown.innerHTML = '<option value="">Compare with</option>';
+
+        for (const key in BANKS) {
+          if (BANKS.hasOwnProperty(key)) {
+            const option = document.createElement('option');
+            option.value = key; // Use the key as the value
+            option.textContent = BANKS[key].name; // Use the name property as the display text
+            $compareDropdown.appendChild(option);
+          }
+        }
+      }
+    }
+
 
     window.onload = async function () {
 
@@ -1271,7 +1293,7 @@
           // Compile the main product template
 
           if (productDetails) {
-            document.getElementById('product-details').innerHTML = productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate });
+            document.getElementById('product-details').innerHTML = productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate, place: BANKS[bankId].name });
           } else {
             document.getElementById('product-details').innerHTML = `<div id="product-details-content">Product details not found.<span id="product-details-close">&times;</span></div>`;
           }
@@ -1327,7 +1349,12 @@
     <div><pre id="product-details-diagram-content"></pre></div>
     <div><pre id="product-details-json-content"></pre></div>
     <div><pre id="product-details-checker-content"></pre></div>
-    <div><pre id="product-details-compare-content"></pre></div>
+    <div><pre id="product-details-compare-content"></pre>
+      <select id="compare-with" style="width: 200px; display: none">
+        <option value="">Compare with Bank</option>
+      </select>
+  
+    </div>
 
   {{> product-name-template}}
 
@@ -1530,6 +1557,40 @@
       vertical-align: top;
       font-size: 14px;
     }
+
+    select {
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    padding: 10px 15px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f7f7f7;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+}
+
+select:hover {
+  background-color: #eaeaea;
+}
+
+select:disabled {
+  background-color: #e0e0e0;
+  cursor: not-allowed;
+}
+
+select {
+  width: auto;
+  min-width: 200px;
+  max-width: 100%;
+}
 
     button {
       background-color: white;
