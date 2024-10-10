@@ -7,7 +7,7 @@
   <script src="https://unpkg.com/renderjson@1.3.0/renderjson.js"></script>
   <!-- <script src="https://cdn.jsdelivr.net/npm/deep-diff@1.0.2/dist/deep-diff.min.js"></script> -->
   <!-- <script src="https://cdn.jsdelivr.net/npm/jsondiffpatch@0.3.11/public/build/jsondiffpatch.min.js"></script> -->
-  <script src="js/treegrid.js"></script>
+  <!-- <script src="js/treegrid.js"></script> -->
 
 </head>
 <body>
@@ -336,56 +336,59 @@ window.onload = async function () {
       savedProductDetails = productDetails
       document.getElementById('product-details').innerHTML = productDetailsTpl(productDetails.data)
       // Call the populateBankDropdown function here
-      populateBankDropdown();
-      document.getElementById('product-details-treegrid-content').style.display = 'none';
+      // populateBankDropdown();
+      // document.getElementById('product-details-treegrid-content').style.display = 'none';
 
-      document.getElementById('compare-bank').addEventListener('change', async function(e) {
-  const selectedBankId = e.target.value;
-  const compareProductSelect = document.getElementById('compare-product');
-  compareProductSelect.disabled = true; // Disable initially
+    //   document.getElementById('compare-bank').addEventListener('change', async function(e) {
+    //     const selectedBankId = e.target.value;
+    //     const compareProductSelect = document.getElementById('compare-product');
+    //     compareProductSelect.disabled = true; // Disable initially
 
-  if (selectedBankId) {
-    const selectedBank = BANKS[selectedBankId];
-    const { products } = await getProducts(selectedBank);
+    //     if (selectedBankId) {
+    //       const selectedBank = BANKS[selectedBankId];
+    //       const { products } = await getProducts(selectedBank);
 
-    compareProductSelect.innerHTML = '<option value="">Compare with Product</option>'; // Reset options
+    //       compareProductSelect.innerHTML = '<option value="">Compare with Product</option>'; // Reset options
 
-    products.forEach(product => {
-      const option = document.createElement('option');
-      option.value = product.productId;
-      option.textContent = product.name;
-      compareProductSelect.appendChild(option);
-    });
+    //       products.forEach(product => {
+    //         const option = document.createElement('option');
+    //         option.value = product.productId;
+    //         option.textContent = product.name;
+    //         compareProductSelect.appendChild(option);
+    //       });
 
-    compareProductSelect.disabled = false; // Enable once populated
-  }
-  });
+    //       compareProductSelect.disabled = false; // Enable once populated
+    //     }
 
-    document.getElementById('compare-product').addEventListener('change', function(e) {
-      const compareButton = document.getElementById('compare-products');
-      compareButton.disabled = !e.target.value; // Enable if a product is selected, otherwise disable
-    });
+    //     compareProductSelect.dispatchEvent(new Event('change')); // Trigger the change event
+    // }
+// );     
 
-      document.getElementById('compare-products').addEventListener('click', async function() {
-        const currentBankId = savedBankId;
-        const currentProductId = document.querySelector('.product-name[data-bank-id="' + currentBankId + '"]').dataset.productId;
+    // document.getElementById('compare-product').addEventListener('change', function(e) {
+    //   const compareButton = document.getElementById('compare-products');
+    //   compareButton.disabled = !e.target.value; // Enable if a product is selected, otherwise disable
+    // });
 
-        const compareBankId = document.getElementById('compare-bank').value;
-        const compareProductId = document.getElementById('compare-product').value;
+      // document.getElementById('compare-products').addEventListener('click', async function() {
+      //   const currentBankId = savedBankId;
+      //   const currentProductId = document.querySelector('.product-name[data-bank-id="' + currentBankId + '"]').dataset.productId;
 
-        const currentProductDetails = await getProductDetails(BANKS[currentBankId], currentProductId);
-        const compareProductDetails = await getProductDetails(BANKS[compareBankId], compareProductId);
-        // const comparisonUrl = `http://www.jsondiff.com/index.html?left=${encodeURIComponent(JSON.stringify(currentProductDetails))}&right=${encodeURIComponent(JSON.stringify(compareProductDetails))}`;
-        // console.log(comparisonUrl);
-        // window.open(comparisonUrl, '_blank');
-        // const response = await fetch('https://cdn.jsdelivr.net/npm/deep-diff@1.1.0/dist/deep-diff.min.js');
-        // const diffModule = await response.text();
-        // const diffFunc = new Function(diffModule);
-        // const { diff } = diffFunc();
-        // const differences = diff(currentProductDetails, compareProductDetails);
-        // console.log(differences);
-        alert('Comparison not yet implemented');
-      });
+      //   const compareBankId = document.getElementById('compare-bank').value;
+      //   const compareProductId = document.getElementById('compare-product').value;
+
+      //   const currentProductDetails = await getProductDetails(BANKS[currentBankId], currentProductId);
+      //   const compareProductDetails = await getProductDetails(BANKS[compareBankId], compareProductId);
+      //   // const comparisonUrl = `http://www.jsondiff.com/index.html?left=${encodeURIComponent(JSON.stringify(currentProductDetails))}&right=${encodeURIComponent(JSON.stringify(compareProductDetails))}`;
+      //   // console.log(comparisonUrl);
+      //   // window.open(comparisonUrl, '_blank');
+      //   // const response = await fetch('https://cdn.jsdelivr.net/npm/deep-diff@1.1.0/dist/deep-diff.min.js');
+      //   // const diffModule = await response.text();
+      //   // const diffFunc = new Function(diffModule);
+      //   // const { diff } = diffFunc();
+      //   // const differences = diff(currentProductDetails, compareProductDetails);
+      //   // console.log(differences);
+      //   alert('Comparison not yet implemented');
+      // });
 
       document.getElementById('product-details-close').addEventListener('click', function (e) {
         document.getElementById('product-details').style.display = 'none'
@@ -423,17 +426,18 @@ window.onload = async function () {
 
 <script id="product-details-template" type="text/x-handlebars-template">
     <div id="product-details-content">
-    <button id="treegrid-btn" onclick="toggleTreegrid( '{{productId}}')">Show Treegrid</button>
+    <!-- <button id="treegrid-btn" onclick="toggleTreegrid( '{{productId}}')">Show Treegrid</button> -->
     <button id="json-btn" onclick="toggleJson( '{{productId}}')">Show JSON</button>
-    <select id="compare-bank" style="width: 200px;">
-      <option value="">Compare with Bank</option>
-    </select>
-    <select id="compare-product" style="width: 200px;" disabled>
-      <option value="">Compare with Product</option>
-    </select>
-    <button id="compare-products" disabled>Compare</button>
-  
     <span id="product-details-close">&times;</span>
+    <!-- <select id="compare-bank" style="width: 200px;">
+      <option value="">Compare with Bank</option>
+    </select> -->
+    <!-- <select id="compare-product" style="width: 200px;" disabled>
+      <option value="">Compare with Product</option>
+    </select> -->
+    <!-- <button id="compare-products" disabled>Compare</button> -->
+  
+
   <div>
         <pre id="product-details-treegrid-content"></pre>
     </div>
@@ -442,8 +446,8 @@ window.onload = async function () {
     </div>
 
     <div id="product-details-pretty-content"></div>
-      <h3>{{this.name}}</h3>
-	 <span>Description: {{this.description}}</span>
+  <h3>{{this.name}}</h3>
+	<span><strong>Description:</strong> {{this.description}}</span>
 	{{#if this.brand}}
 		 <br>
 		 <span><strong>Brand:  </strong> {{this.brand}}</span>
@@ -465,28 +469,27 @@ window.onload = async function () {
 		<br>
 	{{/if}}
 	
-	  {{#if this.additionalInformation}}
-		<h4>Additional Information</h4>
+	{{#if this.additionalInformation}}
+    <h4>Additional Information</h4>
     <div class="content">
-		<ul>
-		{{#if this.additionalInformation.overviewUri}}
-			<li><span><a href="{{this.additionalInformation.overviewUri}}">Overview</a></span></li>
-		{{/if}}
-		{{#if this.additionalInformation.termsUri}}
-			<li><span><a href="{{this.additionalInformation.termsUri}}">Terms and Conditions</a></span></li>
-		{{/if}}
-		{{#if this.additionalInformation.eligibilityUri}}
-			<li><span><a href="{{this.additionalInformation.eligibilityUri}}">Eligibility Criteria</a></span></li>
-		{{/if}}
-		{{#if this.additionalInformation.feesAndPricingUri}}
-			<li><span><a href="{{this.additionalInformation.feesAndPricingUri}}">Fees And Pricing</a></span></li>
-    </div>
+    <ul>
+    {{#if this.additionalInformation.overviewUri}}
+      <li><span><a href="{{this.additionalInformation.overviewUri}}">Overview</a></span></li>
     {{/if}}
-
-		{{#if this.bundleUri}}
-			<span><a href="{{this.bundleUri}}">Bundles</a></span>
-		{{/if}}
-		</ul>
+    {{#if this.additionalInformation.termsUri}}
+      <li><span><a href="{{this.additionalInformation.termsUri}}">Terms and Conditions</a></span></li>
+    {{/if}}
+    {{#if this.additionalInformation.eligibilityUri}}
+      <li><span><a href="{{this.additionalInformation.eligibilityUri}}">Eligibility Criteria</a></span></li>
+    {{/if}}
+    {{#if this.additionalInformation.feesAndPricingUri}}
+      <li><span><a href="{{this.additionalInformation.feesAndPricingUri}}">Fees And Pricing</a></span></li>
+    {{/if}}    
+    {{#if this.bundleUri}}
+      <span><a href="{{this.bundleUri}}">Bundles</a></span>
+    {{/if}}
+    </ul>
+    </div>
 	{{/if}}
 
 	{{#if this.bundles}}
@@ -635,6 +638,7 @@ window.onload = async function () {
     </table>
     </div>
   {{/if}}
+  
   {{#if this.lendingRates}}
     <h4>Lending Rates</h4>
     <div class="content">
@@ -676,8 +680,8 @@ window.onload = async function () {
       {{/each}}
     </table>
     </div>
-{{/if}}
-</div>
+  {{/if}}
+  </div>
 </script>
 
 <script id="products-list-template" type="text/x-handlebars-template">
