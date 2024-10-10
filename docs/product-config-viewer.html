@@ -52,12 +52,9 @@
   <script id="eligibility-template" type="text/x-handlebars-template">
     <table>
       <tr>
-        <th>Life Cycle</th>
-        <th>Eligibility Criteria</th>
-      </tr>
-      <tr>
         <td>
         <table>
+          <tr><th colspan="2">Life Cycle</th></tr>
           <tr><th>Status</th><td>{{#if productStatus}} {{productStatus}} {{/if}}
             {{#if serviceStatus}} {{serviceStatus}} {{/if}}</td></tr>
           <tr><th>From Date</th><td>{{formatDate this.fromDate}}</td></tr>
@@ -67,6 +64,7 @@
       <td>
     {{#with this.eligibilityCriteria}}
     <table>
+      <tr><th colspan="2">Eligibility Criteria</th></tr>
       <tr><th>Type</th><th>Criteria</th></tr>
       {{#if this.customerSegment}}
       <tr>
@@ -130,14 +128,10 @@
     {{#with product.productConfiguration}}
     <table>
       <tr>
-        <th>Product Parameters</th>
-        <th>Financial Parameters</th>
-        <th>Regulatory Parameters</th>
-      </tr>
-      <tr>
         <td>
         {{#with productParameters}}
         <table>
+          <tr><th colspan="2">Product Parameters</th></tr>
           <tr><th>Brand</th><td>{{brand.name}} ({{brand.code}})</td></tr>
           <tr><th>Fee Cycle</th>
             <td>
@@ -183,9 +177,10 @@
           {{#with financialParameters}}
           {{> financial-parameters-template}}
           {{/with}}
-          <br><b>Behaviour Parameters</b><br>
+          <br>
           {{#with behaviourParameters}}
           <table>
+            <tr><th colspan="2">Behaviour Parameters</th></tr>
             <tr>
               <th>Informal Overdraft</th>
               <td>
@@ -199,7 +194,7 @@
           </tr>
           </table>
           {{/with}}
-          <br><b>Entitlement Parameters</b><br>   
+          <br>
           {{#with entitlementParameters}}
           {{> entitlements-template}}
           {{/with}}
@@ -209,7 +204,7 @@
           {{> regulatory-parameters-template}}
           {{/with}}
 
-          <br><b>Documentation</b><br>  
+          <br>  
           {{#with documentations}}
           {{> documentation-template}}
           {{/with}}          
@@ -225,14 +220,10 @@
     {{#with product.termDepositProductConfiguration}}
     <table>
       <tr>
-        <th>Product Parameters</th>
-        <th>Investment Parameters</th>
-        <th>Financial Parameters</th>
-      </tr>
-      <tr>
         <td>
         {{#with productParameters}}
         <table>
+          <tr><th colspan="2">Product Parameters</th></tr>
           <tr><th>Brand</th><td>{{brand.name}} ({{brand.code}})</td></tr>
           <tr><th>Short Name</th><td>{{shortName}}</td></tr>
           <tr><th>Short Description</th><td>{{shortDescription}}</td></tr>
@@ -248,34 +239,39 @@
         </td>
         <td>
           <table>
+          <tr><th colspan="2">Investment Parameters</th></tr>
           {{#with productParameters.investmentParameters}}
           <tr><th>Min Investment Amount</th><td>{{minimumInvestmentAmount}}</td></tr>
           <tr><th>Max Investment Amount</th><td>{{maximumInvestmentAmount}}</td></tr>
           <tr><th>Min Withdrawal Amount</th><td>{{minimumWithdrawalAmount}}</td></tr>
-          </table>
-          <br><b>{{penaltyInterest.name}} {{penaltyInterest.code}}</b><br>
-          <table>
-            <tr>
-              <th>Description</th>
-              <th>% Of Time Elapse Low is {{penaltyInterest.interestRates.[0].precentageOfTimeElapseLow.operator}} </th>
-              <th>% Of Time Elapse High is {{penaltyInterest.interestRates.[0].precentageOfTimeElapseHigh.operator}}</th>
-              <th>Interest Reduction</th>
-            </tr>
-            <tr>
-            {{#each penaltyInterest.interestRates}}
-              <td>{{description}}</td>
-              <td>{{precentageOfTimeElapseLow.value}}</td>
-              <td> {{precentageOfTimeElapseHigh.value}}</td>
-              <td>{{interestReduction}}</td>
-            </tr>
-            {{/each}}
-          </table>
+          <tr><th>Penalty Interest</th>
+            <td>
+              <table>
+                <tr><th colspan="4">{{penaltyInterest.name}} {{penaltyInterest.code}}</th></tr>
+                <tr>
+                  <th>Description</th>
+                  <th>% Of Time Elapse Low is {{penaltyInterest.interestRates.[0].precentageOfTimeElapseLow.operator}} </th>
+                  <th>% Of Time Elapse High is {{penaltyInterest.interestRates.[0].precentageOfTimeElapseHigh.operator}}</th>
+                  <th>Interest Reduction</th>
+                </tr>
+                <tr>
+                {{#each penaltyInterest.interestRates}}
+                  <td>{{description}}</td>
+                  <td>{{precentageOfTimeElapseLow.value}}</td>
+                  <td> {{precentageOfTimeElapseHigh.value}}</td>
+                  <td>{{interestReduction}}</td>
+                </tr>
+                {{/each}}
+              </table>    
+            </td>
+          </tr>
+        </table>
           {{/with}}
         <td>
         {{#with financialParameters}}
         {{> financial-parameters-template}}
         {{/with}}
-        <br><b>Entitlement Parameters</b><br> 
+        <br>
         {{#with entitlementParameters}}
         {{> entitlements-template}}
         {{/with}}
@@ -290,15 +286,9 @@
     {{#with product.mortgageProductConfiguration.productParameters}}
     <table>
       <tr>
-        <th>Product Parameters</th>
-        <th>Financial Parameters</th>
-        <th>Entitlement Parameters</th>
-        <th>Regulatory Parameters</th>
-        <th>Documentation</th>
-      </tr>
-      <tr>
         <td>
         <table>
+        <tr><th colspan="2">Product Parameters</th></tr>
         <tr><th>Brand</th><td>{{brand.name}} ({{brand.code}})</td></tr>
         <tr><th>Min Loan Term (Months)</th><td>{{minimumLoanTermInMonths}}</td></tr>
         <tr><th>Max Loan Term (Months)</th><td>{{maximumLoanTermInMonths}}</td></tr>
@@ -345,13 +335,11 @@
     {{#with product.mortgageProductConfiguration.financialParameters}}
     {{> financial-parameters-template}}
     {{/with}}
-    </td>
-    <td>
+    <br>
     {{#with product.mortgageProductConfiguration.entitlementParameters}}
     {{> entitlements-template}}
     {{/with}}
-    </td>
-    <td>
+    <br>
     {{#with product.mortgageProductConfiguration.regulatoryParameters}}
     {{> regulatory-parameters-template}}
     {{/with}}
@@ -370,6 +358,7 @@
   <!-- Financial Parameters Partial -->
   <script id="financial-parameters-template" type="text/x-handlebars-template">
     <table>
+        <tr><th colspan="2">Financial Parameters</th></tr>
         <tr><th>Operating Segment</th><td>{{this.operatingSegment.name}} ({{this.operatingSegment.code}})</td></tr>
         {{#if accountServicingModel }}
         <tr><th>Account Servicing Model</th><td>{{this.accountServicingModel.name}} ({{this.accountServicingModel.code}})</td></tr>
@@ -394,6 +383,8 @@
   <!-- Regulatory Parameters Partial -->
   <script id="regulatory-parameters-template" type="text/x-handlebars-template">
   <table>
+    <tr><th colspan="2">Regulatory Parameters</th></tr>
+
     {{#if riskLevel}}
       <tr><th>Risk Level</th><td>{{riskLevel.name}} ({{riskLevel.code}}) {{riskLevel.description}}</td></tr>
     {{/if}}
@@ -426,8 +417,8 @@
   </table>
 
   {{#if regulations.regulatoryReporting}}
-  <br><b>Regulatory Reporting</b><br>
   <table>
+    <tr><th colspan="2">Regulatory Reporting</th></tr>
     <tr>
       <th>Regulator</th>
       <th>Reporting</th>
@@ -864,6 +855,7 @@
   <!-- Entitlements Partial -->
   <script id="entitlements-template" type="text/x-handlebars-template">
     <table>
+        <tr><th colspan="2">Entitlements</th></tr>
         <tr><th>Enabled For Open Banking</th><td>{{this.enabledForOpenBanking}}</td></tr>
         {{#if transactOptions}}
         <th>Transact Options</th>
@@ -880,6 +872,7 @@
   <!-- Documention Partial -->
   <script id="documentation-template" type="text/x-handlebars-template">
     <table>
+      <tr><th colspan="4">Documentation</th></tr>
         <tr>
           <th>Type</th>
           <th>Document</th>
