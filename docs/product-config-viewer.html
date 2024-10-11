@@ -217,10 +217,10 @@
 
   <!-- Term Deposit Product Config Partial -->
   <script id="term-deposit-product-config-template" type="text/x-handlebars-template">
-    {{#with product.termDepositProductConfiguration}}
     <table>
-      <tr>
-        <td>
+    <tr>
+      <td>
+    {{#with product.termDepositProductConfiguration}}
         {{#with productParameters}}
         <table>
           <tr><th colspan="2">Product Parameters</th></tr>
@@ -236,7 +236,15 @@
           </tr>
         </table>
         {{/with}}
-        </td>
+      <br>
+        {{#with financialParameters}}
+        {{> financial-parameters-template}}
+        {{/with}}
+      <br>
+        {{#with entitlementParameters}}
+        {{> entitlements-template}}
+        {{/with}}
+      </td>  
         <td>
           <table>
           <tr><th colspan="2">Investment Parameters</th></tr>
@@ -258,7 +266,7 @@
                 {{#each penaltyInterest.interestRates}}
                   <td>{{description}}</td>
                   <td>{{precentageOfTimeElapseLow.value}}</td>
-                  <td> {{precentageOfTimeElapseHigh.value}}</td>
+                  <td>{{precentageOfTimeElapseHigh.value}}</td>
                   <td>{{interestReduction}}</td>
                 </tr>
                 {{/each}}
@@ -266,19 +274,13 @@
             </td>
           </tr>
         </table>
-          {{/with}}
-        <td>
-        {{#with financialParameters}}
-        {{> financial-parameters-template}}
         {{/with}}
-        <br>
-        {{#with entitlementParameters}}
-        {{> entitlements-template}}
-        {{/with}}
-        </td>
-      </tr>
-    </table>
+
     {{/with}}
+  </td>
+  </tr>
+  </table>
+
   </script>
 
   <!-- Lending Product Config Partial -->
@@ -296,20 +298,20 @@
         <tr><th>Max Loan Amount</th><td>{{maximumLoanAmount}}</td></tr>
         <tr><th>Security Mandatory</th><td>{{isSecurityMandatory}}</td></tr>
         <tr>
-          <th>Security Type</th>
-          <td>
-          {{#each securityType}}
-          <li>{{this.name}} ({{this.code}})</li>
-          {{/each}}
-          </td>
+        <th>Security Type</th>
+        <td>
+        {{#each securityType}}
+        <li>{{this.name}} ({{this.code}})</li>
+        {{/each}}
+        </td>
         </tr>
         <tr>
-          <th>Loan Purpose Code</th>
-          <td>
-          {{#each loanPurposeCode}}
-          <li>{{this.name}} ({{this.code}})</li>
-          {{/each}}
-          </td>
+        <th>Loan Purpose Code</th>
+        <td>
+        {{#each loanPurposeCode}}
+        <li>{{this.name}} ({{this.code}})</li>
+        {{/each}}
+        </td>
         </tr>
         <tr>
           <th>Payment Frequency</th>
@@ -328,7 +330,7 @@
           </td>
         </tr>
         </td>
-      </table>
+        </table>
     {{/with}}
     </td>
     <td>
@@ -350,8 +352,7 @@
     {{/with}}  
     </td>
   </tr>
-</table>
-
+  </table>
 
   </script>
 
@@ -723,18 +724,12 @@
     <div class="content">
     <div class="table_wrapper">
     <table>
-    <tr>
-    <th>Product</th>
-    <th>Product Parameters</th>
-    <th>Financial Parameters</th>
-    <th>Fees</th>
-    <th>Rules</th>
-    </tr>
     {{#each multiUseProducts }}
     <tr>
     <td>
-    <table>  
-    <th>Name</th><td>{{productName}} ({{productCode}})</td></tr>
+    <table>
+    <tr><th colspan="2">Product</th></tr>  
+    <tr><th>Name</th><td>{{productName}} ({{productCode}})</td></tr>
     <tr><th>Classification</th><td>{{productClassification}}</td></tr>
     <tr><th>Status</th><td>{{productLifecycleDetails.productStatus}}</td></tr>
     <tr><th>From Date</th><td>{{formatDate productLifecycleDetails.fromDate}}</td></tr>
@@ -743,6 +738,7 @@
     </td>
     <td>
     <table>
+      <tr><th colspan="2">Product Paramaters</th></tr>  
       <tr>
       <th>Linked Deposit Products:</th>
       <td>
@@ -764,6 +760,7 @@
     </td>
     <td>
     <table>
+    <tr><th colspan="2">Financial Paramaters</th></tr>  
     <tr><th>Cost Center</th><td>{{productConfiguration.offsetProductConfiguration.financialParameters.costCenter.name}} ({{productConfiguration.offsetProductConfiguration.financialParameters.costCenter.code}})</td></tr>
     <tr><th>General Ledger Code</th><td>{{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.name}} ({{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.code}})</td></tr>
     </table>
@@ -782,15 +779,11 @@
     <div class="content">
     <div class="table_wrapper">
     <table>
-        <tr>
-        <th>Service</th>
-        <th>Eligibility</th>
-        <th>Service Configuration</th>
-        </tr>
         {{#each services}}
         <tr>
         <td>
         <table>
+          <tr><th colspan="2">Service</th></tr>  
           <tr><th>Name</th><td>{{name}} ({{code}})</td></tr>
           <tr><th>Category</th><td>{{serviceCategory}}</td></tr>
           <tr><th>Subscription Required</th><td>{{subscriptionRequired}}</td></tr>
@@ -803,7 +796,8 @@
         </td>
         <td>
         <table>
-        {{#if serviceDetails.[0].serviceConfiguration.debitCard}}
+        <tr><th colspan="2">Service Configuration</th></tr>  
+          {{#if serviceDetails.[0].serviceConfiguration.debitCard}}
         <tr><th>Card Category</th><td>{{serviceDetails.[0].serviceConfiguration.debitCard.cardCategory.name}} ({{serviceDetails.[0].serviceConfiguration.debitCard.cardCategory.code}})</td></tr>
         <tr>
         <th>Card Design</th>
@@ -1497,6 +1491,18 @@
     overflow-x: auto;
     white-space: nowrap;
     }
+
+    .flex-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+  .flex-container > div {
+    width: 200px;
+    margin: 10px;
+    padding: 10px;
+  }
+
 /* Optional tooltip styling */
 .table th[title]:hover, 
 .table td[title]:hover {
