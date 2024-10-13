@@ -51,6 +51,7 @@
   <!-- Eligibility Partial -->
   <script id="eligibility-template" type="text/x-handlebars-template">
     <table>
+      <tr><th colspan="2">Eligibility Parameters</th></tr>
       <tr>
         <td>
         <table>
@@ -118,9 +119,9 @@
       {{/if}}
     </table>
     {{/with}}
-  </td></tr>
+    </td></tr>
     </table>
-</script>
+  </script>
 
   <!-- Deposit Product Config Partial -->
   <script id="deposit-product-config-template" type="text/x-handlebars-template">
@@ -567,7 +568,6 @@
 
   <!-- Lending Product Rate Plan Partial -->
   <script id="lending-product-rateplan-template" type="text/x-handlebars-template">
-    {{!log this}}
     {{#with product.ratePlans}}
     {{#each this.data}}
       {{#with this.ratePlanAssociation}}
@@ -652,7 +652,6 @@
           {{#with productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates.firstPartTermRates.rateGrid}}
           {{> rategrid-template}}
           {{/with}}
-
           <br><b>Add logic to check if there are qualifier rules exist</b></td><br>
         </td>
         <td>
@@ -663,7 +662,7 @@
         {{/if}}
       </tr>
     {{/each}}
-  </table>
+    </table>
     </div>
     </div>
   {{/if}}
@@ -765,9 +764,18 @@
     <tr><th>General Ledger Code</th><td>{{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.name}} ({{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.code}})</td></tr>
     </table>
     </td>
-    <td>If subscription required, add logic to look up fees..</td>
-    <td>Add logic to look up eligibility..</td>
-    </tr>
+    <td>
+    <table>
+    <tr><th colspan="2">Fee Plan</th></tr>
+    <tr><td>If subscription required, add logic to look up fees..</td></tr>
+    </table>
+    </td>
+    <td>
+    <table>
+    <tr><th colspan="2">Eligibility</th></tr>
+    <tr><td>Add logic to look up eligibility rules..</td></tr>
+    </table>
+    </td>
     {{/each}}
     </table>
     </div>
