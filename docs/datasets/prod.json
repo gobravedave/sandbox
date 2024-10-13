@@ -1,4 +1,5 @@
 {
+    "requestDate": "2024-08-27T23:27:47Z",
     "dataCount": 1,
     "data": [
         { 
@@ -16,9 +17,9 @@
                     "eligibilityCriteria": {
                         "ageGroup": [
                             {
-                                "name": "Greater than 18 years",
-                                "code": "18+",
-                                "fromValue": 18,
+                                "name": "Greater than 20 years",
+                                "code": "20+",
+                                "fromValue": 20,
                                 "toValue": 999
                             }
                         ]
