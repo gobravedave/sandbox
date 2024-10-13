@@ -1,0 +1,50 @@
+
+    {{#with product.openBankingConfiguration}}
+    {{#if this.features}}
+    <h3>Features</h3>
+    <div class="content">
+    <table>
+      <tr>
+        <th>Type</th>
+        <th>Additional Value</th>
+        <th>Additional Information</th>
+        <th>Additional Information Link</th>
+      </tr>
+      {{#each this.features}}
+        <tr>
+          <td>{{this.featureType}}</td>
+          <td>{{this.additionalValue}}</td>
+          <td>{{this.additionalInfo}}</td>
+          <td>{{this.additionalInfoUri}}</td>
+        </tr>
+      {{/each}}
+    </table>
+    </div>
+    {{/if}}
+
+    {{#if this.feeItems}}
+    <h3>Fee Items</h3>
+    <div class="content">
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Fee Item Type</th>
+        <th>Fee Type</th>
+        <th>Additional Information</th>
+        <th>Link</th>
+      </tr>
+      {{#each this.feeItems}}
+        <tr>
+          <td>{{this.feeItem.feeItemName}}</td>
+          <td>{{this.feeItem.feeItemDescription}}</td>
+          <td>{{this.feeItem.feeItemType}}</td>
+          <td>{{this.feeType}}</td>
+          <td>{{this.additionalInfo}}</td>
+          <td>{{this.additionalInfoUri}}</td>
+        </tr>
+      {{/each}}
+    </table>
+    </div>
+    {{/if}}
+    {{/with}}
