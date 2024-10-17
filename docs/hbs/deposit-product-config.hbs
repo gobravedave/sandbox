@@ -1,0 +1,87 @@
+{{#with product.productConfiguration}}
+<table>
+    <tr>
+    <td>
+    {{#with productParameters}}
+    <table>
+        <tr><th colspan="2">Product Parameters</th></tr>
+        <tr><th>Brand</th><td>{{brand.name}} ({{brand.code}})</td></tr>
+        <tr><th>Fee Cycle</th>
+        <td>
+        {{#each feeCycle}}
+        <li>{{code}}</li>
+        {{/each}}
+        </td>
+        </tr>
+        <tr><th>Statement Cycle</th>
+        <td>
+        {{#each statementCycle}}
+        <li>{{code}} (Frequency = {{frequency}})</li>
+        {{/each}}
+        </td>
+        </tr>
+        <tr><th>Statement Type</th>
+        <td>
+        {{#each statementType}}
+        <li>{{code}}</li>
+        {{/each}}
+        </td>
+        </tr>
+        <tr><th>CR Interest Cycle</th>
+        <td>
+        {{#each creditInterestCycle}}
+        <li>{{code}}</li>
+        {{/each}}
+        </td>
+        </tr>
+        <tr><th>DR Interest Cycle</th>
+        <td>
+        {{#each debitInterestCycle}}
+        <li>{{code}}</li>
+        {{/each}}
+        </td>
+        </tr>
+        <tr><th>Is Redirect Credit Interest Allowed</th><td>{{reDirectInterest.isRedirectCreditInterestAllowed}}</td></tr>
+        <tr><th>Is Redirect Debit Interest Allowed</th><td>{{reDirectInterest.isRedirectDebitInterestAllowed}}</td></tr>
+    </table>
+    {{/with}}
+    </td>
+    <td>
+        {{#with financialParameters}}
+        {{> financial-parameters-template}}
+        {{/with}}
+        <br>
+        {{#with behaviourParameters}}
+        <table>
+        <tr><th colspan="2">Behaviour Parameters</th></tr>
+        <tr>
+            <th>Informal Overdraft</th>
+            <td>
+            <li>Applicable = {{informalOverDraft.inFormalOverdraftApplicable}}</li>
+            <li>Tolerance = {{informalOverDraft.inFormalOverdraftTolerance}}</li>
+            </td>
+        </tr>
+        <tr>
+            <th>Overdraft Treatment</th>
+            <td>{{informalOverDraft.overdrawnTreatment.name}} ({{informalOverDraft.overdrawnTreatment.name}}) {{informalOverDraft.overdrawnTreatment.description}}</td>
+        </tr>
+        </table>
+        {{/with}}
+        <br>
+        {{#with entitlementParameters}}
+        {{> entitlements-template}}
+        {{/with}}
+    </td>
+    <td>
+        {{#with regulatoryParameters}}
+        {{> regulatory-parameters-template}}
+        {{/with}}
+
+        <br>  
+        {{#with documentations}}
+        {{> documentation-template}}
+        {{/with}}          
+    </td>
+    </tr>
+</table>
+{{/with}}

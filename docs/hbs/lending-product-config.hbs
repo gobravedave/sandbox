@@ -1,0 +1,68 @@
+{{#with product.mortgageProductConfiguration.productParameters}}
+<table>
+    <tr>
+    <td>
+    <table>
+    <tr><th colspan="2">Product Parameters</th></tr>
+    <tr><th>Brand</th><td>{{brand.name}} ({{brand.code}})</td></tr>
+    <tr><th>Min Loan Term (Months)</th><td>{{minimumLoanTermInMonths}}</td></tr>
+    <tr><th>Max Loan Term (Months)</th><td>{{maximumLoanTermInMonths}}</td></tr>
+    <tr><th>Min Loan Amount</th><td>{{minimumLoanAmount}}</td></tr>
+    <tr><th>Max Loan Amount</th><td>{{maximumLoanAmount}}</td></tr>
+    <tr><th>Security Mandatory</th><td>{{isSecurityMandatory}}</td></tr>
+    <tr>
+    <th>Security Type</th>
+    <td>
+    {{#each securityType}}
+    <li>{{this.name}} ({{this.code}})</li>
+    {{/each}}
+    </td>
+    </tr>
+    <tr>
+    <th>Loan Purpose Code</th>
+    <td>
+    {{#each loanPurposeCode}}
+    <li>{{this.name}} ({{this.code}})</li>
+    {{/each}}
+    </td>
+    </tr>
+    <tr>
+        <th>Payment Frequency</th>
+        <td>
+        {{#each paymentFrequency}}
+        <li>{{this.name}} ({{this.code}}), (default={{this.isDefault}})</li>
+        {{/each}}
+        </td>
+    </tr>
+    <tr>
+        <th>Payment Method</th>
+        <td>
+        {{#each paymentmethod}}
+        <li>{{this.name}} ({{this.code}}), (default={{this.isDefault}})</li>
+        {{/each}}
+        </td>
+    </tr>
+    </td>
+    </table>
+{{/with}}
+</td>
+<td>
+{{#with product.mortgageProductConfiguration.financialParameters}}
+{{> financial-parameters-template}}
+{{/with}}
+<br>
+{{#with product.mortgageProductConfiguration.entitlementParameters}}
+{{> entitlements-template}}
+{{/with}}
+<br>
+{{#with product.mortgageProductConfiguration.regulatoryParameters}}
+{{> regulatory-parameters-template}}
+{{/with}}
+</td>
+<td>
+{{#with product.mortgageProductConfiguration.documentations}}
+{{> documentation-template}}
+{{/with}}  
+</td>
+</tr>
+</table>

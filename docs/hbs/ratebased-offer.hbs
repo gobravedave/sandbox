@@ -1,0 +1,54 @@
+{{#if rateBasedOffers}}
+<h3>Rate Based Offers</h3>
+<div class="content">
+<div class="table_wrapper">
+<table>
+    <tr>
+    <th>Offer</th>
+    {{#if rateBasedOffers.[0].productOfferRatePlanMapping.offerRatePlanDetails.simpleRates}}
+    <th>Simple Rate</th>
+    {{/if}}
+    {{#if rateBasedOffers.[0].productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates}}
+    <th>First Term</th>
+    <th>Remaining Term</th>
+    {{/if}}
+    </tr>
+    {{#each rateBasedOffers}}
+    <tr>
+    <td>
+    <table>
+    <tr><th>Name</th><td>{{name}} ({{code}})</td></tr>
+    <tr><th>Publish Externally</th><td>{{publishExternally}}</td></tr>
+    <tr><th>Offer Category</th><td>{{offerCategory.name}} ({{offerCategory.code}})</td></tr>
+    <tr><th>Status</th><td>{{status}}</td></tr>
+    <tr></tr><th>Start Date</th><td>{{formatDate offerStartDate}}</td></tr>
+    <tr></tr><th>End Date</th><td>{{formatDate offerEndDate}}</td></tr>
+    </table>  
+    </td>
+    {{#if productOfferRatePlanMapping.offerRatePlanDetails.simpleRates}}
+        <td>
+        {{#with productOfferRatePlanMapping.offerRatePlanDetails.simpleRates.rates.rateGrid}}
+        {{> rategrid-template}}
+        {{/with}}
+        <br><b>Add logic to check if there are qualifier rules exist</b></td><br>
+        </td>
+    {{/if}}
+    {{#if productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates}}
+    <td>
+        {{#with productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates.firstPartTermRates.rateGrid}}
+        {{> rategrid-template}}
+        {{/with}}
+        <br><b>Add logic to check if there are qualifier rules exist</b></td><br>
+    </td>
+    <td>
+        {{#with productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates.remainingPartTermRates.rateGrid}}
+        {{> rategrid-template}}
+        {{/with}}
+        </td>
+    {{/if}}
+    </tr>
+{{/each}}
+</table>
+</div>
+</div>
+{{/if}}

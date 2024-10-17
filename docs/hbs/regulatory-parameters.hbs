@@ -1,0 +1,60 @@
+<table>
+<tr><th colspan="2">Regulatory Parameters</th></tr>
+
+{{#if riskLevel}}
+    <tr><th>Risk Level</th><td>{{riskLevel.name}} ({{riskLevel.code}}) {{riskLevel.description}}</td></tr>
+{{/if}}
+{{#if regulations.regulatoryProductConfiguration.riskLevel}}
+    <tr><th>Risk Level</th><td>{{regulations.regulatoryProductConfiguration.riskLevel.name}} ({{regulations.regulatoryProductConfiguration.riskLevel.code}})<br> Description = {{regulations.regulatoryProductConfiguration.riskLevel.description}}</td></tr>
+{{/if}}
+{{#if regulatedIndicator}}
+<tr><th>Regulated Indicator</th>
+    <td>
+    {{#each regulatedIndicator}}
+    <li>{{name}} ({{code}}), (Is Default is {{isDefault}})</li>
+    {{/each}}
+    </td>
+</tr>
+{{/if}}
+{{#if regulations.regulatoryProductCode}}
+    <tr><th>Regulatory Product Code</th><td>{{regulations.regulatoryProductCode}}</td></tr>
+    {{/if}}
+    {{#if regulations.regulatoryProductName}}
+    <tr><th>Regulatory Product Name</th><td>{{regulations.regulatoryProductName}}</td></tr>
+    {{/if}}
+    {{#if regulations.regulatoryProductDescription}}
+    <tr><th>Regulatory Product Description</th><td>{{regulations.regulatoryProductDescription}}</td></tr>
+    {{/if}}
+    {{#if egulations.regulatoryProductConfiguration.withHoldingTax}}
+    <tr><th>Withholding Tax</th><td>{{regulations.regulatoryProductConfiguration.withHoldingTax}}</td></tr>
+    {{/if}}
+    </td>
+    </tr>
+</table>
+
+{{#if regulations.regulatoryReporting}}
+<table>
+<tr><th colspan="2">Regulatory Reporting</th></tr>
+<tr>
+    <th>Regulator</th>
+    <th>Reporting</th>
+</tr>
+{{#each regulations.regulatoryReporting}}
+<tr>
+    <td>{{name}} ({{code}}) </td>
+    <td>
+    <table>
+    <tr>
+    <th>Series</th>
+    <th>Classification</th>
+    </tr>
+    {{#each reportSeries}}
+    <tr>
+        <td>{{reportSeriesName}} ({{code}})</td>
+        <td>{{reportingProductClassificationCode}}</td>
+    </tr>
+    {{/each}}
+    </table>
+{{/each}}
+</table>
+{{/if}}

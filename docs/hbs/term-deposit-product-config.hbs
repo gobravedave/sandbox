@@ -1,0 +1,63 @@
+<table>
+<tr>
+    <td>
+{{#with product.termDepositProductConfiguration}}
+    {{#with productParameters}}
+    <table>
+        <tr><th colspan="2">Product Parameters</th></tr>
+        <tr><th>Brand</th><td>{{brand.name}} ({{brand.code}})</td></tr>
+        <tr><th>Short Name</th><td>{{shortName}}</td></tr>
+        <tr><th>Short Description</th><td>{{shortDescription}}</td></tr>
+        <tr><th>Interest Payment Frequency</th>
+        <td>
+            {{#each interestPaymentFrequency}}
+            <li>{{name}} ({{code}})</li>
+            {{/each}}
+        </td>
+        </tr>
+    </table>
+    {{/with}}
+    <br>
+    {{#with financialParameters}}
+    {{> financial-parameters-template}}
+    {{/with}}
+    <br>
+    {{#with entitlementParameters}}
+    {{> entitlements-template}}
+    {{/with}}
+    </td>  
+    <td>
+        <table>
+        <tr><th colspan="2">Investment Parameters</th></tr>
+        {{#with productParameters.investmentParameters}}
+        <tr><th>Min Investment Amount</th><td>{{minimumInvestmentAmount}}</td></tr>
+        <tr><th>Max Investment Amount</th><td>{{maximumInvestmentAmount}}</td></tr>
+        <tr><th>Min Withdrawal Amount</th><td>{{minimumWithdrawalAmount}}</td></tr>
+        <tr><th>Penalty Interest</th>
+        <td>
+            <table>
+            <tr><th colspan="4">{{penaltyInterest.name}} {{penaltyInterest.code}}</th></tr>
+            <tr>
+                <th>Description</th>
+                <th>% Of Time Elapse Low is {{penaltyInterest.interestRates.[0].precentageOfTimeElapseLow.operator}} </th>
+                <th>% Of Time Elapse High is {{penaltyInterest.interestRates.[0].precentageOfTimeElapseHigh.operator}}</th>
+                <th>Interest Reduction</th>
+            </tr>
+            <tr>
+            {{#each penaltyInterest.interestRates}}
+                <td>{{description}}</td>
+                <td>{{precentageOfTimeElapseLow.value}}</td>
+                <td>{{precentageOfTimeElapseHigh.value}}</td>
+                <td>{{interestReduction}}</td>
+            </tr>
+            {{/each}}
+            </table>    
+        </td>
+        </tr>
+    </table>
+    {{/with}}
+
+{{/with}}
+</td>
+</tr>
+</table>

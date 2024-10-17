@@ -1,0 +1,40 @@
+{{#with product.ratePlans}}
+{{#each this.data}}
+    {{#with this.ratePlanAssociation}}
+    {{#with this.standardRatePlan.mortgageStandardRatePlanDetails}}
+    <h2>Mortgage Rate Plan</h2>
+    <div class="content">
+    <div class="table_wrapper">
+    <table>
+        <tr>
+        <th>RatePlan</th>
+        <th>First Term</th>
+        <th>Remaining Term</th>
+        </tr>
+        <td>
+        <table>
+        <tr><th>Name</th><td>{{name}} ({{code}})</td></tr>
+        <tr><th>Rate Plan Type</th><td>{{ratePlanType}}</td></tr>
+        <tr><th>First Term Rate Type</th><td>{{twoTermRates.firstPartTermRates.rateType}}</td></tr>
+        <tr><th>Remaining Term Rate Type</th><td>{{twoTermRates.remainingPartTermRates.rateType}}</td></tr>
+        </table>
+        </td>
+        <td>
+        {{#with this.twoTermRates.firstPartTermRates.rateGrid}}
+        {{> rategrid-template}}
+        {{/with}}
+        </td>
+        <td>
+        {{#with this.twoTermRates.remainingPartTermRates.rateGrid}}
+        {{> rategrid-template}}
+        {{/with}}
+        </td>
+        </tr>
+    </table>
+    </div>
+    {{/with}}
+    {{> ratebased-offer-template}}
+    {{/with}}
+</div>
+{{/each}}
+{{/with}}

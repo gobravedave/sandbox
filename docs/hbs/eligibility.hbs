@@ -1,0 +1,71 @@
+<table>
+  <tr><th colspan="2">Eligibility Parameters</th></tr>
+  <tr>
+    <td>
+    <table>
+      <tr><th colspan="2">Life Cycle</th></tr>
+      <tr><th>Status</th><td>{{#if productStatus}} {{productStatus}} {{/if}}
+        {{#if serviceStatus}} {{serviceStatus}} {{/if}}</td></tr>
+      <tr><th>From Date</th><td>{{formatDate this.fromDate}}</td></tr>
+      <tr><th>To Date</th><td>{{formatDate this.toDate}}</td></tr>
+    </table>
+  </td>
+  <td>
+{{#with this.eligibilityCriteria}}
+<table>
+  <tr><th colspan="2">Eligibility Criteria</th></tr>
+  <tr><th>Type</th><th>Criteria</th></tr>
+  {{#if this.customerSegment}}
+  <tr>
+    <td>Customer Segment</td>
+    <td>
+    {{#each this.customerSegment}}
+        <li> {{this.code}}</li>
+    {{/each}}
+    </td>
+  </tr>
+  {{/if}}
+  {{#if this.customerRelationshipType}}
+  <tr>
+    <td>Relationship Type</td>
+    <td>
+    {{#each this.customerRelationshipType}}
+        <li> {{this.relationshipName}} ({{this.code}})</li>
+    {{/each}}
+</td>
+</tr>
+  {{/if}}
+  {{#if this.ageGroup}}
+  <tr>
+    <td>Age Group</td>
+    <td>
+    {{#each this.ageGroup}}
+        <li> {{this.name}} ({{this.code}}) From = {{this.fromValue}}, To = {{this.toValue}}</li>
+    {{/each}}
+    </td>
+  </tr>
+  {{/if}}
+  {{#if this.residencyStatus}}
+  <tr>
+    <td>Residency Status</td>
+    <td>
+    {{#each this.residencyStatus}}
+        <li> {{this.code}}</li>
+    {{/each}}
+    </td>
+  </tr>
+  {{/if}}
+  {{#if this.naturalPerson}}
+  <tr>
+    <td>Natural Person</td>
+    <td>
+    {{#each this.naturalPerson}}
+        <li> {{this.code}}</li>
+    {{/each}}
+    </td>
+  </tr>
+  {{/if}}
+</table>
+{{/with}}
+</td></tr>
+</table>

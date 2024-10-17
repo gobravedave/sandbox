@@ -1,0 +1,14 @@
+<table>
+<tr>
+    <th>System</th>
+    <th>Product</th>
+    <th>Product Classification</th>
+</tr>
+<tr>
+{{#each product.impactedSystems}}
+    <td>{{this.name}} ({{this.code}})</td>
+    <td>{{impactedSystemProductName}} ({{impactedSystemProductCode}})</td>
+    <td>{{impactedSystemProductClassification}}</td>
+</tr>
+</table>
+{{/each}}

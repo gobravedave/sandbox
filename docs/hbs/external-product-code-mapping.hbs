@@ -1,0 +1,12 @@
+<table>
+    <tr>
+    <th>Product</th>
+    <th>System Of Record</th>
+    </tr>
+    <tr>
+    {{#each product.externalProductCodeMapping}}
+    <td>{{this.name}} ({{this.code}})</td>
+    <td>{{systemOfRecord.name}} ({{this.systemOfRecord.code}})</td>
+    </tr>
+</table>
+{{/each}}

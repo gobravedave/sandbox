@@ -1,0 +1,135 @@
+{{#with product.serviceAssociation}}
+{{#if multiUseProducts}}
+<h3>MultiUse Products</h3>
+<div class="content">
+<div class="table_wrapper">
+<table>
+{{#each multiUseProducts }}
+<tr>
+<td>
+<table>
+<tr><th colspan="2">Product</th></tr>  
+<tr><th>Name</th><td>{{productName}} ({{productCode}})</td></tr>
+<tr><th>Classification</th><td>{{productClassification}}</td></tr>
+<tr><th>Status</th><td>{{productLifecycleDetails.productStatus}}</td></tr>
+<tr><th>From Date</th><td>{{formatDate productLifecycleDetails.fromDate}}</td></tr>
+<tr><th>To Date</th><td>{{formatDate productLifecycleDetails.toDate}}</td></tr>
+</table>
+</td>
+<td>
+<table>
+    <tr><th colspan="2">Product Paramaters</th></tr>  
+    <tr>
+    <th>Linked Deposit Products:</th>
+    <td>
+    {{#each productConfiguration.offsetProductConfiguration.productParameters.linkedDepositProducts}}
+    {{name}} ({{code}}) is default = {{isDefault}}<br>
+    {{/each}}
+    </td>
+    </tr>  
+    <tr><th>Max Linked Account Count</th><td>{{productConfiguration.offsetProductConfiguration.productParameters.maximumNumberLinkedAccounts}}</td></tr>
+    <tr>
+    <th>Billing Products</th>
+    <td>
+    {{#each productConfiguration.offsetProductConfiguration.productParameters.billingProducts}}
+    {{name}} ({{code}}) is default = {{isDefault}}<br>
+    {{/each}}
+    </td>
+    </tr>
+</table>
+</td>
+<td>
+<table>
+<tr><th colspan="2">Financial Paramaters</th></tr>  
+<tr><th>Cost Center</th><td>{{productConfiguration.offsetProductConfiguration.financialParameters.costCenter.name}} ({{productConfiguration.offsetProductConfiguration.financialParameters.costCenter.code}})</td></tr>
+<tr><th>General Ledger Code</th><td>{{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.name}} ({{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.code}})</td></tr>
+</table>
+</td>
+<td>
+<table>
+<tr><th colspan="2">Fee Plan</th></tr>
+<tr><td>If subscription required, add logic to look up fees..</td></tr>
+</table>
+</td>
+<td>
+<table>
+<tr><th colspan="2">Eligibility</th></tr>
+<tr><td>Add logic to look up eligibility rules..</td></tr>
+</table>
+</td>
+{{/each}}
+</table>
+</div>
+</div>
+{{/if}}
+
+{{#if services}}
+<h3>Services</h3>
+<div class="content">
+<div class="table_wrapper">
+<table>
+    {{#each services}}
+    <tr>
+    <td>
+    <table>
+        <tr><th colspan="2">Service</th></tr>  
+        <tr><th>Name</th><td>{{name}} ({{code}})</td></tr>
+        <tr><th>Category</th><td>{{serviceCategory}}</td></tr>
+        <tr><th>Subscription Required</th><td>{{subscriptionRequired}}</td></tr>
+    </table>
+    </td>
+    <td>
+    {{#with serviceDetails.[0].serviceEligibilityDetails}}
+    {{> eligibility-template}}
+    {{/with}}
+    </td>
+    <td>
+    <table>
+    <tr><th colspan="2">Service Configuration</th></tr>  
+        {{#if serviceDetails.[0].serviceConfiguration.debitCard}}
+    <tr><th>Card Category</th><td>{{serviceDetails.[0].serviceConfiguration.debitCard.cardCategory.name}} ({{serviceDetails.[0].serviceConfiguration.debitCard.cardCategory.code}})</td></tr>
+    <tr>
+    <th>Card Design</th>
+    <td>
+    {{#each serviceDetails.[0].serviceConfiguration.debitCard.cardDesign }}
+    {{name}} ({{code}}) {{#if imageURL}}, imageURL = {{imageURL}}{{/if}}</br>
+    {{/each}}
+    </td>
+    </tr>
+    <tr><th>Daily Withdrawal Limit</th><td>{{serviceDetails.[0].serviceConfiguration.debitCard.dailyWithdrawalLimit}}</td></tr>
+    {{/if}}
+    {{#if serviceDetails.[0].serviceConfiguration.goalService}}
+    <tr><th>Service Category</th><td> {{serviceDetails.[0].serviceConfiguration.goalService.serviceCategory}}</td></tr>
+    <tr><th>Max Goal Count</th><td> {{serviceDetails.[0].serviceConfiguration.goalService.maxNumberofGoals}}</td></tr>
+    <tr> 
+    <th>Goal Mapping</th>
+    <td>
+    {{#each serviceDetails.[0].serviceConfiguration.goalService.goalMapping}}
+    {{name}} ({{code}}), Type= {{type}}, isBaseGaol={{isBaseGoal}}<br>
+    {{/each}}
+    </td>
+    </tr>
+    {{/if}}
+    {{#if serviceDetails.[0].serviceConfiguration.creditCard}}
+    <tr><th>Card Category</th><td>{{serviceDetails.[0].serviceConfiguration.creditCard.cardCategory.name}} ({{serviceDetails.[0].serviceConfiguration.creditCard.cardCategory.code}})</td></tr>
+    <tr>
+    <th>Card Design</th>
+    <td>
+    {{#each serviceDetails.[0].serviceConfiguration.creditCard.cardDesign }}
+    {{name}} ({{code}}) {{#if imageURL}}<br><br> imageURL = {{imageURL}}{{/if}}<br><br>
+    {{/each}}
+    </td>
+    </tr>
+    <tr><th>Daily Withdrawal Limit</th><td>{{serviceDetails.[0].serviceConfiguration.creditCard.dailyWithdrawalLimit}}</td></tr>
+    <tr><th>Monthly Withdrawal Limit</th><td>{{serviceDetails.[0].serviceConfiguration.creditCard.monthlyWithdrawalLimit}}</td></tr>
+    </tr>
+    {{/if}}
+    </table>
+    </td>
+    </tr>
+    {{/each}}
+</table>
+</div>
+</div>
+{{/if}}
+{{/with}}

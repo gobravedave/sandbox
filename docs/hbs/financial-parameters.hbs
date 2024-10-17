@@ -1,0 +1,20 @@
+<table>
+    <tr><th colspan="2">Financial Parameters</th></tr>
+    <tr><th>Operating Segment</th><td>{{this.operatingSegment.name}} ({{this.operatingSegment.code}})</td></tr>
+    {{#if accountServicingModel }}
+    <tr><th>Account Servicing Model</th><td>{{this.accountServicingModel.name}} ({{this.accountServicingModel.code}})</td></tr>
+    {{/if}}
+    {{#if costCenter}}
+    <tr><th>Cost Center</th><td>{{this.costCenter.name}} ({{this.costCenter.code}})</td></tr>
+    {{/if}}
+    {{#if generalLedger}}
+    <tr><th>General Ledger</th><td>{{this.generalLedger.name}} ({{this.generalLedger.code}})</td></tr>
+    {{/if}}
+    {{#if variableGeneralLedger}}
+    <tr><th>Variable General Ledger</th><td>{{this.variableGeneralLedger.name}} ({{this.variableGeneralLedger.code}})</td></tr>
+    {{/if}}
+    {{#if collections}}
+    <tr><th>Unproductive General Ledger</th><td>{{collections.unproductiveGeneralLedger.name}} ({{collections.unproductiveGeneralLedger.code}})</td></tr>
+    <tr><th>Collections Customer Credit Rating</th><td>{{collections.collectionsCustomerCreditRating.name}} ({{collections.collectionsCustomerCreditRating.code}})</td></tr>
+    {{/if}}
+</table>

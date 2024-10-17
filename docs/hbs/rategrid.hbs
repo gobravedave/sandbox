@@ -1,0 +1,43 @@
+<div class="table-responsive table_wrapper" style="overflow-x: auto;">
+<table id="{{uniqueTableId}}" class="table table-sm table-bordered"
+data-toggle="table"
+data-filter-control="true"
+data-search="false"
+data-show-columns="false"
+data-pagination="true"
+data-page-size="25"
+data-page-length="25"
+data-sortable="true"
+data-show-loading="true"
+style="table-layout: fixed; width: 100%;">
+<thead class="thead-dark">
+    <tr>
+    {{#if row.[0].rate}}
+        <th data-field="rate" data-sortable="true" data-filter-control="input" style="width: 100px; max-width: 100px;" title="Rate">Rate</th>
+    {{/if}}
+    {{#if row.[0].adjustment}}
+        <th data-field="adjustment" data-sortable="true" data-filter-control="input" style="width: 100px; max-width: 100px;" title="Adjustment">Adjustment</th>
+    {{/if}}
+    {{#if row.[0].comparisonRate}}
+        <th data-field="comparisonRate" data-sortable="true" data-filter-control="input" style="width: 100px; max-width: 100px;" title="Comparison Rate">Comparison Rate</th>
+    {{/if}}
+    {{#each row.[0].columns}}
+        <th data-field="{{name}}" data-sortable="true" data-filter-control="input" style="width: 100px; max-width: 100px;" title="{{name}} is {{operator}}">{{name}} is {{operator}}</th>
+    {{/each}}
+    </tr>
+</thead>
+<tbody>
+    {{#each row}}
+    <tr>
+    {{#if rate}} <td style="width: 100px; max-width: 100px;" title="{{rate}}">{{rate}}</td> {{/if}}
+    {{#if adjustment}}<td style="width: 100px; max-width: 100px;" title="{{adjustment}}">{{adjustment}}</td>{{/if}}
+    {{#if comparisonRate}}<td style="width: 100px; max-width: 100px;" title="{{comparisonRate}}">{{comparisonRate}}</td>{{/if}}
+    {{#each columns}}
+        <td style="width: 100px; max-width: 100px;" title="{{value}}">{{value}}</td>
+    {{/each}}
+    </tr>
+    {{/each}}
+</tbody>
+</table>
+{{initializeTable}} <!-- Call the helper here -->
+</div>

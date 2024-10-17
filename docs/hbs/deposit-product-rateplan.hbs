@@ -1,0 +1,38 @@
+{{#with product.ratePlans}}
+{{#each this.data}}
+    {{#with this.ratePlanAssociation}}
+    {{#if standardRatePlan.depositStandardRatePlanDetails}}
+    {{#with standardRatePlan.depositStandardRatePlanDetails}}
+    <h2>Deposit Rates</h2>
+    <div class="content">
+    <div class="table_wrapper">
+    <table>
+    <tr>
+    <th>Rate Plan</th>
+    <th>Rate Grid</th>
+    </tr>
+    <tr>
+    <td>
+    <table>
+    {{#if name}} <tr><th>Name</th><td>{{name}} ({{code}})</td><tr>{{/if}}
+    {{#if ratePlanType}}<tr><th>Rate Plan Type</th><td>{{ratePlanType}}</td><tr>{{/if}}
+    {{#if rateType}}<tr><th>Rate Type</th><td>{{rateType}}</td><tr>{{/if}}
+    {{#if interestCalculationMethod}}<tr><th>Interest Calculation Method</th><td>{{interestCalculationMethod}}</td><tr>{{/if}}
+    {{#if creditBalanceRateTierType}}<tr><th>Credit Balance Rate Tier Type</th><td>{{creditBalanceRateTierType}}</td><tr>{{/if}}
+    {{#if debitBalanceRateTierType}}<tr><th> Debit Balance Rate Tier Type</th><td>{{debitBalanceRateTierType}}</td><tr>{{/if}}
+    {{/with}}
+    </table>
+    </td>        
+    <td>
+    <div class="table_wrapper">
+    {{#with this.standardRatePlan.depositStandardRatePlanDetails.rates.rateGrid}}
+    {{> rategrid-template}}
+    {{/with}}
+    </div>
+    </td>        
+    </tr>
+    </table>
+    {{/if}}
+    {{/with}}
+{{/each}}
+{{/with}}

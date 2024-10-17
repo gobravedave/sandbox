@@ -1,0 +1,13 @@
+<table>
+    <tr><th colspan="2">Entitlements</th></tr>
+    <tr><th>Enabled For Open Banking</th><td>{{this.enabledForOpenBanking}}</td></tr>
+    {{#if transactOptions}}
+    <th>Transact Options</th>
+    <td>
+        {{#each transactOptions}}
+        <li>{{this.code}}</li>
+        {{/each}}
+    </td>
+    </tr>
+    {{/if}}
+</table>

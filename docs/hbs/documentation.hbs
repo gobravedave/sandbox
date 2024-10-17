@@ -1,0 +1,25 @@
+<table>
+    <tr><th colspan="4">Documentation</th></tr>
+    <tr>
+        <th>Type</th>
+        <th>Document</th>
+        <th>Reference ID</th>
+        <th>External URL</th>
+    </tr>
+    {{#each termsAndConditions}}
+    <tr>
+    <td>Terms And Conditions</td>
+    <td>{{this.name}} ({{this.code}})</td>
+    <td>{{this.documentReferenceID}}</td>
+    <td>{{this.externalURL}}</td>
+    </tr>
+    {{/each}}
+    {{#each termsAndConditions}}
+    <tr>
+    <td>Marketing Collateral</td>
+    <td>{{this.name}} ({{this.code}})</td>
+    <td>{{this.documentReferenceID}}</td>
+    <td>{{this.externalURL}}</td>
+    </tr>
+    {{/each}}
+</table>
