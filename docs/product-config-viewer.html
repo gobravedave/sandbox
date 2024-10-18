@@ -30,25 +30,29 @@
   
   <script>
 
-    // Register partials
-    Handlebars.registerPartial('product-name-template', 'hbs/product-name.hbs'); 
-    Handlebars.registerPartial('eligibility-template', 'hbs/eligibility.hbs');
-    Handlebars.registerPartial('deposit-product-config-template', 'hbs/deposit-product-config.hbs'); 
-    Handlebars.registerPartial('term-deposit-product-config-template', 'hbs/term-deposit-product-config.hbs'); 
-    Handlebars.registerPartial('lending-product-config-template', 'hbs/lending-product-config.hbs'); 
-    Handlebars.registerPartial('financial-parameters-template', 'hbs/financial-parameters.hbs'); 
-    Handlebars.registerPartial('regulatory-parameters-template', 'hbs/regulatory-parameters.hbs'); 
-    Handlebars.registerPartial('product-fees-template', 'hbs/product-fees.hbs'); 
-    Handlebars.registerPartial('deposit-product-rateplan-template', 'hbs/deposit-product-rateplan.hbs'); 
-    Handlebars.registerPartial('lending-product-rateplan-template', 'hbs/lending-product-rateplan.hbs'); 
-    Handlebars.registerPartial('ratebased-offer-template', 'hbs/ratebased-offer.hbs'); 
-    Handlebars.registerPartial('services-template', 'hbs/services.hbs'); 
-    Handlebars.registerPartial('rategrid-template', 'hbs/rategrid.hbs'); 
-    Handlebars.registerPartial('entitlements-template', 'hbs/entitlements.hbs'); 
-    Handlebars.registerPartial('documentation-template','hbs/documentation.hbs');
-    Handlebars.registerPartial('open-banking-template', 'hbs/open-banking.hbs');
-    Handlebars.registerPartial('external-product-code-mapping-template', 'hbs/external-product-code-mapping.hbs');
-    Handlebars.registerPartial('impacted-systems-template', 'hbs/impacted-systems.hbs'); 
+    // Register partials dynamically
+    Promise.all([
+      loadPartial('product-name-template', 'hbs/product-name.hbs'),
+      loadPartial('eligibility-template', 'hbs/eligibility.hbs'),
+      loadPartial('deposit-product-config-template', 'hbs/deposit-product-config.hbs'),
+      loadPartial('term-deposit-product-config-template', 'hbs/term-deposit-product-config.hbs'),
+      loadPartial('lending-product-config-template', 'hbs/lending-product-config.hbs'),
+      loadPartial('financial-parameters-template', 'hbs/financial-parameters.hbs'), 
+      loadPartial('regulatory-parameters-template', 'hbs/regulatory-parameters.hbs'), 
+      loadPartial('product-fees-template', 'hbs/product-fees.hbs'), 
+      loadPartial('deposit-product-rateplan-template', 'hbs/deposit-product-rateplan.hbs'), 
+      loadPartial('lending-product-rateplan-template', 'hbs/lending-product-rateplan.hbs'), 
+      loadPartial('ratebased-offer-template', 'hbs/ratebased-offer.hbs'),
+      loadPartial('services-template', 'hbs/services.hbs'),
+      loadPartial('rategrid-template', 'hbs/rategrid.hbs'), 
+      loadPartial('entitlements-template', 'hbs/entitlements.hbs'), 
+      loadPartial('documentation-template','hbs/documentation.hbs'),
+      loadPartial('open-banking-template', 'hbs/open-banking.hbs'),
+      loadPartial('external-product-code-mapping-template', 'hbs/external-product-code-mapping.hbs'),
+      loadPartial('impacted-systems-template', 'hbs/impacted-systems.hbs') 
+    ]).then(() => {
+      let productDetailsTpl = Handlebars.compile(document.getElementById('product-details-template').innerHTML)
+    });
 
     let logConsole;
     // let selectedLeftProduct = null;
@@ -68,9 +72,9 @@
         name: 'Deposits',
       },
       TIME_DEPOSIT: {
-        name: 'Time Deposits',
+        name: 'Term Deposits',
       },
-        CRED_AND_CHRG_CARDS: {
+        CREDIT_CARD: {
         name: 'Credit and Charge Cards',
       },
         MORTGAGE: {
@@ -237,7 +241,16 @@
       }
     }
 
+    function loadPartial(name, path) {
+      return fetch(path)
+      .then(response => response.text())
+      .then(templateContent => {
+        Handlebars.registerPartial(name, templateContent);
+      })
+      .catch(error => console.error(`Error loading partial ${name}: ${error}`));
+    }
 
+    
     window.onload = async function () {
 
     Handlebars.logger.level = 0; // for DEBUG
@@ -478,7 +491,6 @@
 </div>
 </script>
 
-
   <script id="products-list-template" type="text/x-handlebars-template">
     <table style="width: 100%">
       <tr>
@@ -671,7 +683,6 @@ select {
     .product-name {
       cursor: pointer;
     }
-
 
     .category-products-main {
       padding: 0;
