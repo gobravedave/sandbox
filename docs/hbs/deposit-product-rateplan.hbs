@@ -1,10 +1,9 @@
+{{log this}}
 {{#with product.ratePlans}}
 {{#each this.data}}
     {{#with this.ratePlanAssociation}}
     {{#if standardRatePlan.depositStandardRatePlanDetails}}
     {{#with standardRatePlan.depositStandardRatePlanDetails}}
-    <h2>Deposit Rates</h2>
-    <div class="content">
     <div class="table_wrapper">
     <table>
     <tr>
@@ -32,7 +31,11 @@
     </td>        
     </tr>
     </table>
+    </div>
     {{/if}}
+    {{!-- {{> ratebased-offer-template}} --}}
     {{/with}}
 {{/each}}
 {{/with}}
+{{!-- {{log 'checking access to rules when calling the ratebased-offer template'rules}} --}}
+{{> ratebased-offer-template ratePlan=product.ratePlans.data.[0].ratePlanAssociation rules=rules}}

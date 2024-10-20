@@ -1,9 +1,8 @@
 {{#with product.ratePlans}}
 {{#each this.data}}
     {{#with this.ratePlanAssociation}}
-    {{#with this.standardRatePlan.mortgageStandardRatePlanDetails}}
-    <h2>Mortgage Rate Plan</h2>
-    <div class="content">
+    {{#if standardRatePlan.mortgageStandardRatePlanDetails}}
+    {{#with standardRatePlan.mortgageStandardRatePlanDetails}}
     <div class="table_wrapper">
     <table>
         <tr>
@@ -21,20 +20,26 @@
         </td>
         <td>
         {{#with this.twoTermRates.firstPartTermRates.rateGrid}}
+        <div class="table_wrapper">
         {{> rategrid-template}}
+        </div>
         {{/with}}
         </td>
         <td>
-        {{#with this.twoTermRates.remainingPartTermRates.rateGrid}}
+        {{#with this.twoTermRates.remainingPartTermRates.rateGrid}}    
+        <div class="table_wrapper">
         {{> rategrid-template}}
+        </div>  
         {{/with}}
         </td>
         </tr>
     </table>
     </div>
     {{/with}}
-    {{> ratebased-offer-template}}
+    {{/if}}
     {{/with}}
-</div>
 {{/each}}
 {{/with}}
+<div class="table_wrapper">
+{{> ratebased-offer-template ratePlan=product.ratePlans.data.[0].ratePlanAssociation rules=rules}}
+</div>

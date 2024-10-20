@@ -1,7 +1,6 @@
 <head>
   <title>Zafin Product Configuration Viewer</title>
 
-  <!-- Bootstrap CSS for styling -->
   <!-- jQuery (required for Bootstrap) -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -24,10 +23,10 @@
   <!-- Bootstrap CSS for styling -->
   <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/product.css">
 
-    </head>
-    <body>
-  
+</head>
+<body>
   <script>
 
     // Register partials dynamically
@@ -43,6 +42,7 @@
       loadPartial('deposit-product-rateplan-template', 'hbs/deposit-product-rateplan.hbs'), 
       loadPartial('lending-product-rateplan-template', 'hbs/lending-product-rateplan.hbs'), 
       loadPartial('ratebased-offer-template', 'hbs/ratebased-offer.hbs'),
+      loadPartial('ruleset-template', 'hbs/ruleset-offer.hbs'),
       loadPartial('services-template', 'hbs/services.hbs'),
       loadPartial('rategrid-template', 'hbs/rategrid.hbs'), 
       loadPartial('entitlements-template', 'hbs/entitlements.hbs'), 
@@ -59,11 +59,11 @@
     // let selectedRightProduct = null;
 
     const BANKS = {
-      prod: { name: 'PROD', json: 'datasets/prod.json'},
-      preprod: { name: 'Pre-Prod', json: 'datasets/preprod.json'},
-      sitk: { name: 'SIT-K', json: 'datasets/sitk.json'},
-      sitl: { name: 'SIT-L', json: 'datasets/sitl.json'},
-      st: { name: 'ST', json: 'datasets/st2.json'},
+      prod: { name: 'PROD', json: ['datasets/prod-product.json', 'datasets/prod-rules.json']},
+      preprod: { name: 'Pre-Prod', json: ['datasets/preprod-product.json', 'datasets/preprod-rules.json']},
+      sitk: { name: 'SIT-K', json: ['datasets/sitk-product.json', 'datasets/sitk-rules.json']},
+      sitl: { name: 'SIT-L', json: ['datasets/sitl-product.json', 'datasets/sitl-rules.json']},
+      st: { name: 'ST', json: ['datasets/st-product.json', 'datasets/st-rules.json']},
     }
     let savedBankId
 
@@ -92,30 +92,33 @@
 
 
     async function getProducts(bank) {
-      let jsonUrl = `${bank.json}`; // Path to the JSON file
+      let productJsonUrl = bank.json[0]; // Product JSON file
+      let ruleJsonUrl = bank.json[1]; // Rule JSON file, if any
+
       try {
         logToConsole(`Getting products for ${bank.name}`);
-        const start = new Date();
-        let response = await fetch(jsonUrl);
-        let jsonData = await response.json();
-        const duration = (new Date() - start) / 1000;
+        let productResponse = await fetch(productJsonUrl);
+        let productData = await productResponse.json();
 
-        // Assuming you're interested in the first entry in the data array
-        const res = jsonData.data && jsonData.data[0] ? {
-          asofDate: jsonData.requestDate,
-          count: jsonData.data[0].productDetails.length,
-          products: jsonData.data[0].productDetails
-        } : { asofDate: null, count: 0, products: [] };
+        let ruleData = [];
+        if (ruleJsonUrl) {
+          logToConsole(`Getting rules for ${bank.name}`);
+          let ruleResponse = await fetch(ruleJsonUrl);
+          ruleData = await ruleResponse.json();
+        }
 
-        logToConsole(`Got products for ${bank.name} in ${duration}s`);
-        console.log(res);
-        return res;
-      } catch (err) {
-        logToConsole(`Error getting data for ${bank.name} from ${bank.json}`);
-        console.error(err);
-        return { products: [], count: 0 };
+        const res = {
+        asofDate: productData.requestDate || null,
+        products: productData.data[0].productDetails,
+        rules: ruleData.data[0].associatedTo // Assuming rules structure
+        }
+      return res;
       }
-    }
+      catch (err) {
+      logToConsole(`Error getting data for ${bank.name}`);
+      return { asofDate: null, products: [], rules: [] };
+      }
+  }
 
     function processProducts(products) {
       const byCategory = {};
@@ -260,6 +263,10 @@
     return date.toLocaleDateString('en-AU');
     });
 
+    Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+    return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+    });
+
     let tableIndex = 0; // Global counter for table IDs
     Handlebars.registerHelper('uniqueTableId', function() {
       return `table-${tableIndex++}`;
@@ -281,7 +288,6 @@
 
       $productsList.innerHTML = productListTpl({})
       let productDetailsTpl = Handlebars.compile(document.getElementById('product-details-template').innerHTML)
-
       // logConsole = document.getElementById('log-console')
 
       await Promise.all(Object.entries(BANKS).map(async ([id, bank]) => {
@@ -293,10 +299,10 @@
           }
         }
 
-        const { asofDate, count, products } = await getProducts(bank)
-        BANKS[bank.id].productsRaw = products
-        BANKS[bank.id].totalCount = count
+        const { asofDate, products, rules } = await getProducts(bank)
         BANKS[bank.id].asofDate = asofDate
+        BANKS[bank.id].productsRaw = products
+        BANKS[bank.id].rulesRaw = rules
 
         // add banks product count and list to PRODUCTS
         const byCategory = processProducts(products)
@@ -337,12 +343,13 @@
           })
 
           let productDetails = BANKS[bankId].productsRaw.find(prod => prod.productCode === productCode);
-          console.log({productDetails})
+          // console.log({productDetails})
 
           // Compile the main product template
 
           if (productDetails) {
-            document.getElementById('product-details').innerHTML = productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate, place: BANKS[bankId].name });
+            document.getElementById('product-details').innerHTML = productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate, place: BANKS[bankId].name, rules: BANKS[bankId].rulesRaw});
+            // console.log(productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate, place: BANKS[bankId].name }))
           } else {
             document.getElementById('product-details').innerHTML = `<div id="product-details-content">Product details not found.<span id="product-details-close">&times;</span></div>`;
           }
@@ -377,7 +384,7 @@
       <li>This page is a static view of the product configurations from each Zafin environment. The data will be periodically updated as part of a product configuration relaese or upon request to <a href="mailto:david.anderson@anz.com">david.anderson@anz.com</a></li>
       <li>To use.. Click on a product category to show products in each environment. Click on a product button to show the product details.</li>
       <li>Known data gaps include multiuse product fees, rulesets, offers, credit card config etc</li>
-      <li>Backlog items include calling mulesoft to pull product data, compare, config checker, diagram view</li>
+      <li>Backlog items include calling mulesoft to pull product data, compare, config checker, diagram view, NZ Products</li>
     </ul>
     </div>
     </div>
@@ -389,7 +396,7 @@
 
 <!-- Main Product Template -->
 <script id="product-details-template" type="text/x-handlebars-template">
-  <div id="product-details-content">
+<div id="product-details-content">
     <button id="diagram-btn" onclick="toggleDiagram( '{{product.productCode}}')" >Show Diagram</button>
     <button id="json-btn" onclick="toggleJson( '{{product.productCode}}')">Show JSON</button>
     <button id="check-btn" onclick="toggleCheck( '{{product.productCode}}')">Show Checker</button>
@@ -401,8 +408,7 @@
     <div><pre id="product-details-compare-content"></pre>
       <select id="compare-with" style="width: 200px; display: none">
         <option value="">Compare with Bank</option>
-      </select>
-  
+      </select>  
     </div>
 
   {{> product-name-template}}
@@ -450,8 +456,19 @@
     </div>
   {{/if}}
 
-  {{> deposit-product-rateplan-template}}
-  {{> lending-product-rateplan-template}}
+  {{#if product.ratePlans.data.[0].ratePlanAssociation.standardRatePlan.depositStandardRatePlanDetails}}
+    <h2>Deposit Rate Plan</h2>
+    <div class="content">
+    {{> deposit-product-rateplan-template}}
+    </div>
+  {{/if}}
+
+  {{#if product.ratePlans.data.[0].ratePlanAssociation.standardRatePlan.mortgageStandardRatePlanDetails}}
+    <h2>Lending Rate Plan</h2>
+    <div class="content">
+    {{> lending-product-rateplan-template}}
+    </div>
+  {{/if}}
 
   {{#if product.serviceAssociation}}
   <h2>Associated Services</h2>
@@ -488,6 +505,7 @@
     </div>
     </div>
   {{/if}}
+
 </div>
 </script>
 
@@ -497,12 +515,6 @@
         <th>Environment</th>
         {{#each BANKS}}
           <th>{{this.name}}</th>
-        {{/each}}
-      </tr>
-      <tr>
-        <td>Total Products</td>
-        {{#each BANKS}}
-          <td>{{this.totalCount}}</td>
         {{/each}}
       </tr>
       {{#each PRODUCTS}}
@@ -531,211 +543,5 @@
       {{/each}}
   </table>
   </script>
-
-  <style>
-    body {
-      font-family: Arial;
-    }
-
-    h1, h2, h3, h4 {
-      padding-top: 12px;
-      cursor: pointer;
-      color: #371282;
-    }
-    .content {
-        display: block;
-        margin-left: 20px;
-    }
-
-   .table_wrapper{
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-    }
-
-    .flex-container {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-  .flex-container > div {
-    width: 200px;
-    margin: 10px;
-    padding: 10px;
-  }
-
-/* Optional tooltip styling */
-.table th[title]:hover, 
-.table td[title]:hover {
-  position: relative;
-  cursor: pointer; /* Optional: add cursor pointer on hover */
-}
-
-.table th[title]:hover:after, 
-.table td[title]:hover:after {
-  content: attr(title);
-  position: absolute;
-  background-color: #333;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 5px;
-  white-space: nowrap;
-  top: -30px; /* Position above the element */
-  left: 50%; /* Center tooltip */
-  transform: translateX(-50%);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 1;
-}
-
-.table th[title]:hover:after, 
-.table td[title]:hover:after {
-  opacity: 1;
-}
-
-    .table th, .table td {
-      word-wrap: break-word;
-      white-space: normal !important; /* Allow text to wrap */;
-      width: 100px; /* Set this based on your requirement */
-      max-width: 100px;
-      overflow: hidden;
-      text-overflow: ellipsis; /* Add ellipsis for overflow text */
-    }
-
-    table {
-      border-collapse: collapse;
-    }
-
-    th {
-      background: #eee;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      /* text-align: center; */
-      vertical-align: top;
-      font-size: 14px;
-    }
-
-    select {
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    padding: 10px 15px;
-    margin: 5px 0;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: #f7f7f7;
-    cursor: pointer;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  }
-
-select:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
-}
-
-select:hover {
-  background-color: #eaeaea;
-}
-
-select:disabled {
-  background-color: #e0e0e0;
-  cursor: not-allowed;
-}
-
-select {
-  width: auto;
-  min-width: 200px;
-  max-width: 100%;
-}
-
-    button {
-      background-color: white;
-      color: #3949ab;
-      border: 1px solid #3949ab;
-      border-radius: 8px;
-      padding: 10px 20px;
-      transition-duration: 0.4s;
-    }
-
-    button[disabled]:hover {
-      background: red;
-    }
-
-    button:hover {
-    background-color: #3949ab; /* purple */
-    color: white;
-  }
-    .category-row.expanded {
-      background-color: #eee;
-    }
-    .category-row:hover {
-      background-color: #eee;
-    }
-    .category-title {
-      cursor: pointer;
-      width: 200px;
-    }
-
-    .product-name {
-      cursor: pointer;
-    }
-
-    .category-products-main {
-      padding: 0;
-    }
-    .category-products-main table {
-      width: 100%;
-    }
-    .category-products-main table td {
-      border: 0;
-    }
-    .category-products-list.hidden {
-      display: none;
-    }
-
-
-    #product-details {
-      display: none; /* Hidden by default */
-      position: fixed; /* Stay in place */
-      z-index: 1; /* Sit on top */
-      left: 0;
-      top: 0;
-      width: 100%; /* Full width */
-      height: 100%; /* Full height */
-      overflow: auto; /* Enable scroll if needed */
-      background-color: rgb(0,0,0); /* Fallback color */
-      background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    }
-
-    #product-details-content {
-      background-color: #fefefe;
-      margin: 50px auto; /* 15% from the top and centered */
-      padding: 20px;
-      border: 1px solid #888;
-      width: 80%; /* Could be more or less, depending on screen size */
-    }
-    #product-details-close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-    #product-details-close:hover,
-    #product-details-close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    .thead-dark th {
-      background: #eee;
-    }
-
-  </style>
-
   </body>
   </html>

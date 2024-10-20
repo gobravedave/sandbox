@@ -1,0 +1,158 @@
+{
+  "requestDate": "2024-10-03T06:12:55Z",
+  "durationMs": 49,
+  "dataType": "anz.eventresults.GetRuleDefinitionDetailsResult",
+  "dataCount": 1,
+  "data": [
+    {
+      "modelType": "com.zafin.zplatform.anz.eventresults.GetRuleDefinitionDetailsResult",
+      "eventStatus": "SUCCESS",
+      "associatedTo": [
+          {
+          "modelType": "com.zafin.zplatform.anz.models.AssociatedToTran",
+          "name": "ANZ Save Grow Balance Qualifier",
+          "description": "ANZ Save Grow Balance Qualifier",
+          "code": "QUALIFIERPILOT01",
+          "associationStartDate": "2024-05-23T00:00:00Z",
+          "associationEndDate": "9999-12-31T23:59:59Z",
+          "associationModelType": "RATE_BASED_OFFER",
+          "associatedRuleSets": [
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Number of Deposits Required",
+              "description": "Rule Set for Number of Deposits Required for S1 Qualifier",
+              "code": "RSNBROFDEPOSITS",
+              "ruleSetErrorNarrativeInternal": "Failed to achieve number of deposits required (int)",
+              "ruleSetErrorNarrativeExternal": "Failed to achieve number of deposits required (ext)",
+              "ruleSetDefinitionStartDate": "2019-04-24T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-12-31T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Number of Deposits Required",
+                  "description": "Rule Definition for Number of Deposits Required for S1 Qualifier. ",
+                  "code": "RDNBROFDEPOSITS",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "Failed to achieve number of deposits required (int)",
+                  "ruleErrorNarrativeExternal": "Failed to achieve number of deposits required (ext)",
+                  "ruleDefinitionStartDate": "2019-04-24T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-12-31T23:59:59Z",
+                  "attributeType": "NUMBER",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Number of deposits required",
+                    "description": "Number of deposits required",
+                    "code": "NBROFDEPOSITS",
+                    "metadata": "ATTRIBUTE_TYPE=NUMBER"
+                  },
+                  "operator": "GREATER_THAN_EQUAL_TO",
+                  "values": "0"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Balance to Achieve and Maintain",
+              "description": "Grow your balance by $200 in your ANZ Save Account.",
+              "code": "RSBALACHIEVEMAINT",
+              "ruleSetErrorNarrativeInternal": "Failed to achieve grow your balance (int)",
+              "ruleSetErrorNarrativeExternal": "Failed to achieve grow your balance (ext)",
+              "ruleSetDefinitionStartDate": "2019-04-24T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-12-31T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Balance to Achieve and Maintain",
+                  "description": "Grow your balance by $200 in your ANZ Save Account.",
+                  "code": "RDBALACHIEVEMAINT",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "Failed to achieve grow your balance (int)",
+                  "ruleErrorNarrativeExternal": "Failed to achieve grow your balance (ext)",
+                  "ruleDefinitionStartDate": "2024-08-23T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "DECIMAL",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Balance to achieve and maintain",
+                    "description": "Balance to achieve and maintain",
+                    "code": "BALACHIEVEMAINT",
+                    "metadata": "ATTRIBUTE_TYPE=DECIMAL"
+                  },
+                  "operator": "GREATER_THAN_EQUAL_TO",
+                  "values": "100.0000"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Number of Withdrawals Allowed",
+              "description": "Rule Set for Number of Withdrawals Allowed for S1 Qualifier",
+              "code": "RSNBROFWDALLOWED",
+              "ruleSetErrorNarrativeInternal": "Failed to achieve number of withdrawals allowed (int)",
+              "ruleSetErrorNarrativeExternal": "Failed to achieve number of withdrawals allowed (ext)",
+              "ruleSetDefinitionStartDate": "2019-04-24T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-12-31T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Number of Withdrawals Allowed",
+                  "description": "Rule Definition for Number of Withdrawals Allowed for S1 Qualifier\n",
+                  "code": "RDNBROFWDALLOWED",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "Failed to achieve number of withdrawals allowed (int)",
+                  "ruleErrorNarrativeExternal": "Failed to achieve number of withdrawals allowed (ext)",
+                  "ruleDefinitionStartDate": "2019-04-24T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-12-31T23:59:59Z",
+                  "attributeType": "NUMBER",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Number of withdrawals allowed",
+                    "description": "Number of withdrawals allowed",
+                    "code": "NBROFWDALLOWED",
+                    "metadata": "ATTRIBUTE_TYPE=NUMBER"
+                  },
+                  "operator": "LESS_THAN_EQUAL_TO",
+                  "values": "9999999"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Value of Deposits Required",
+              "description": "Rule Set for Value of Deposits Required for S1 Qualifier",
+              "code": "RSVALUEOFDEPOSIT",
+              "ruleSetErrorNarrativeInternal": "Failed to achieve value of deposits required (int)",
+              "ruleSetErrorNarrativeExternal": "Failed to achieve value of deposits required (ext)",
+              "ruleSetDefinitionStartDate": "2019-04-24T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-12-31T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Value of Deposits Required",
+                  "description": "Rule Definition for Value of Deposits Required for S1 Qualifier",
+                  "code": "RDVALUEOFDEPOSIT",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "Failed to achieve value of deposits required (int)",
+                  "ruleErrorNarrativeExternal": "Failed to achieve value of deposits required (ext)",
+                  "ruleDefinitionStartDate": "2019-04-24T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-12-31T23:59:59Z",
+                  "attributeType": "DECIMAL",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Value of deposits required",
+                    "description": "Value of deposits required",
+                    "code": "VALUEOFDEPOSIT",
+                    "metadata": "ATTRIBUTE_TYPE=DECIMAL"
+                  },
+                  "operator": "GREATER_THAN_EQUAL_TO",
+                  "values": "0.0000"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "errorCode": 0
+    }
+  ]
+}
