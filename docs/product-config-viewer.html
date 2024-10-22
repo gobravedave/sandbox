@@ -81,10 +81,10 @@
         name: 'Residential Mortgages',
       },
       RULESET: {
-        name: 'Rulesets (comming soon)',
+        name: 'Rulesets (coming soon)',
       },
       OFFER: {
-        name: 'Offers (comming soon)',
+        name: 'Offers (tbd)',
       },
     }
 
@@ -130,12 +130,15 @@
         byCategory[prodCat] = { count: 0, products: [] };
       }
 
+      // Loop through each product and group them by category
       products.forEach((p) => {
         const category = p.productClassification; // or the key you're using
 
         // Ensure the category exists in the PRODUCTS object
         if (category && PRODUCTS[category]) {
+          // Increment the product count for the category
           byCategory[category].count++;
+          // Add the product to the products array for the category
           byCategory[category].products.push(p);
         } else {
           console.warn(`Product ${p.productName} has an unknown or missing category: ${category}`);
