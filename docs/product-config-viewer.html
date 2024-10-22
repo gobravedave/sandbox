@@ -80,8 +80,11 @@
         MORTGAGE: {
         name: 'Residential Mortgages',
       },
-      OFFERS: {
-        name: 'Marketing Propositions',
+      RULESET: {
+        name: 'Rulesets (comming soon)',
+      },
+      OFFER: {
+        name: 'Offers (comming soon)',
       },
     }
 
@@ -89,7 +92,6 @@
       console.log(msg)
       // logConsole.value += msg + '\n'
     }
-
 
     async function getProducts(bank) {
       let productJsonUrl = bank.json[0]; // Product JSON file
@@ -267,6 +269,11 @@
     return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
     });
 
+    Handlebars.registerHelper('ifKeyExists', function(array, key, options) {
+    const match = array.some(item => item.code === key);
+    return match ? options.fn(this) : options.inverse(this);
+    });
+
     let tableIndex = 0; // Global counter for table IDs
     Handlebars.registerHelper('uniqueTableId', function() {
       return `table-${tableIndex++}`;
@@ -383,7 +390,7 @@
     <ul style="list-style: square; padding-left: 10px;">
       <li>This page is a static view of the product configurations from each Zafin environment. The data will be periodically updated as part of a product configuration relaese or upon request to <a href="mailto:david.anderson@anz.com">david.anderson@anz.com</a></li>
       <li>To use.. Click on a product category to show products in each environment. Click on a product button to show the product details.</li>
-      <li>Known data gaps include multiuse product fees, rulesets, offers, <del>qualifier rules</del>, eligibility rules, credit card config etc</li>
+      <li>Known data gaps include multiuse product fees, rulesets, offers, <del>qualifier rules, multiuse eligibility rules</del>, product eligibility rules, credit card config etc</li>
       <li>Backlog items include calling mulesoft to pull product data, compare, config checker, diagram view, NZ Products</li>
     </ul>
     </div>
@@ -473,8 +480,10 @@
   {{#if product.serviceAssociation}}
   <h2>Associated Services</h2>
   <div class="content">
-  <div class="table_wrapper">    
-  {{> services-template}}
+  <div class="table_wrapper">  
+  {{log 'before service' this}}  
+  {{> services-template rules=rules}}
+  
   </div>
   </div>  
   {{/if}}

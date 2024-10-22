@@ -1,3 +1,4 @@
+{{log 'service partial'this}}
 {{#with product.serviceAssociation}}
 {{#if multiUseProducts}}
 <h3>MultiUse Products</h3>
@@ -54,7 +55,21 @@
 <td>
 <table>
 <tr><th colspan="2">Eligibility</th></tr>
-<tr><td>Add logic to look up eligibility rules..</td></tr>
+    <tr><td>
+    {{#if ../rules}}
+    {{#ifKeyExists ../rules ../code}}
+        {{#each ../rules}}
+        {{#ifEquals code ../code}}
+            {{> ruleset-template}}
+        {{/ifEquals}}
+        {{/each}}
+    {{else}}
+        <b>No matching rule found for this {{code}}.</b>
+    {{/ifKeyExists}}
+    {{else}}
+   <b> No rules found.</b>
+    {{/if}}
+</td></tr>
 </table>
 </td>
 {{/each}}

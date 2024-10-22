@@ -1,4 +1,3 @@
-{{log this}}
 {{#with product.ratePlans}}
 {{#each this.data}}
     {{#with this.ratePlanAssociation}}
@@ -37,5 +36,4 @@
     {{/with}}
 {{/each}}
 {{/with}}
-{{!-- {{log 'checking access to rules when calling the ratebased-offer template'rules}} --}}
 {{> ratebased-offer-template ratePlan=product.ratePlans.data.[0].ratePlanAssociation rules=rules}}

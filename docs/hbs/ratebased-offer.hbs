@@ -28,24 +28,42 @@
           </td>
           {{#if productOfferRatePlanMapping.offerRatePlanDetails.simpleRates}}
           <td>
-              {{#with productOfferRatePlanMapping.offerRatePlanDetails.simpleRates.rates.rateGrid}}
-              {{> rategrid-template}}
-              {{/with}}
-              {{#if ../rules}}
+            {{#with productOfferRatePlanMapping.offerRatePlanDetails.simpleRates.rates.rateGrid}}
+            {{> rategrid-template}}
+            {{/with}}
+            {{#if ../rules}}
+            {{#ifKeyExists ../rules ../code}}
                 {{#each ../rules}}
                 {{#ifEquals code ../code}}
-                {{> ruleset-template}}
+                    {{> ruleset-template}}
                 {{/ifEquals}}
                 {{/each}}
-              {{/if}}
+            {{else}}
+                <b>No qualifier rules exist for {{code}}.</b>
+            {{/ifKeyExists}}
+            {{else}}
+            <b>No rules found.</b>
+            {{/if}}
           </td>
           {{/if}}
           {{#if productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates}}
           <td>
-              {{#with productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates.firstPartTermRates.rateGrid}}
-              {{> rategrid-template}}
-              {{/with}}
-              <br><b>Add logic to check if there are qualifier rules exist</b></td><br>
+            {{#with productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates.firstPartTermRates.rateGrid}}
+            {{> rategrid-template}}
+            {{/with}}
+            {{#if ../rules}}
+            {{#ifKeyExists ../rules ../code}}
+                {{#each ../rules}}
+                {{#ifEquals code ../code}}
+                    {{> ruleset-template}}
+                {{/ifEquals}}
+                {{/each}}
+            {{else}}
+                <b>No qualifier rules exist for {{code}}.</b>
+            {{/ifKeyExists}}
+            {{else}}
+            <b>No rules found.</b>
+            {{/if}}
           </td>
           <td>
               {{#with productOfferRatePlanMapping.offerRatePlanDetails.twoTermRates.remainingPartTermRates.rateGrid}}
