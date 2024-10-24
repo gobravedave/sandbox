@@ -1,6 +1,6 @@
 {
-  "requestDate": "2024-10-03T06:12:55Z",
-  "durationMs": 49,
+  "requestDate": "2024-10-14T01:14:04Z",
+  "durationMs": 40,
   "dataType": "anz.eventresults.GetRuleDefinitionDetailsResult",
   "dataCount": 1,
   "data": [
@@ -8,7 +8,485 @@
       "modelType": "com.zafin.zplatform.anz.eventresults.GetRuleDefinitionDetailsResult",
       "eventStatus": "SUCCESS",
       "associatedTo": [
-          {
+        {
+          "modelType": "com.zafin.zplatform.anz.models.AssociatedToTran",
+          "name": "Offset Feature",
+          "description": "To service my home loan whilst reducing interest payable against my home loan.",
+          "code": "OFFSET01",
+          "associationStartDate": "2024-05-23T00:00:00Z",
+          "associationEndDate": "9999-12-31T23:59:59Z",
+          "associationModelType": "MULTI_USE_PRODUCT",
+          "associatedRuleSets": [
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set Account Status",
+              "description": "Account Status Rule Set ",
+              "code": "RSACCSTATUS",
+              "ruleSetErrorNarrativeInternal": "Accounts are closed and ineligible  ",
+              "ruleSetErrorNarrativeExternal": "Accounts are closed and ineligible",
+              "ruleSetDefinitionStartDate": "2023-04-05T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.ArrayRuleDefinitionTran",
+                  "name": "Rule definition for active Deposit accounts",
+                  "description": "Rule definition for active Deposit accounts",
+                  "code": "RDDEPOSITACCSTATUS",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "Account is closed",
+                  "ruleErrorNarrativeExternal": "Account is closed",
+                  "ruleDefinitionStartDate": "2023-04-05T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "STRING_ARRAY",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Active Deposit accounts",
+                    "description": "Rule to validate all Deposit accounts that are linked to a feature/service need to be in Active status",
+                    "code": "DEPOSITACCSTATUS",
+                    "metadata": "ID=CAP_DDA_ACCOUNT_STATUS,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "IN_ARRAY",
+                  "values": [
+                    "01",
+                    "03",
+                    "05",
+                    "99"
+                  ]
+                },
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule definition for active Loan accounts",
+                  "description": "Rule definition for active Loan accounts",
+                  "code": "RDLOANACCSTATUS",
+                  "productType": "Mortgages",
+                  "ruleErrorNarrativeInternal": "Account is closed",
+                  "ruleErrorNarrativeExternal": "Account is closed",
+                  "ruleDefinitionStartDate": "2023-04-05T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "STRING",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Active Loan accounts",
+                    "description": "Rule to validate all Loan accounts that are linked to a feature/service need to be in Active status",
+                    "code": "LOANACCSTATUS",
+                    "metadata": "ID=CAP_ILS_ACCOUNT_STATUS,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "EQUAL_TO",
+                  "values": "EMPTY_STRING"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set Productive Accounts",
+              "description": "Productive Accounts rule set",
+              "code": "RSPRODUCTIVEACC",
+              "ruleSetErrorNarrativeInternal": "Accounts fail Credit Risk Grade checks",
+              "ruleSetErrorNarrativeExternal": "Account ineligible ",
+              "ruleSetDefinitionStartDate": "2023-04-05T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.ArrayRuleDefinitionTran",
+                  "name": "Rule definition for Deposit productive status",
+                  "description": "Rule definition for Deposit productive status",
+                  "code": "RDPRODUCTIVEDEPOSIT",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "Deposit account is not in productive state",
+                  "ruleErrorNarrativeExternal": "Account ineligible",
+                  "ruleDefinitionStartDate": "2023-04-05T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "STRING_ARRAY",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Deposit Productive Status",
+                    "description": "Rule to validate deposit accounts will need to be in a productive state",
+                    "code": "PRODUCTIVEDEPOSIT",
+                    "metadata": "ID=CAP_DDA_CCR,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "IN_ARRAY",
+                  "values": [
+                    "00",
+                    "01",
+                    "02",
+                    "03",
+                    "04",
+                    "05",
+                    "06",
+                    "07",
+                    "08"
+                  ]
+                },
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.ArrayRuleDefinitionTran",
+                  "name": "Rule definition for Loan productive status",
+                  "description": "Rule definition for Loan productive status",
+                  "code": "RDPRODUCTIVELOAN",
+                  "productType": "Mortgages",
+                  "ruleErrorNarrativeInternal": "Loan account is not in productive state",
+                  "ruleErrorNarrativeExternal": "Account ineligible ",
+                  "ruleDefinitionStartDate": "2023-04-05T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "STRING_ARRAY",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Loan Productive Status",
+                    "description": "Rule to validate loan accounts will need to be in a productive state",
+                    "code": "PRODUCTIVELOAN",
+                    "metadata": "ID=CAP_ILS_CCR,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "IN_ARRAY",
+                  "values": [
+                    "00",
+                    "01",
+                    "02",
+                    "03",
+                    "04",
+                    "05",
+                    "06",
+                    "07",
+                    "08"
+                  ]
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Ruleset for Direct Ownership of Accounts",
+              "description": "Ruleset for direct ownership of accounts",
+              "code": "RSMATCHDIROWN",
+              "ruleSetErrorNarrativeInternal": "Accounts not eligible due to ownership differences",
+              "ruleSetErrorNarrativeExternal": "Account Ineligible",
+              "ruleSetDefinitionStartDate": "2023-04-05T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.ArrayRuleDefinitionTran",
+                  "name": "Rule Definition Direct Account Ownership",
+                  "description": "Rule Definition of direct account ownership for deposits product",
+                  "code": "RDMATCHDIROWN",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "Account ownership does not align",
+                  "ruleErrorNarrativeExternal": "Account Ineligible",
+                  "ruleDefinitionStartDate": "2023-04-05T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "STRING_ARRAY",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Offset Account Direct Owners",
+                    "description": "Rule to validate primary owner of the loan account against primary owner of the deposit match",
+                    "code": "MATCHDIROWN",
+                    "metadata": "ID=OCV_DIRECT_OWNERS,ATTRIBUTE_TYPE=STRING_ARRAY"
+                  },
+                  "operator": "SUBSET_OF",
+                  "values": [
+                    "GetDirectOwnersOf(<Account ID>)"
+                  ]
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Ruleset for Number of Allowed Offsets for Deposit",
+              "description": "A Ruleset that defines the maximum number of allowed offsets for a Deposit account",
+              "code": "RSDEPALWDNUMOFFSETS",
+              "ruleSetErrorNarrativeInternal": "This Deposit account is not eligible to Offset this Loan",
+              "ruleSetErrorNarrativeExternal": "Account already in offset arrangement",
+              "ruleSetDefinitionStartDate": "2023-04-05T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule definition of allowable number of Loan accounts offset by the deposit account",
+                  "description": "Rule definition to validate the number of Loan accounts offset by the deposit account",
+                  "code": "RDDEPALWDNUMOFFSETS",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "This Deposit account is offsetting a Loan",
+                  "ruleErrorNarrativeExternal": "Account Ineligible",
+                  "ruleDefinitionStartDate": "2023-04-05T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "STRING",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Allowable number of Loans Offset by Deposit account",
+                    "description": "Rule to validate allowable number of Loans Offset by Deposit account",
+                    "code": "DEPALWDNUMOFFSETS",
+                    "metadata": "ID=CAP_DDA_PROD_SETOFF,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "EQUAL_TO",
+                  "values": "000000000000000"
+                },
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule definition validating Account number of Loan Offset by Deposit account",
+                  "description": "Rule definition validating Account number of Loan Offset by Deposit account",
+                  "code": "RDLNACNOOFSTBYDEPAC",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "This Deposit account is not offsetting this Loan",
+                  "ruleErrorNarrativeExternal": "Account ineligible",
+                  "ruleDefinitionStartDate": "2023-11-30T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "STRING",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Account number of Loan Offset by Deposit account",
+                    "description": "Rule to validate account number of Loan that is Offset by the Deposit account",
+                    "code": "LNACNOOFSTBYDEPAC",
+                    "metadata": "ID=CAP_PSO_INQUIRY,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "EQUAL_TO",
+                  "values": "GetLoanAccountNumberOffsetByDeposit(<Deposit Account ID>)"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Allowable number of Deposit accounts Offsetting Loan",
+              "description": "Rule to validate allowable number of Deposit accounts Offsetting the Loan",
+              "code": "RSLNALWDNUMOFFSETS",
+              "ruleSetErrorNarrativeInternal": "Maximum number of Offsets reached",
+              "ruleSetErrorNarrativeExternal": "Account Ineligible",
+              "ruleSetDefinitionStartDate": "2023-11-30T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule definition of allowable number of Deposit accounts offsetting the Loan account",
+                  "description": "Rule definition to validate the number of Deposit accounts offsetting the Loan account",
+                  "code": "RDLNALWDNUMOFFSETS",
+                  "productType": "Mortgages",
+                  "ruleErrorNarrativeInternal": "Maximum number of Offsets reached",
+                  "ruleErrorNarrativeExternal": "Account Ineligible",
+                  "ruleDefinitionStartDate": "2023-10-31T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "NUMBER",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Allowable number of Deposit accounts Offsetting Loan",
+                    "description": "Rule to validate allowable number of Deposit accounts Offsetting the Loan",
+                    "code": "LNALWDNUMOFFSETS",
+                    "metadata": "ID=CAP_PSO_INQUIRY,ATTRIBUTE_TYPE=NUMBER"
+                  },
+                  "operator": "EQUAL_TO",
+                  "values": "0"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Ruleset for allowed product codes",
+              "description": "Ruleset for allowed product codes for Feature",
+              "code": "RSALWDPRDCODES",
+              "ruleSetErrorNarrativeInternal": "Not an allowable Product",
+              "ruleSetErrorNarrativeExternal": "Not an allowable Product",
+              "ruleSetDefinitionStartDate": "2023-04-05T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.ArrayRuleDefinitionTran",
+                  "name": "Rule definition for allowed Marketing Product Codes",
+                  "description": "Rule definition for allowed Marketing Product Codes for Offset",
+                  "code": "RDALWDPRODUCTS01",
+                  "ruleErrorNarrativeInternal": "Allowable products for feature not found",
+                  "ruleErrorNarrativeExternal": "Account Ineligible",
+                  "ruleDefinitionStartDate": "2023-04-05T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "STRING_ARRAY",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Allowable Marketing Product codes for Offset",
+                    "description": "Rule to validate allowable marketing product codes for Offset Feature/Service",
+                    "code": "ALWDPRODUCTS01",
+                    "metadata": "ID=OCV_ACCOUNT_MARKETING_CODE,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "IN_ARRAY",
+                  "values": [
+                    "HLVAR01",
+                    "HLFXD01",
+                    "TRANSACT01"
+                  ]
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Ruleset for Allowable Loan State",
+              "description": "Ruleset for allowable loan state",
+              "code": "RSALWDLOANSTATE",
+              "ruleSetErrorNarrativeInternal": "Loans in fixed rate arrangement are not eligible ",
+              "ruleSetErrorNarrativeExternal": "Loans in fixed rate arrangement are not eligible ",
+              "ruleSetDefinitionStartDate": "2023-04-05T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule definition for allowable loan state",
+                  "description": "Rule definition for allowable loan state",
+                  "code": "RDALWDLOANSTATE",
+                  "productType": "Mortgages",
+                  "ruleErrorNarrativeInternal": "Loan in Fixed state is not allowed",
+                  "ruleErrorNarrativeExternal": "Fixed loan ineligible for offset",
+                  "ruleDefinitionStartDate": "2023-04-05T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "STRING",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Allowable Loan state",
+                    "description": "Rule to validate the loan state of a Fixed Loan in an Offset arrangement",
+                    "code": "ALWDLOANSTATE",
+                    "metadata": "ID=CAP_ILS_RATE_STATE,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "EQUAL_TO",
+                  "values": "VARIABLE"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "modelType": "com.zafin.zplatform.anz.models.AssociatedToTran",
+          "name": "Welcome Rate Offer",
+          "description": "Welcome Rate Offer",
+          "code": "WRO",
+          "associationStartDate": "2024-05-23T00:00:00Z",
+          "associationEndDate": "9999-12-31T23:59:59Z",
+          "associationModelType": "RATE_BASED_OFFER",
+          "associatedRuleSets": [
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Minimum Balance",
+              "description": "Rule Set for Minimum Balance",
+              "code": "RS_FR_MIN_BALNC",
+              "ruleSetErrorNarrativeInternal": "minimum balance criterion not satisfied",
+              "ruleSetErrorNarrativeExternal": "minimum balance criterion not satisfied",
+              "ruleSetDefinitionStartDate": "2023-01-01T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Minimum Balance Rule",
+                  "description": "Rule Definition for Minimum Balance Rule",
+                  "code": "RD_FR_MIN_BALNC",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "minimum balance criterion not satisfied",
+                  "ruleErrorNarrativeExternal": "minimum balance criterion not satisfied",
+                  "ruleDefinitionStartDate": "2023-01-01T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "DECIMAL",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Balance to achieve and maintain",
+                    "description": "Balance to achieve and maintain",
+                    "code": "BALACHIEVEMAINT",
+                    "metadata": "ATTRIBUTE_TYPE=DECIMAL"
+                  },
+                  "operator": "GREATER_THAN_EQUAL_TO",
+                  "values": "200"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set For Number Of Withdrawals ",
+              "description": "Rule Set For Number Of Withdrawals ",
+              "code": "RS_FR_NO_F_WIDRAL",
+              "ruleSetErrorNarrativeInternal": "number of withdrawals criterion not satisfied",
+              "ruleSetErrorNarrativeExternal": "number of withdrawals criterion not satisfied",
+              "ruleSetDefinitionStartDate": "2023-01-01T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Number of Withdrawal Rule",
+                  "description": "Rule Definition for Number of Withdrawal Rule",
+                  "code": "RD_FR_NO_F_WIDRAL",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "number of withdrawals criterion not satisfied",
+                  "ruleErrorNarrativeExternal": "number of withdrawals criterion not satisfied",
+                  "ruleDefinitionStartDate": "2023-01-01T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "NUMBER",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Number of withdrawals allowed",
+                    "description": "Number of withdrawals allowed",
+                    "code": "NBROFWDALLOWED",
+                    "metadata": "ATTRIBUTE_TYPE=NUMBER"
+                  },
+                  "operator": "LESS_THAN",
+                  "values": "1"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set For Number of Deposits",
+              "description": "Rule Set For Number of Deposits",
+              "code": "RS_FR_NO_F_DEP",
+              "ruleSetErrorNarrativeInternal": "number of deposits criterion not satisfied",
+              "ruleSetErrorNarrativeExternal": "number of deposits criterion not satisfied",
+              "ruleSetDefinitionStartDate": "2023-01-01T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Number of Deposits Rule",
+                  "description": "Rule Definition for Number of Deposits Rule",
+                  "code": "RD_FR_NO_F_DEP",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "number of deposits criterion not satisfied",
+                  "ruleErrorNarrativeExternal": "number of deposits criterion not satisfied",
+                  "ruleDefinitionStartDate": "2023-01-01T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "NUMBER",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Number of deposits required",
+                    "description": "Number of deposits required",
+                    "code": "NBROFDEPOSITS",
+                    "metadata": "ATTRIBUTE_TYPE=NUMBER"
+                  },
+                  "operator": "GREATER_THAN",
+                  "values": "0"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Value of Deposits",
+              "description": "Rule Set for Value of Deposits",
+              "code": "RS_FR_VAL_F_DEP",
+              "ruleSetErrorNarrativeInternal": "value of deposits criterion not satisfied",
+              "ruleSetErrorNarrativeExternal": "value of deposits criterion not satisfied",
+              "ruleSetDefinitionStartDate": "2023-01-01T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Value of Deposits Rule",
+                  "description": "Rule Definition for Value of Deposits Rule",
+                  "code": "RD_FR_VAL_F_DEP",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "value of deposits criterion not satisfied",
+                  "ruleErrorNarrativeExternal": "value of deposits criterion not satisfied",
+                  "ruleDefinitionStartDate": "2023-01-01T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "DECIMAL",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Value of deposits required",
+                    "description": "Value of deposits required",
+                    "code": "VALUEOFDEPOSIT",
+                    "metadata": "ATTRIBUTE_TYPE=DECIMAL"
+                  },
+                  "operator": "GREATER_THAN",
+                  "values": "0"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "modelType": "com.zafin.zplatform.anz.models.AssociatedToTran",
           "name": "ANZ Save Grow Balance Qualifier",
           "description": "ANZ Save Grow Balance Qualifier",
@@ -146,6 +624,248 @@
                   },
                   "operator": "GREATER_THAN_EQUAL_TO",
                   "values": "0.0000"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "modelType": "com.zafin.zplatform.anz.models.AssociatedToTran",
+          "name": "ANZ Plus",
+          "description": "Get an ANZ Plus account to help sort your spending",
+          "code": "TRANSACT01",
+          "associationStartDate": "2024-05-23T00:00:00Z",
+          "associationEndDate": "9999-12-31T23:59:59Z",
+          "associationModelType": "MARKETING_PRODUCT",
+          "associatedRuleSets": [
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Customer Minimum Age",
+              "description": "Rule Set for Customer Minimum Age",
+              "code": "RSCUSTMINAGE",
+              "ruleSetErrorNarrativeInternal": "customer minimum age criterion not satisfied",
+              "ruleSetErrorNarrativeExternal": "customer minimum age criterion not satisfied",
+              "ruleSetDefinitionStartDate": "2024-01-23T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Customer Minimum Age",
+                  "description": "Rule Definition for Customer Minimum Age",
+                  "code": "RDCUSTMINAGE",
+                  "ruleErrorNarrativeInternal": "customer minimum age criterion not satisfied",
+                  "ruleErrorNarrativeExternal": "customer minimum age criterion not satisfied",
+                  "ruleDefinitionStartDate": "2024-01-23T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "NUMBER",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Customer Minimum Age",
+                    "description": "Customer Minimum Age",
+                    "code": "CUSTMINAGE",
+                    "metadata": "ID=OCV_PARTY_DOB,ATTRIBUTE_TYPE=NUMBER"
+                  },
+                  "operator": "GREATER_THAN_EQUAL_TO",
+                  "values": "15"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Active Deposit Accounts",
+              "description": "Rule Set for Active Deposit Accounts",
+              "code": "RSDEPOSITACCSTATUS",
+              "ruleSetErrorNarrativeInternal": "Account is closed",
+              "ruleSetErrorNarrativeExternal": "Account is closed",
+              "ruleSetDefinitionStartDate": "2024-01-23T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.ArrayRuleDefinitionTran",
+                  "name": "Rule definition for active Deposit accounts",
+                  "description": "Rule definition for active Deposit accounts",
+                  "code": "RDDEPOSITACCSTATUS",
+                  "productType": "Deposits",
+                  "ruleErrorNarrativeInternal": "Account is closed",
+                  "ruleErrorNarrativeExternal": "Account is closed",
+                  "ruleDefinitionStartDate": "2023-04-05T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "STRING_ARRAY",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Active Deposit accounts",
+                    "description": "Rule to validate all Deposit accounts that are linked to a feature/service need to be in Active status",
+                    "code": "DEPOSITACCSTATUS",
+                    "metadata": "ID=CAP_DDA_ACCOUNT_STATUS,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "IN_ARRAY",
+                  "values": [
+                    "01",
+                    "03",
+                    "05",
+                    "99"
+                  ]
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Maximum DDA Account per Customer",
+              "description": "Rule Set for Maximum DDA Account per Customer",
+              "code": "RSMAXDDAALWD",
+              "ruleSetErrorNarrativeInternal": "maximum dda account per customer criterion not satisfied",
+              "ruleSetErrorNarrativeExternal": "maximum dda account per customer criterion not satisfied",
+              "ruleSetDefinitionStartDate": "2024-01-23T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Maximum DDA Account per Customer",
+                  "description": "Rule Definition for Maximum DDA Account per Customer",
+                  "code": "RDMAXDDAALWD",
+                  "ruleErrorNarrativeInternal": "maximum dda account per customer criterion not satisfied",
+                  "ruleErrorNarrativeExternal": "maximum dda account per customer criterion not satisfied",
+                  "ruleDefinitionStartDate": "2024-01-23T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "NUMBER",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Maximum DDA Account per Customer",
+                    "description": "Maximum DDA Account per Customer",
+                    "code": "MAXDDAALWD",
+                    "metadata": "ID=OCV_PARTY_ACCOUNTS,ATTRIBUTE_TYPE=NUMBER"
+                  },
+                  "operator": "LESS_THAN_EQUAL_TO",
+                  "values": "6"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Customer Segment Type",
+              "description": "Rule Set for Customer Segment Type",
+              "code": "RSCUSTSEGMENTTYPE",
+              "ruleSetErrorNarrativeInternal": "customer segment type is not P",
+              "ruleSetErrorNarrativeExternal": "customer segment type is not P",
+              "ruleSetDefinitionStartDate": "2024-01-23T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Customer Segment Type",
+                  "description": "Rule Definition for Customer Segment Type",
+                  "code": "RDCUSTSEGMENTTYPE",
+                  "ruleErrorNarrativeInternal": "customer segment type is not P",
+                  "ruleErrorNarrativeExternal": "customer segment type is not P",
+                  "ruleDefinitionStartDate": "2024-01-23T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "STRING",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Customer Segment Type",
+                    "description": "Customer Segment Type",
+                    "code": "CUSTSEGMENTTYPE",
+                    "metadata": "ID=OCV_PARTY_TYPE,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "EQUAL_TO",
+                  "values": "P"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Customer Profile Fraud Locked ",
+              "description": "Rule Set for Customer Profile Fraud Locked ",
+              "code": "RSCUSTFRAUDSTATUS",
+              "ruleSetErrorNarrativeInternal": "customer profile is locked",
+              "ruleSetErrorNarrativeExternal": "customer profile is locked",
+              "ruleSetDefinitionStartDate": "2024-01-23T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Customer Profile Fraud Locked ",
+                  "description": "Rule Definition for Customer Profile Fraud Locked ",
+                  "code": "RDCUSTFRAUDSTATUS",
+                  "ruleErrorNarrativeInternal": "customer profile is locked",
+                  "ruleErrorNarrativeExternal": "customer profile is locked",
+                  "ruleDefinitionStartDate": "2024-01-23T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-12-31T23:59:59Z",
+                  "attributeType": "STRING",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Customer Profile Fraud Locked",
+                    "description": "Customer Profile Fraud Locked",
+                    "code": "CUSTFRAUDSTATUS",
+                    "metadata": "ID=AEGIS_PERSON_STATUS,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "EQUAL_TO",
+                  "values": "active"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Customer AU Residential Address",
+              "description": "Rule Set for Customer AU Residential Address",
+              "code": "RSCUSTRESADDRESS",
+              "ruleSetErrorNarrativeInternal": "customer au residential address criterion not satisfied",
+              "ruleSetErrorNarrativeExternal": "customer au residential address criterion not satisfied",
+              "ruleSetDefinitionStartDate": "2024-01-23T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule Definition for Customer AU Residential Address",
+                  "description": "Rule Definition for Customer AU Residential Address",
+                  "code": "RDCUSTRESADDRESS",
+                  "ruleErrorNarrativeInternal": "customer au residential address criterion not satisfied",
+                  "ruleErrorNarrativeExternal": "customer au residential address criterion not satisfied",
+                  "ruleDefinitionStartDate": "2024-01-23T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "BOOLEAN",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Customer AU Residential Address",
+                    "description": "Customer AU Residential Address",
+                    "code": "CUSTRESADDRESS",
+                    "metadata": "ID=OCV_PARTY_RES_ADDRESS,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "EQUAL_TO",
+                  "values": "TRUE"
+                }
+              ]
+            },
+            {
+              "modelType": "com.zafin.zplatform.anz.models.RuleSetDetailsTran",
+              "name": "Rule Set for Active Loan Accounts",
+              "description": "Rule Set for Active Loan Accounts",
+              "code": "RSLOANACCSTATUS",
+              "ruleSetErrorNarrativeInternal": "Account is closed",
+              "ruleSetErrorNarrativeExternal": "Account is closed",
+              "ruleSetDefinitionStartDate": "2024-01-23T00:00:00Z",
+              "ruleSetDefinitionEndDate": "9999-01-01T23:59:59Z",
+              "ruleSetDefinition": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.SimpleRuleDefinitionTran",
+                  "name": "Rule definition for active Loan accounts",
+                  "description": "Rule definition for active Loan accounts",
+                  "code": "RDLOANACCSTATUS",
+                  "productType": "Mortgages",
+                  "ruleErrorNarrativeInternal": "Account is closed",
+                  "ruleErrorNarrativeExternal": "Account is closed",
+                  "ruleDefinitionStartDate": "2023-04-05T00:00:00Z",
+                  "ruleDefinitionEndDate": "9999-01-01T23:59:59Z",
+                  "attributeType": "STRING",
+                  "ruleAttribute": {
+                    "modelType": "com.zafin.zplatform.anz.models.RuleAttributeTran",
+                    "name": "Active Loan accounts",
+                    "description": "Rule to validate all Loan accounts that are linked to a feature/service need to be in Active status",
+                    "code": "LOANACCSTATUS",
+                    "metadata": "ID=CAP_ILS_ACCOUNT_STATUS,ATTRIBUTE_TYPE=STRING"
+                  },
+                  "operator": "EQUAL_TO",
+                  "values": "EMPTY_STRING"
                 }
               ]
             }
