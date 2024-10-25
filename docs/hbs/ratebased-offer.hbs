@@ -34,6 +34,7 @@
 
             {{#if ../rules}}
             {{#ifKeyExists ../rules code}}
+            <b>Qualifier RuleSet</b>
                 {{#each ../rules}}
                 {{!log 'compare ' code ' with ' ../code}}
                 {{#ifEquals code ../code}}
@@ -41,7 +42,7 @@
                 {{/ifEquals}}
                 {{/each}}
             {{else}}
-                <b>No qualifier ruleset found for {{code}}</b>
+                <b>No qualifier RuleSet found for {{code}}</b>
             {{/ifKeyExists}}
             {{else}}
                 <b>No rules found</b>
@@ -55,6 +56,7 @@
             {{/with}}
             {{#if ../rules}}
             {{#ifKeyExists ../rules code}}
+                <b>Qualifier RuleSet</b>
                 {{#each ../rules}}
                 {{!log 'comparing  ' code ' with ' ../code}}
                 {{#ifEquals code ../code}}
@@ -62,7 +64,7 @@
                 {{/ifEquals}}
                 {{/each}}
             {{else}}
-                <b>No qualifier ruleset found for {{code}}</b>
+                <b>No qualifier RuleSet found for {{code}}</b>
             {{/ifKeyExists}}
             {{else}}
             <b>No rules found</b>

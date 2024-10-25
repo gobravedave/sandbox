@@ -3,33 +3,26 @@
       <table>
           <tr>
           <th>Ruleset</th>
-          <th>Rules</th>
+            <th>Rule</th>
+            <th>Attribute</th>
+            <th>Operator</th>
+            <th>Value</th>
           </tr>
           {{#each associatedRuleSets}}
           <tr>
-          <td>
+            {{!-- calaculate rowspan based on length of ruleSetDefinition array --}}
+          <td rowspan="{{ruleSetDefinition.length}}">
               {{name}} ({{code}})<br>
               <b>Start Date:</b> {{formatDate ruleSetDefinitionStartDate}}<br>
               <b>End Date:</b> {{formatDate ruleSetDefinitionEndDate}}<br>
           </td>
-          <td>
-            <table>
-            <tr>
-              <th>Rule</th>
-              <th>Attribute</th>
-              <th>Operator</th>
-              <th>Value</th>
-            </tr>
             {{#each ruleSetDefinition}}
-            <tr>
               <td>{{name}} ({{code}})</td>
               <td>{{ruleAttribute.name}} ({{ruleAttribute.code}})</td>
               <td>{{operator}}</td>
               <td>{{values}}</td>
             </tr>
             {{/each}}
-            </table>
-        </td>
         </tr>
       {{/each}}
       </table>

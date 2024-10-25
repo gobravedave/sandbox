@@ -45,42 +45,40 @@
         <tr><th>Is Redirect Debit Interest Allowed</th><td>{{reDirectInterest.isRedirectDebitInterestAllowed}}</td></tr>
     </table>
     {{/with}}
+    <br>
+    {{#with financialParameters}}
+    {{> financial-parameters-template}}
+    {{/with}}
+    <br>
+    {{#with behaviourParameters}}
+    <table>
+    <tr><th colspan="2">Behaviour Parameters</th></tr>
+    <tr>
+        <th>Informal Overdraft</th>
+        <td>
+        <li>Applicable = {{informalOverDraft.inFormalOverdraftApplicable}}</li>
+        <li>Tolerance = {{informalOverDraft.inFormalOverdraftTolerance}}</li>
+        </td>
+    </tr>
+    <tr>
+        <th>Overdraft Treatment</th>
+        <td>{{informalOverDraft.overdrawnTreatment.name}} ({{informalOverDraft.overdrawnTreatment.name}}) {{informalOverDraft.overdrawnTreatment.description}}</td>
+    </tr>
+    </table>
+    {{/with}}
+    <br>
+    {{#with entitlementParameters}}
+    {{> entitlements-template}}
+    {{/with}}
     </td>
     <td>
-        {{#with financialParameters}}
-        {{> financial-parameters-template}}
-        {{/with}}
-        <br>
-        {{#with behaviourParameters}}
-        <table>
-        <tr><th colspan="2">Behaviour Parameters</th></tr>
-        <tr>
-            <th>Informal Overdraft</th>
-            <td>
-            <li>Applicable = {{informalOverDraft.inFormalOverdraftApplicable}}</li>
-            <li>Tolerance = {{informalOverDraft.inFormalOverdraftTolerance}}</li>
-            </td>
-        </tr>
-        <tr>
-            <th>Overdraft Treatment</th>
-            <td>{{informalOverDraft.overdrawnTreatment.name}} ({{informalOverDraft.overdrawnTreatment.name}}) {{informalOverDraft.overdrawnTreatment.description}}</td>
-        </tr>
-        </table>
-        {{/with}}
-        <br>
-        {{#with entitlementParameters}}
-        {{> entitlements-template}}
-        {{/with}}
-    </td>
-    <td>
-        {{#with regulatoryParameters}}
-        {{> regulatory-parameters-template}}
-        {{/with}}
-
-        <br>  
-        {{#with documentations}}
-        {{> documentation-template}}
-        {{/with}}          
+    {{#with regulatoryParameters}}
+    {{> regulatory-parameters-template}}
+    {{/with}}
+    <br>  
+    {{#with documentations}}
+    {{> documentation-template}}
+    {{/with}}          
     </td>
     </tr>
 </table>

@@ -122,7 +122,7 @@
       }
   }
 
-    function processProducts(products) {
+    function processProducts(products, rules) {
       const byCategory = {};
 
       // Initialize categories in byCategory object
@@ -315,7 +315,7 @@
         BANKS[bank.id].rulesRaw = rules
 
         // add banks product count and list to PRODUCTS
-        const byCategory = processProducts(products)
+        const byCategory = processProducts(products, rules)
         for (let prodCat in PRODUCTS) {
           PRODUCTS[prodCat].banks[bank.id].count = byCategory[prodCat].count
           PRODUCTS[prodCat].banks[bank.id].products = byCategory[prodCat].products
