@@ -1,0 +1,15 @@
+{{log 'eligibility rules partial' this}}
+
+  {{#if rules}}
+  {{#ifKeyExists rules product.productCode}}
+  <h4>Product Eligibility Rules</h3>
+  <div class="content">
+      {{#each rules}}
+      {{log 'compare' code ' with ' ../product.productCode}}
+      {{#ifEquals code ../product.productCode}}
+          {{> ruleset-template}}
+      {{/ifEquals}}
+      {{/each}}
+  </div>
+  {{/ifKeyExists}}
+  {{/if}}

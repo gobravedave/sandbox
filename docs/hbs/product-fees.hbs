@@ -1,5 +1,6 @@
 {{#with product.feePlans}}
 {{#each data}}
+{{#if feePlans}}
 {{#each feePlans}}
 <div class="table_wrapper">
 <table>
@@ -70,5 +71,8 @@
 </table> <!-- End of Fee Plan --> 
 </div>
 {{/each}}
+{{else}}
+<b>No Feeplans for this product</b>
+{{/if}}
 {{/each}}
 {{/with}}
