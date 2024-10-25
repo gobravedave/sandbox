@@ -1,4 +1,4 @@
-      {{log 'rate based partial' this}}
+      {{!log 'rate based partial' this}}
       {{#if this.ratePlan.rateBasedOffers}}
       <h3>Rate Based Offers</h3>
       <div class="content">
@@ -31,18 +31,20 @@
             {{#with productOfferRatePlanMapping.offerRatePlanDetails.simpleRates.rates.rateGrid}}
             {{> rategrid-template}}
             {{/with}}
+
             {{#if ../rules}}
-            {{#ifKeyExists ../rules ../code}}
+            {{#ifKeyExists ../rules code}}
                 {{#each ../rules}}
+                {{!log 'compare ' code ' with ' ../code}}
                 {{#ifEquals code ../code}}
                     {{> ruleset-template}}
                 {{/ifEquals}}
                 {{/each}}
             {{else}}
-                <b>No qualifier rules exist for {{code}}.</b>
+                <b>No qualifier ruleset found for {{code}}</b>
             {{/ifKeyExists}}
             {{else}}
-            <b>No rules found.</b>
+                <b>No rules found</b>
             {{/if}}
           </td>
           {{/if}}
@@ -52,17 +54,18 @@
             {{> rategrid-template}}
             {{/with}}
             {{#if ../rules}}
-            {{#ifKeyExists ../rules ../code}}
+            {{#ifKeyExists ../rules code}}
                 {{#each ../rules}}
+                {{!log 'comparing  ' code ' with ' ../code}}
                 {{#ifEquals code ../code}}
                     {{> ruleset-template}}
                 {{/ifEquals}}
                 {{/each}}
             {{else}}
-                <b>No qualifier rules exist for {{code}}.</b>
+                <b>No qualifier ruleset found for {{code}}</b>
             {{/ifKeyExists}}
             {{else}}
-            <b>No rules found.</b>
+            <b>No rules found</b>
             {{/if}}
           </td>
           <td>

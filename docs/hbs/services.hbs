@@ -1,11 +1,10 @@
-{{log 'service partial'this}}
-{{#with product.serviceAssociation}}
-{{#if multiUseProducts}}
+{{!log 'service partial'this}}
+{{#if product.serviceAssociation.multiUseProducts}}
 <h3>MultiUse Products</h3>
 <div class="content">
 <div class="table_wrapper">
 <table>
-{{#each multiUseProducts }}
+{{#each product.serviceAssociation.multiUseProducts }}
 <tr>
 <td>
 <table>
@@ -38,36 +37,35 @@
     </td>
     </tr>
 </table>
-</td>
-<td>
+<br>
 <table>
 <tr><th colspan="2">Financial Paramaters</th></tr>  
 <tr><th>Cost Center</th><td>{{productConfiguration.offsetProductConfiguration.financialParameters.costCenter.name}} ({{productConfiguration.offsetProductConfiguration.financialParameters.costCenter.code}})</td></tr>
 <tr><th>General Ledger Code</th><td>{{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.name}} ({{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.code}})</td></tr>
 </table>
-</td>
-<td>
+<br>
 <table>
 <tr><th colspan="2">Fee Plan</th></tr>
 <tr><td>If subscription required, add logic to look up fees..</td></tr>
 </table>
-</td>
-<td>
+</table>
+
+<h4>MultiUse Eligibility Rules</h3>
+<div class="content">
 <table>
-<tr><th colspan="2">Eligibility</th></tr>
     <tr><td>
     {{#if ../rules}}
-    {{#ifKeyExists ../rules ../code}}
+    {{#ifKeyExists ../rules productCode}}
         {{#each ../rules}}
-        {{#ifEquals code ../code}}
+        {{#ifEquals code ../productCode}}
             {{> ruleset-template}}
         {{/ifEquals}}
         {{/each}}
     {{else}}
-        <b>No matching rule found for this {{code}}.</b>
+        <b>No matching ruleset found for {{productCode}}</b>
     {{/ifKeyExists}}
     {{else}}
-   <b> No rules found.</b>
+   <b> No rules found</b>
     {{/if}}
 </td></tr>
 </table>
@@ -77,13 +75,14 @@
 </div>
 </div>
 {{/if}}
+</div> 
 
-{{#if services}}
+{{#if product.serviceAssociation.services}}
 <h3>Services</h3>
 <div class="content">
 <div class="table_wrapper">
 <table>
-    {{#each services}}
+    {{#each product.serviceAssociation.services}}
     <tr>
     <td>
     <table>
@@ -147,4 +146,3 @@
 </div>
 </div>
 {{/if}}
-{{/with}}
