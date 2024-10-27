@@ -38,7 +38,7 @@
                 {{#each ../rules}}
                 {{!log 'compare ' code ' with ' ../code}}
                 {{#ifEquals code ../code}}
-                    {{> ruleset-template}}
+                    {{> ruleset-template ruleset=this}}
                 {{/ifEquals}}
                 {{/each}}
             {{else}}
@@ -60,7 +60,7 @@
                 {{#each ../rules}}
                 {{!log 'comparing  ' code ' with ' ../code}}
                 {{#ifEquals code ../code}}
-                    {{> ruleset-template}}
+                    {{> ruleset-template ruleset=this}}
                 {{/ifEquals}}
                 {{/each}}
             {{else}}

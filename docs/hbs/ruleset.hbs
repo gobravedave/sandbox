@@ -3,22 +3,37 @@
       <table>
           <tr>
           <th>Ruleset</th>
-            <th>Rule</th>
-            <th>Attribute</th>
-            <th>Operator</th>
-            <th>Value</th>
+          <th>Rule</th>
+          <th>Attribute</th>
+          <th>Attribute Type</th>
+          <th>Operator</th>
+          <th>Value</th>
           </tr>
-          {{#each associatedRuleSets}}
+          {{#each ruleset.associatedRuleSets}}
           <tr>
             {{!-- calaculate rowspan based on length of ruleSetDefinition array --}}
           <td rowspan="{{ruleSetDefinition.length}}">
-              {{name}} ({{code}})<br>
-              <b>Start Date:</b> {{formatDate ruleSetDefinitionStartDate}}<br>
-              <b>End Date:</b> {{formatDate ruleSetDefinitionEndDate}}<br>
+              <table>
+              <tr><th>Name</th><td>{{name}} ({{code}})</td></tr>
+              <tr><th>Start Date</th><td>{{formatDate ruleSetDefinitionStartDate}}</td></tr>
+              <tr><th>End Date</th><td>{{formatDate ruleSetDefinitionEndDate}}</td></tr>
+              <tr><th>Internal Narrative</th><td>{{ruleSetErrorNarrativeInternal}}</td></tr>
+              <tr><th>External Narrative</th><td>{{ruleSetErrorNarrativeExternal}}</td></tr>
+              </table>
           </td>
             {{#each ruleSetDefinition}}
-              <td>{{name}} ({{code}})</td>
+              <td>
+              <table>
+              <tr><th>Name</th><td>{{name}} ({{code}})</td></tr>
+              <tr><th>Product Type</th><td>{{productType}}</td></tr>
+              <tr><th>Start Date</th><td>{{formatDate ruleDefinitionStartDate}}</td></tr>
+              <tr><th>End Date</th><td>{{formatDate ruleDefinitionEndDate}}</td></tr>
+              <tr><th>Internal Narrative</th><td>{{ruleErrorNarrativeInternal}}</td></tr>
+              <tr><th>External Narrative</th><td>{{ruleErrorNarrativeExternal}}</td></tr>
+              </table>
+              </td>
               <td>{{ruleAttribute.name}} ({{ruleAttribute.code}})</td>
+              <td>{{attributeType}}</td>
               <td>{{operator}}</td>
               <td>{{values}}</td>
             </tr>

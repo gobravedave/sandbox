@@ -32,6 +32,7 @@
     // Register partials dynamically
     Promise.all([
       loadPartial('product-name-template', 'hbs/product-name.hbs'),
+      loadPartial('ruleset-name-template', 'hbs/ruleset-name.hbs'),
       loadPartial('eligibility-template', 'hbs/eligibility.hbs'),
       loadPartial('eligibility-rules-template', 'hbs/eligibility-rules.hbs'),
       loadPartial('deposit-product-config-template', 'hbs/deposit-product-config.hbs'),
@@ -82,7 +83,7 @@
         name: 'Residential Mortgages',
       },
       RULESET: {
-        name: 'RuleSets (coming soon)',
+        name: 'RuleSets',
       },
       OFFER: {
         name: 'Offers (tbd)',
@@ -128,7 +129,7 @@
 
       // Initialize categories in byCategory object
       for (let prodCat in PRODUCTS) {
-        byCategory[prodCat] = { count: 0, products: [] };
+        byCategory[prodCat] = { count: 0, products: [], rules: [] };
       }
 
       // Loop through each product and group them by category
@@ -144,6 +145,22 @@
         } else {
           console.warn(`Product ${p.productName} has an unknown or missing category: ${category}`);
         }
+      });
+
+      rules.forEach((r) => {
+        category = "RULESET"; // or the key you're using
+
+        // Ensure the category exists in the PRODUCTS object
+        if (category && PRODUCTS[category]) {
+          // Increment the rule count for the category
+          byCategory[category].count++;
+          // Add the rule to the rules array for the category
+          if(byCategory[category].products) {
+            byCategory[category].products.push(r);
+          } else {
+            byCategory[category].products = [r];
+          }
+        } 
       });
 
       return byCategory;
@@ -171,24 +188,36 @@
         }
     }
 
-    async function toggleJson(productId) {
-      logToConsole(`Showing JSON for bank ${savedBankId} productId ${productId}`)
-      const jsonBtn = document.getElementById('json-btn');
-      if (jsonBtn.textContent === 'Show JSON') {
-        let productDetails = BANKS[savedBankId].productsRaw.find(prod => prod.productCode=== productId);
+    async function toggleJson(type, id) {
+  logToConsole(`Showing JSON for bank ${savedBankId}, type ${type}, id ${id}`);
+  const jsonBtn = document.getElementById('json-btn');
 
-        var pre = document.getElementById("product-details-json-content");
-        pre.innerHTML = ""; // Clear previous JSON content
-        renderjson.set_icons('+', '-');
-        renderjson.set_show_to_level(2);
-        // renderjson.set_collapse_msg(function(len) { return len + " item" + (len==1 ? "" : "s") })
-        pre.appendChild(renderjson(productDetails));
-        jsonBtn.textContent = 'Hide JSON';
-      } else {
-        document.getElementById("product-details-json-content").innerHTML = "";
-        jsonBtn.textContent = 'Show JSON';
-      }
+  if (jsonBtn.textContent === 'Show JSON') {
+    let details;
+
+    // Check the type and retrieve the appropriate JSON details
+    if (type === 'product') {
+      details = BANKS[savedBankId].productsRaw.find(prod => prod.productCode === id);
+    } else if (type === 'ruleset') {
+      details = BANKS[savedBankId].rulesRaw.find(rule => rule.code === id);
     }
+
+    if (details) {
+      const pre = document.getElementById("product-details-json-content");
+      pre.innerHTML = ""; // Clear previous JSON content
+      renderjson.set_icons('+', '-');
+      renderjson.set_show_to_level(2);
+      pre.appendChild(renderjson(details));
+      jsonBtn.textContent = 'Hide JSON';
+    } else {
+      console.error(`Details not found for type: ${type}, id: ${id}`);
+    }
+  } else {
+    document.getElementById("product-details-json-content").innerHTML = "";
+    jsonBtn.textContent = 'Show JSON';
+  }
+}
+
 
     async function toggleCheck(productId) {
       logToConsole(`Showing Checker for bank ${savedBankId} productId ${productId}`)
@@ -354,7 +383,7 @@
           })
 
           let productDetails = BANKS[bankId].productsRaw.find(prod => prod.productCode === productCode);
-          // console.log({productDetails})
+          console.log({productDetails})
 
           // Compile the main product template
 
@@ -363,6 +392,38 @@
             // console.log(productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate, place: BANKS[bankId].name }))
           } else {
             document.getElementById('product-details').innerHTML = `<div id="product-details-content">Product details not found.<span id="product-details-close">&times;</span></div>`;
+          }
+
+          document.getElementById('product-details-close').addEventListener('click', function (e) {
+            document.getElementById('product-details').style.display = 'none'
+            document.getElementById('product-details').innerHTML = ''
+          })
+        })
+      }
+      
+      let $ruleNames = document.querySelectorAll('.rule-name')
+      for (let $ruleName of $ruleNames) {
+        // clicking on product name will show product details
+        $ruleName.addEventListener('click', async function (e) {
+          let { bankId, ruleCode } = e.target.dataset
+          savedBankId = bankId
+          document.getElementById('product-details').innerHTML = '<div id="product-details-content">Fetching rule details...<span id="product-details-close">&times;</span></div>'
+          document.getElementById('product-details').style.display = 'block'
+          document.getElementById('product-details-close').addEventListener('click', function (e) {
+            document.getElementById('product-details').style.display = 'none'
+            document.getElementById('product-details').innerHTML = ''
+          })
+
+          let ruleDetails = BANKS[bankId].rulesRaw.find(rule => rule.code === ruleCode);
+          console.log({ruleDetails})
+
+          // Compile the main product template
+
+          if (ruleDetails) {
+            document.getElementById('product-details').innerHTML = productDetailsTpl({asofDate: BANKS[bankId].asofDate, place: BANKS[bankId].name, ruleset: ruleDetails});
+            // console.log(productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate, place: BANKS[bankId].name }))
+          } else {
+            document.getElementById('product-details').innerHTML = `<div id="product-details-content">Rule details not found.<span id="product-details-close">&times;</span></div>`;
           }
 
           document.getElementById('product-details-close').addEventListener('click', function (e) {
@@ -394,7 +455,7 @@
     <ul style="list-style: square; padding-left: 10px;">
       <li>This page is a static view of the product configurations from each Zafin environment. The data will be periodically updated as part of a product configuration relaese or upon request to <a href="mailto:david.anderson@anz.com">david.anderson@anz.com</a></li>
       <li>To use.. Click on a product category to show products in each environment. Click on a product button to show the product details.</li>
-      <li>Known data gaps include multiuse product fees, rulesets, offers, <del>qualifier rules, multiuse eligibility rules</del>, product eligibility rules, credit card config etc</li>
+      <li>Known data gaps include multiuse product fees, <del>rulesets,</del> offers, <del>qualifier rules, multiuse eligibility rules, product eligibility rules,</del> credit card config etc</li>
       <li>Backlog items include calling mulesoft to pull product data, compare, config checker, diagram view, NZ Products</li>
     </ul>
     </div>
@@ -408,9 +469,14 @@
 <!-- Main Product Template -->
 <script id="product-details-template" type="text/x-handlebars-template">
 <div id="product-details-content">
-    <button id="diagram-btn" onclick="toggleDiagram( '{{product.productCode}}')" >Show Diagram</button>
-    <button id="json-btn" onclick="toggleJson( '{{product.productCode}}')">Show JSON</button>
-    <button id="check-btn" onclick="toggleCheck( '{{product.productCode}}')">Show Checker</button>
+    {{log 'product details' this}}
+    <!-- <button id="diagram-btn" onclick="toggleDiagram( '{{product.productCode}}')" >Show Diagram</button> -->
+    {{#if product.productCode}}
+      <button id="json-btn" onclick="toggleJson('product', '{{product.productCode}}')">Show JSON</button>
+    {{else}}
+      <button id="json-btn" onclick="toggleJson('ruleset', '{{ruleset.code}}')">Show JSON</button>
+    {{/if}}
+    <button id="check-btn" onclick="toggleCheck('{{product.productCode}}')">Show Checker</button>
     <button id="compare-btn" onclick="toggleCompare( '{{product.productCode}}')">Show Compare</button>
     <span id="product-details-close">&times;</span>
     <div><pre id="product-details-diagram-content"></pre></div>
@@ -421,104 +487,112 @@
         <option value="">Compare with Bank</option>
       </select>  
     </div>
+  {{!log 'main template' this}}
+  {{#if ruleset}}
+    {{> ruleset-name-template}}
+    <h2>RuleSets</h2>
+    <div class="content">
+    {{> ruleset-template}}
+    </div>
 
-  {{> product-name-template}}
+  {{else}}
+    {{> product-name-template}}
 
-  <h2>Eligibility</h2>
-  <div class="content">
-  {{#with product.productEligibilityDetails}}
-  {{> eligibility-template}}
-  {{/with}}
-  </div>
+    <h2>Eligibility</h2>
+    <div class="content">
+    {{#with product.productEligibilityDetails}}
+    {{> eligibility-template}}
+    {{/with}}
+    </div>
 
-  {{> eligibility-rules-template rules=rules}}
+    {{> eligibility-rules-template rules=rules}}
 
-  {{#if product.productConfiguration}}
+    {{#if product.productConfiguration}}
     <h2>Deposit Product Configuration</h2>
     <div class="content">
     <div class="table_wrapper">
         {{> deposit-product-config-template}}
     </div>
     </div>
-  {{/if}}
+    {{/if}}
 
-  {{#if product.termDepositProductConfiguration}}
-  <h2>Term Deposit Product Configuration</h2>
-  <div class="content">
-  <div class="table_wrapper">
+    {{#if product.termDepositProductConfiguration}}
+    <h2>Term Deposit Product Configuration</h2>
+    <div class="content">
+    <div class="table_wrapper">
       {{> term-deposit-product-config-template}}
-  </div>
-  </div>  
-  {{/if}}
+    </div>
+    </div>  
+    {{/if}}
 
-  {{#if product.mortgageProductConfiguration}}
+    {{#if product.mortgageProductConfiguration}}
     <h2>Lending Product Configuration</h2>
     <div class="content">
     <div class="table_wrapper">
     {{> lending-product-config-template}}
     </div>
     </div>
-  {{/if}}
+    {{/if}}
 
-  {{#if product.feePlans}}
+    {{#if product.feePlans}}
     <h2>Fee Plans</h2>
     <div class="content">
     <div class="table_wrapper">
     {{> product-fees-template}}
     </div>
     </div>
-  {{/if}}
+    {{/if}}
 
-  {{#if product.ratePlans.data.[0].ratePlanAssociation.standardRatePlan.depositStandardRatePlanDetails}}
+    {{#if product.ratePlans.data.[0].ratePlanAssociation.standardRatePlan.depositStandardRatePlanDetails}}
     <h2>Deposit Rate Plan</h2>
     <div class="content">
     {{> deposit-product-rateplan-template}}
     </div>
-  {{/if}}
+    {{/if}}
 
-  {{#if product.ratePlans.data.[0].ratePlanAssociation.standardRatePlan.mortgageStandardRatePlanDetails}}
+    {{#if product.ratePlans.data.[0].ratePlanAssociation.standardRatePlan.mortgageStandardRatePlanDetails}}
     <h2>Lending Rate Plan</h2>
     <div class="content">
     {{> lending-product-rateplan-template}}
     </div>
-  {{/if}}
+    {{/if}}
 
-  {{#if product.serviceAssociation}}
-  <h2>Associated Services</h2>
-  <div class="content">
-  <div class="table_wrapper">  
-  {{!log 'before service' this}}  
-  {{> services-template rules=rules}}
-  
-  </div>
-  </div>  
-  {{/if}}
+    {{#if product.serviceAssociation}}
+    <h2>Associated Services</h2>
+    <div class="content">
+    <div class="table_wrapper">  
+    {{!log 'before service' this}}  
+    {{> services-template rules=rules}}    
+    </div>
+    </div>  
+    {{/if}}
 
-  {{#if product.openBankingConfiguration}}
-  <h2>Open Banking</h2>
-  <div class="content">
-  <div class="table_wrapper">
-      {{> open-banking-template}}
-  </div>
-  </div>
-  {{/if}}
-
-  {{#if product.externalProductCodeMapping}}
-  <h2>External Product Code Mapping</h2>
-  <div class="content">
-  <div class="table_wrapper">
-  {{> external-product-code-mapping-template}}
-  </div>
-  </div> 
-  {{/if}}
-
-  {{#if product.impactedSystems}}
-    <h2>Impacted Systems</h2>
+    {{#if product.openBankingConfiguration}}
+    <h2>Open Banking</h2>
     <div class="content">
     <div class="table_wrapper">
-    {{> impacted-systems-template}}
+        {{> open-banking-template}}
     </div>
     </div>
+    {{/if}}
+
+    {{#if product.externalProductCodeMapping}}
+    <h2>External Product Code Mapping</h2>
+    <div class="content">
+    <div class="table_wrapper">
+    {{> external-product-code-mapping-template}}
+    </div>
+    </div> 
+    {{/if}}
+
+    {{#if product.impactedSystems}}
+      <h2>Impacted Systems</h2>
+      <div class="content">
+      <div class="table_wrapper">
+      {{> impacted-systems-template}}
+      </div>
+      </div>
+    {{/if}}
   {{/if}}
 
 </div>
@@ -547,7 +621,11 @@
                 {{#each this.products}}
                   <tr>
                     <td>
+                    {{#if this.productCode}}
                       <button class="product-name" data-bank-id="{{../bankId}}" data-product-code="{{this.productCode}}" title="{{this.productDescription}}">{{this.productName}}</button>
+                    {{else}}
+                      <button class="rule-name" data-bank-id="{{../bankId}}" data-rule-code="{{this.code}}" title="{{this.description}}">{{this.name}}</button>
+                    {{/if}}
                     </td>
                   </tr>
                 {{/each}}

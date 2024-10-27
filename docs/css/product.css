@@ -149,6 +149,10 @@ color: white;
   cursor: pointer;
 }
 
+.rule-name {
+  cursor: pointer;
+}
+
 .category-products-main {
   padding: 0;
 }

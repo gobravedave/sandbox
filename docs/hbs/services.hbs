@@ -45,37 +45,37 @@
 </table>
 <br>
 <table>
-<tr><th colspan="2">Fee Plan</th></tr>
+<tr><th>Fee Plan</th></tr>
 <tr><td>If subscription required, add logic to look up fees..</td></tr>
 </table>
 </table>
 
 <h4>MultiUse Eligibility Rules</h3>
-<div class="content">
-<table>
-    <tr><td>
-    {{#if ../rules}}
-    {{#ifKeyExists ../rules productCode}}
-        {{#each ../rules}}
-        {{#ifEquals code ../productCode}}
-            {{> ruleset-template}}
-        {{/ifEquals}}
-        {{/each}}
-    {{else}}
-        <b>No matching ruleset found for {{productCode}}</b>
-    {{/ifKeyExists}}
-    {{else}}
-   <b> No rules found</b>
-    {{/if}}
-</td></tr>
-</table>
-</td>
+    <div class="content">
+    <table>
+        <tr><td>
+        {{#if ../rules}}
+        {{#ifKeyExists ../rules productCode}}
+            {{#each ../rules}}
+            {{#ifEquals code ../productCode}}
+                {{> ruleset-template ruleset=this}}
+            {{/ifEquals}}
+            {{/each}}
+        {{else}}
+            <b>No matching ruleset found for {{productCode}}</b>
+        {{/ifKeyExists}}
+        {{else}}
+            <b> No rules found</b>
+        {{/if}}
+    </td></tr>
+    </table>
+    </td>
 {{/each}}
 </table>
 </div>
+</div> 
 </div>
 {{/if}}
-</div> 
 
 {{#if product.serviceAssociation.services}}
 <h3>Services</h3>
