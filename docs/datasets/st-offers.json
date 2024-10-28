@@ -1,0 +1,300 @@
+{
+  "requestDate": "2024-10-03T06:08:36Z",
+  "durationMs": 52,
+  "dataType": "anz.eventresults.GetEligibleOffersResult",
+  "dataCount": 1,
+  "data": [
+    {
+      "modelType": "com.zafin.zplatform.anz.eventresults.GetEligibleOffersResult",
+      "eventStatus": "SUCCESS",
+      "listOfOffers": [
+        {
+          "modelType": "com.zafin.zplatform.anz.models.OfferDetailsTran",
+          "offerCode": "RMIG01",
+          "offerName": "Rewards Migration Campaign",
+          "offerDescription": "Rewards Migration test campaign to help facilitate end-to-end reward processing",
+          "offerCurrencyCode": "AUD",
+          "offerCategoryCode": "REF",
+          "offerType": "REFERRAL_OFFER",
+          "listOfProducts": [
+            {
+              "modelType": "com.zafin.zplatform.zrpe.models.ProductDetails",
+              "productCode": "TRANSACT01",
+              "productName": "ANZ Plus",
+              "productDescription": "Get an ANZ Plus account to help sort your spending",
+              "productClassification": "DEPOSIT",
+              "productType": "DEPOSIT",
+              "productCurrencyCode": "AUD"
+            },
+            {
+              "modelType": "com.zafin.zplatform.zrpe.models.ProductDetails",
+              "productCode": "SAVING01",
+              "productName": "ANZ Save",
+              "productDescription": "Get an ANZ Save account to help smash your savings goals",
+              "productClassification": "DEPOSIT",
+              "productType": "DEPOSIT",
+              "productCurrencyCode": "AUD"
+            }
+          ],
+          "marketingreferral": {
+            "modelType": "com.zafin.zplatform.anz.eventresults.GetMarketingReferralOfferDetailsResult",
+            "eventStatus": "SUCCESS",
+            "marketingReferralOffers": [
+              {
+                "modelType": "com.zafin.zplatform.anz.models.MarketingReferralOfferTran",
+                "offerDefinitionDetails": {
+                  "modelType": "com.zafin.zplatform.anz.models.OfferDefinitionTran",
+                  "name": "Rewards Migration Campaign",
+                  "description": "Rewards Migration test campaign to help facilitate end-to-end reward processing",
+                  "code": "RMIG01",
+                  "offerStartDate": "2024-03-25",
+                  "offerEndDate": "2024-10-04",
+                  "offerCurrency": {
+                    "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                    "name": "Australian Dollar",
+                    "description": "Australian Dollar Currency",
+                    "code": "AUD"
+                  },
+                  "offerCategory": {
+                    "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                    "name": "Referral",
+                    "code": "REF"
+                  },
+                  "offerAccounts": {
+                    "modelType": "com.zafin.zplatform.anz.models.OfferAccountTran",
+                    "selectionCriteriaBasedOnOpenDate": "OLDEST_ACCOUNT",
+                    "sameDateSelectionCriteria": "FIRST_ACCOUNT_NUMBER",
+                    "productsInScope": [
+                      {
+                        "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                        "name": "ANZ Plus",
+                        "description": "Get an ANZ Plus account to help sort your spending",
+                        "code": "TRANSACT01"
+                      },
+                      {
+                        "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                        "name": "ANZ Save",
+                        "description": "Get an ANZ Save account to help smash your savings goals",
+                        "code": "SAVING01"
+                      }
+                    ],
+                    "accountFilters": {
+                      "modelType": "com.zafin.zplatform.anz.models.AccountFilterTran",
+                      "accountsOpenedOnOrAfter": "2021-07-19",
+                      "includeJointAccounts": false,
+                      "terminateOnOwnershipChange": false
+                    }
+                  },
+                  "reward": {
+                    "modelType": "com.zafin.zplatform.anz.models.RewardTran",
+                    "fromDate": "2024-03-25",
+                    "toDate": "9999-01-01",
+                    "refereeRewards": [
+                      {
+                        "modelType": "com.zafin.zplatform.anz.models.CashBonusRewardsTran",
+                        "name": "Conditions for Referee",
+                        "code": "REF_CON",
+                        "assessedAt": "PERIOD_END",
+                        "conditionToBeMet": "ALL",
+                        "rewardConditions": [
+                          {
+                            "modelType": "com.zafin.zplatform.anz.models.OneTimeRewardConditionTran",
+                            "name": "One time Reward for Referee",
+                            "description": "One time Reward for Referee",
+                            "code": "ONE_REW",
+                            "monitoringStart": {
+                              "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                              "name": "OFFER_ENROLLMENT_DATE",
+                              "code": "OFFER_ENROLLMENT_DATE"
+                            },
+                            "monitoringEnd": {
+                              "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                              "name": "NUMBER_OF_DAYS_AFTER_MONITORING_START",
+                              "code": "NUMBER_OF_DAYS_AFTER_MONITORING_START"
+                            },
+                            "daysAfterMonitoringStart": 365,
+                            "period": 0,
+                            "logicalOperator": "AND",
+                            "monitoringActivities": [
+                              {
+                                "modelType": "com.zafin.zplatform.anz.models.MonitoringActivitiesTran",
+                                "name": "Referee Activity Monitored",
+                                "description": "Referee Activity Monitored",
+                                "code": "REF_ACT",
+                                "logicalOperator": "OR",
+                                "ruleConfiguration": {
+                                  "modelType": "com.zafin.zplatform.anz.models.RuleConfigurationTran",
+                                  "accountSelection": "ENROLLED_ACCOUNTS",
+                                  "ruleModels": [
+                                    {
+                                      "modelType": "com.zafin.zplatform.anz.models.RuleModelTran",
+                                      "name": "\tCount for Card Transactions",
+                                      "code": "CD_TXN_COUNT",
+                                      "logicalOperator": "AND",
+                                      "attributeName": "CountCardTransactions",
+                                      "value": [
+                                        {
+                                          "modelType": "com.zafin.zplatform.anz.models.ValueModelTran",
+                                          "dataType": "Number",
+                                          "dataValue": "3",
+                                          "relationalOperator": "GREATERTHAN_EQUAL"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "modelType": "com.zafin.zplatform.anz.models.RuleModelTran",
+                                      "name": "Count for Virtual Goal Transfers",
+                                      "code": "VIRTUAL_GOAL",
+                                      "logicalOperator": "AND",
+                                      "attributeName": "Virtual Goal Transfer Count",
+                                      "value": [
+                                        {
+                                          "modelType": "com.zafin.zplatform.anz.models.ValueModelTran",
+                                          "dataType": "Number",
+                                          "dataValue": "1",
+                                          "relationalOperator": "GREATERTHAN_EQUAL"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "modelType": "com.zafin.zplatform.anz.models.RuleModelTran",
+                                      "name": "Products",
+                                      "code": "PRD",
+                                      "logicalOperator": "AND",
+                                      "attributeName": "Products",
+                                      "value": [
+                                        {
+                                          "modelType": "com.zafin.zplatform.anz.models.ValueModelTran",
+                                          "dataType": "String",
+                                          "dataValue": "TRANSACT01",
+                                          "relationalOperator": "MATCHES"
+                                        },
+                                        {
+                                          "modelType": "com.zafin.zplatform.anz.models.ValueModelTran",
+                                          "dataType": "String",
+                                          "dataValue": "SAVING01",
+                                          "relationalOperator": "MATCHES"
+                                        }
+                                      ],
+                                      "decisionModels": [
+                                        {
+                                          "modelType": "com.zafin.zplatform.anz.models.DecisionModelTran",
+                                          "name": "Joint Account Options",
+                                          "logicalOperator": "AND",
+                                          "value": [
+                                            {
+                                              "modelType": "com.zafin.zplatform.anz.models.ValueModelTran",
+                                              "dataType": "String",
+                                              "dataValue": "ACCOUNT_OWNER_ONLY",
+                                              "relationalOperator": "EQUAL"
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        ],
+                        "calculation": {
+                          "modelType": "com.zafin.zplatform.anz.models.SimpleCalculationTran",
+                          "fromDate": "2024-03-25",
+                          "toDate": "9999-01-01",
+                          "cashBonus": "1.0000"
+                        },
+                        "payout": {
+                          "modelType": "com.zafin.zplatform.anz.models.PayoutTran",
+                          "payoutTo": "SELECTED_ACCOUNT",
+                          "accountStatusFilter": false,
+                          "accountSelection": "ALL_ACCOUNTS_OF_CUSTOMER",
+                          "includeAllJointAccounts": false,
+                          "determinePayoutAccountAtEnrollementTime": false,
+                          "applicableProductCode": [
+                            {
+                              "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                              "code": "TRANSACT01"
+                            }
+                          ],
+                          "payoutType": "IMMEDIATE",
+                          "accountSelectionRules": [
+                            {
+                              "modelType": "com.zafin.zplatform.anz.models.AccountAgeBasedRulesTran",
+                              "accountAgeBased": "OLDEST_ACCOUNT"
+                            }
+                          ],
+                          "periodBased": "CALENDAR"
+                        }
+                      }
+                    ],
+                    "referrerReward": [
+                      {
+                        "modelType": "com.zafin.zplatform.anz.models.ReferrerRewardsTran",
+                        "name": "Referrer Reward",
+                        "description": "Referrer Reward",
+                        "code": "REF_REWD",
+                        "selectReferrerExistingRefereeRewardCondition": true,
+                        "assessedAt": "PERIOD_END",
+                        "refereeRewardSelection": [
+                          {
+                            "modelType": "com.zafin.zplatform.anz.models.RefereeRewardSelectionTran",
+                            "name": "Conditions for Referee",
+                            "code": "REF_CON",
+                            "selectReward": true
+                          }
+                        ],
+                        "calculation": {
+                          "modelType": "com.zafin.zplatform.anz.models.SimpleCalculationTran",
+                          "fromDate": "2024-03-25",
+                          "toDate": "9999-01-01",
+                          "cashBonus": "1.0000"
+                        },
+                        "referrerPayout": {
+                          "modelType": "com.zafin.zplatform.anz.models.ReferrerPayoutTran",
+                          "includeAllJointAccounts": false,
+                          "determinePayoutAccountAtEnrollmentTime": false,
+                          "accountStatusFilter": false,
+                          "applicableProductCode": [
+                            {
+                              "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                              "code": "TRANSACT01"
+                            }
+                          ],
+                          "accountSelectionRules": [
+                            {
+                              "modelType": "com.zafin.zplatform.anz.models.AccountAgeBasedRulesTran",
+                              "accountAgeBased": "OLDEST_ACCOUNT"
+                            }
+                          ],
+                          "payoutType": "IMMEDIATE",
+                          "maxPayoutLimit": 5,
+                          "payoutLimitResetFrequency": "YEARLY_CALENDER"
+                        }
+                      }
+                    ]
+                  }
+                },
+                "offerConfiguration": {
+                  "modelType": "com.zafin.zplatform.anz.models.OfferConfigurationTran",
+                  "fromDate": "2024-03-25",
+                  "toDate": "9999-01-01",
+                  "financialParameters": {
+                    "modelType": "com.zafin.zplatform.anz.models.FinancialParameterTran",
+                    "generalLedger": {
+                      "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                      "name": "BSB/COS: 014111 CAGL: 9505419",
+                      "description": "Referral Offer",
+                      "code": "CAGL"
+                    }
+                  }
+                }
+              }
+            ],
+            "errorCode": 0
+          }
+        }
+      ]
+    }
+  ]
+}
