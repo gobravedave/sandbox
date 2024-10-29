@@ -1,0 +1,37 @@
+{{!log 'offer name partial' this}}
+<div>
+<h2>({{place}}) {{offer.offerName}} as at {{formatDate asofDate}}</h2>
+<table>
+<tr>
+    <th>Code</th>
+    <th>Description</th>
+    <th>Offer Type</th>
+    <th>Offer Category</th>
+</tr>
+<tr>
+    <td>{{offer.offerCode}}</td>
+    <td>{{offer.offerDescription}}</td>
+    <td>{{offer.offerType}}</td>
+    <td>{{offer.offerCategoryCode}}</td>
+</tr>
+</table>
+<h3>List of Products</h3>
+<div class="content">
+    <table>
+    <tr>
+    <th>Product</th>    
+    <th>Type</th>    
+    <th>Classification</th>    
+    <th>Description</th>    
+    </tr>
+    {{#each offer.listOfProducts}}
+    <tr>
+    <td>{{productName}} ({{productCode}})</td>    
+    <td>{{productType}}</td>    
+    <td>{{productClassification}}</td>    
+    <td>{{productDescription}}</td>    
+    </tr>
+    {{/each}}
+</table>
+</div>
+</div>

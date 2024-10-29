@@ -1,0 +1,14 @@
+{
+  "requestDate": "2024-10-03T06:08:36Z",
+  "durationMs": 52,
+  "dataType": "anz.eventresults.GetEligibleOffersResult",
+  "dataCount": 1,
+  "data": [
+    {
+      "modelType": "com.zafin.zplatform.anz.eventresults.GetEligibleOffersResult",
+      "eventStatus": "SUCCESS",
+      "listOfOffers": [
+      ]
+    }
+  ]
+}

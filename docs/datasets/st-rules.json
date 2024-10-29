@@ -490,7 +490,7 @@
           "modelType": "com.zafin.zplatform.anz.models.AssociatedToTran",
           "name": "ANZ Save Grow Balance Qualifier",
           "description": "ANZ Save Grow Balance Qualifier",
-          "code": "OFFSET01",
+          "code": "QUALIFIERPILOT01",
           "associationStartDate": "2024-05-23T00:00:00Z",
           "associationEndDate": "9999-12-31T23:59:59Z",
           "associationModelType": "RATE_BASED_OFFER",

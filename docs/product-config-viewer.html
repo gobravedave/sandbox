@@ -33,6 +33,7 @@
     Promise.all([
       loadPartial('product-name-template', 'hbs/product-name.hbs'),
       loadPartial('ruleset-name-template', 'hbs/ruleset-name.hbs'),
+      loadPartial('offer-name-template', 'hbs/offer-name.hbs'),
       loadPartial('eligibility-template', 'hbs/eligibility.hbs'),
       loadPartial('eligibility-rules-template', 'hbs/eligibility-rules.hbs'),
       loadPartial('deposit-product-config-template', 'hbs/deposit-product-config.hbs'),
@@ -45,6 +46,7 @@
       loadPartial('lending-product-rateplan-template', 'hbs/lending-product-rateplan.hbs'), 
       loadPartial('ratebased-offer-template', 'hbs/ratebased-offer.hbs'),
       loadPartial('ruleset-template', 'hbs/ruleset.hbs'),
+      loadPartial('offer-template', 'hbs/offer.hbs'),
       loadPartial('services-template', 'hbs/services.hbs'),
       loadPartial('rategrid-template', 'hbs/rategrid.hbs'), 
       loadPartial('entitlements-template', 'hbs/entitlements.hbs'), 
@@ -61,11 +63,11 @@
     // let selectedRightProduct = null;
 
     const BANKS = {
-      prod: { name: 'Prod', json: ['datasets/prod-product.json', 'datasets/prod-rules.json']},
-      preprod: { name: 'Pre-Prod', json: ['datasets/preprod-product.json', 'datasets/preprod-rules.json']},
-      sitk: { name: 'SIT-K', json: ['datasets/sitk-product.json', 'datasets/sitk-rules.json']},
-      sitl: { name: 'SIT-L', json: ['datasets/sitl-product.json', 'datasets/sitl-rules.json']},
-      st: { name: 'ST', json: ['datasets/st-product.json', 'datasets/st-rules.json']},
+      prod: { name: 'Prod', json: ['datasets/prod-product.json', 'datasets/prod-rules.json', 'datasets/prod-offers.json']},
+      preprod: { name: 'Pre-Prod', json: ['datasets/preprod-product.json', 'datasets/preprod-rules.json', 'datasets/preprod-offers.json']},
+      sitk: { name: 'SIT-K', json: ['datasets/sitk-product.json', 'datasets/sitk-rules.json', 'datasets/sitk-offers.json']},
+      sitl: { name: 'SIT-L', json: ['datasets/sitl-product.json', 'datasets/sitl-rules.json', 'datasets/sitl-offers.json']},
+      st: { name: 'ST', json: ['datasets/st-product.json', 'datasets/st-rules.json', 'datasets/st-offers.json']},
     }
     let savedBankId
 
@@ -86,7 +88,7 @@
         name: 'RuleSets',
       },
       OFFER: {
-        name: 'Offers (tbd)',
+        name: 'Offers',
       },
     }
 
@@ -98,6 +100,7 @@
     async function getProducts(bank) {
       let productJsonUrl = bank.json[0]; // Product JSON file
       let ruleJsonUrl = bank.json[1]; // Rule JSON file, if any
+      let offerJsonUrl = bank.json[2]; // Offer JSON file, if any
 
       try {
         logToConsole(`Getting products for ${bank.name}`);
@@ -111,20 +114,28 @@
           ruleData = await ruleResponse.json();
         }
 
+        let offerData = [];
+        if (offerJsonUrl) {
+          logToConsole(`Getting offers for ${bank.name}`);
+          let offerResponse = await fetch(offerJsonUrl);
+          offerData = await offerResponse.json();
+        }
+
         const res = {
         asofDate: productData.requestDate || null,
         products: productData.data[0].productDetails,
-        rules: ruleData.data[0].associatedTo // Assuming rules structure
+        rules: ruleData.data[0].associatedTo, // Assuming rules structure
+        offers: offerData.data[0].listOfOffers // Assuming offer structure
         }
       return res;
       }
       catch (err) {
       logToConsole(`Error getting data for ${bank.name}`);
-      return { asofDate: null, products: [], rules: [] };
+      return { asofDate: null, products: [], rules: [], offers: [] };
       }
   }
 
-    function processProducts(products, rules) {
+    function processProducts(products, rules, offers) {
       const byCategory = {};
 
       // Initialize categories in byCategory object
@@ -163,6 +174,23 @@
         } 
       });
 
+      offers.forEach((o) => {
+        category = "OFFER"; // or the key you're using
+
+        // Ensure the category exists in the PRODUCTS object
+        if (category && PRODUCTS[category]) {
+          // Increment the offer count
+          byCategory[category].count++;
+          // Add the offer to the offer array for the category
+          if(byCategory[category].products) {
+            byCategory[category].products.push(o);
+          } else {
+            byCategory[category].products = [o];
+          }
+        } 
+      });
+
+
       return byCategory;
     }
 
@@ -200,6 +228,8 @@
       details = BANKS[savedBankId].productsRaw.find(prod => prod.productCode === id);
     } else if (type === 'ruleset') {
       details = BANKS[savedBankId].rulesRaw.find(rule => rule.code === id);
+    }  else if (type === 'offer') {
+      details = BANKS[savedBankId].offersRaw.find(offer => offer.offerCode === id);
     }
 
     if (details) {
@@ -339,13 +369,14 @@
           }
         }
 
-        const { asofDate, products, rules } = await getProducts(bank)
+        const { asofDate, products, rules, offers } = await getProducts(bank)
         BANKS[bank.id].asofDate = asofDate
         BANKS[bank.id].productsRaw = products
         BANKS[bank.id].rulesRaw = rules
+        BANKS[bank.id].offersRaw = offers
 
         // add banks product count and list to PRODUCTS
-        const byCategory = processProducts(products, rules)
+        const byCategory = processProducts(products, rules, offers)
         for (let prodCat in PRODUCTS) {
           PRODUCTS[prodCat].banks[bank.id].count = byCategory[prodCat].count
           PRODUCTS[prodCat].banks[bank.id].products = byCategory[prodCat].products
@@ -403,11 +434,11 @@
       
       let $ruleNames = document.querySelectorAll('.rule-name')
       for (let $ruleName of $ruleNames) {
-        // clicking on product name will show product details
+        // clicking on ruleset name will show ruleset details
         $ruleName.addEventListener('click', async function (e) {
           let { bankId, ruleCode } = e.target.dataset
           savedBankId = bankId
-          document.getElementById('product-details').innerHTML = '<div id="product-details-content">Fetching rule details...<span id="product-details-close">&times;</span></div>'
+          document.getElementById('product-details').innerHTML = '<div id="product-details-content">Fetching ruleset details...<span id="product-details-close">&times;</span></div>'
           document.getElementById('product-details').style.display = 'block'
           document.getElementById('product-details-close').addEventListener('click', function (e) {
             document.getElementById('product-details').style.display = 'none'
@@ -421,7 +452,37 @@
 
           if (ruleDetails) {
             document.getElementById('product-details').innerHTML = productDetailsTpl({asofDate: BANKS[bankId].asofDate, place: BANKS[bankId].name, ruleset: ruleDetails});
-            // console.log(productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate, place: BANKS[bankId].name }))
+          } else {
+            document.getElementById('product-details').innerHTML = `<div id="product-details-content">Rule details not found.<span id="product-details-close">&times;</span></div>`;
+          }
+
+          document.getElementById('product-details-close').addEventListener('click', function (e) {
+            document.getElementById('product-details').style.display = 'none'
+            document.getElementById('product-details').innerHTML = ''
+          })
+        })
+      }
+
+      let $offerNames = document.querySelectorAll('.offer-name')
+      for (let $offerName of $offerNames) {
+        // clicking on offer name will show offer details
+        $offerName.addEventListener('click', async function (e) {
+          let { bankId, offerCode } = e.target.dataset
+          savedBankId = bankId
+          document.getElementById('product-details').innerHTML = '<div id="product-details-content">Fetching offer details...<span id="product-details-close">&times;</span></div>'
+          document.getElementById('product-details').style.display = 'block'
+          document.getElementById('product-details-close').addEventListener('click', function (e) {
+            document.getElementById('product-details').style.display = 'none'
+            document.getElementById('product-details').innerHTML = ''
+          })
+
+          let offerDetails = BANKS[bankId].offersRaw.find(offer => offer.offerCode === offerCode);
+          console.log({offerDetails})
+
+          // Compile the main offer template
+
+          if (offerDetails) {
+            document.getElementById('product-details').innerHTML = productDetailsTpl({asofDate: BANKS[bankId].asofDate, place: BANKS[bankId].name, offer: offerDetails});
           } else {
             document.getElementById('product-details').innerHTML = `<div id="product-details-content">Rule details not found.<span id="product-details-close">&times;</span></div>`;
           }
@@ -469,10 +530,12 @@
 <!-- Main Product Template -->
 <script id="product-details-template" type="text/x-handlebars-template">
 <div id="product-details-content">
-    {{log 'product details' this}}
+    {{!log 'details template' this}}
     <!-- <button id="diagram-btn" onclick="toggleDiagram( '{{product.productCode}}')" >Show Diagram</button> -->
     {{#if product.productCode}}
       <button id="json-btn" onclick="toggleJson('product', '{{product.productCode}}')">Show JSON</button>
+    {{else if offer.offerCode}}
+      <button id="json-btn" onclick="toggleJson('offer', '{{offer.offerCode}}')">Show JSON</button>
     {{else}}
       <button id="json-btn" onclick="toggleJson('ruleset', '{{ruleset.code}}')">Show JSON</button>
     {{/if}}
@@ -494,6 +557,11 @@
     <div class="content">
     {{> ruleset-template}}
     </div>
+
+  {{else if offer}}  
+  <h2>Offer</h2>
+    {{> offer-name-template}}
+    {{> offer-template}}
 
   {{else}}
     {{> product-name-template}}
@@ -599,6 +667,7 @@
 </script>
 
   <script id="products-list-template" type="text/x-handlebars-template">
+    {{!log 'list template' this}}
     <table style="width: 100%">
       <tr>
         <th>Environment</th>
@@ -623,6 +692,8 @@
                     <td>
                     {{#if this.productCode}}
                       <button class="product-name" data-bank-id="{{../bankId}}" data-product-code="{{this.productCode}}" title="{{this.productDescription}}">{{this.productName}}</button>
+                    {{else if this.offerCode}}
+                      <button class="offer-name" data-bank-id="{{../bankId}}" data-offer-code="{{this.offerCode}}" title="{{this.offerDescription}}">{{this.offerName}}</button>
                     {{else}}
                       <button class="rule-name" data-bank-id="{{../bankId}}" data-rule-code="{{this.code}}" title="{{this.description}}">{{this.name}}</button>
                     {{/if}}
