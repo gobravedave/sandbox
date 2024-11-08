@@ -13,16 +13,16 @@ style="table-layout: fixed; width: 100%;">
 <thead class="thead-dark">
     <tr>
     {{#if row.[0].rate}}
-        <th data-field="rate" data-sortable="true" data-filter-control="input" style="width: 100px; max-width: 100px;" title="Rate">Rate</th>
+        <th data-field="rate" data-sortable="true" data-filter-control="select" style="width: 100px; max-width: 100px;" title="Rate">Rate</th>
     {{/if}}
     {{#if row.[0].adjustment}}
-        <th data-field="adjustment" data-sortable="true" data-filter-control="input" style="width: 100px; max-width: 100px;" title="Adjustment">Adjustment</th>
+        <th data-field="adjustment" data-sortable="true" data-filter-control="select" style="width: 100px; max-width: 100px;" title="Adjustment">Adjustment</th>
     {{/if}}
     {{#if row.[0].comparisonRate}}
-        <th data-field="comparisonRate" data-sortable="true" data-filter-control="input" style="width: 100px; max-width: 100px;" title="Comparison Rate">Comparison Rate</th>
+        <th data-field="comparisonRate" data-sortable="true" data-filter-control="select" style="width: 100px; max-width: 100px;" title="Comparison Rate">Comparison Rate</th>
     {{/if}}
     {{#each row.[0].columns}}
-        <th data-field="{{name}}" data-sortable="true" data-filter-control="input" style="width: 100px; max-width: 100px;" title="{{name}} is {{operator}}">{{name}} is {{operator}}</th>
+        <th data-field="{{value}}" data-sortable="true" data-filter-control="select" style="width: 100px; max-width: 100px;" title="{{name}} is {{operator}}">{{name}} is {{operator}}</th>
     {{/each}}
     </tr>
 </thead>
