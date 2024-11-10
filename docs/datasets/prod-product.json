@@ -10,6 +10,314 @@
                 "productName": "ANZ Plus Home Loan Variable (prod)",
                 "productDescription": "ANZ Plus Home Loan Variable",
                 "productClassification": "MORTGAGE",
+                "productPricing": {
+                    "productPricingTier": [
+                        {
+                        "code": "HLVAR01-BASE-PRICE",
+                        "name": "HLVAR01-BASE-TIER-PRICING",
+                        "description": "Base Pricing Plan for the ANZ Plus Home Loan Variable product",
+                        "tierRatePlan": {
+                            "code": "HLVAR01-BASE-TIER-RATE",
+                            "name": "HLVAR01-BASE-TIER-RATE",
+                            "description": "Fee Plan associated with the Base Pricing Tier",
+                            "lendingRates": [
+                            {
+                            "lendingRateType": "VARIABLE",
+                            "rate": "0.0864",
+                            "calculationFrequency": "P1D",
+                            "applicationFrequency": "P1M",
+                            "interestPaymentDue": "IN_ARREARS",
+                            "repaymentType": "PRINCIPAL_AND_INTEREST",
+                            "loanPurpose": "OWNER_OCCUPIED",
+                            "additionalValue": "",
+                            "additionalInfo": "Principal and Interest, Owner Occupied, Index Rate",
+                            "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+                            },
+                            {
+                            "lendingRateType": "VARIABLE",
+                            "rate": "0.0614",
+                            "comparisonRate": "0.0615",
+                            "calculationFrequency": "P1D",
+                            "applicationFrequency": "P1M",
+                            "interestPaymentDue": "IN_ARREARS",
+                            "repaymentType": "PRINCIPAL_AND_INTEREST",
+                            "loanPurpose": "OWNER_OCCUPIED",
+                            "additionalInfo": "Principal and Interest, Owner Occupied, Discounted Rate",
+                            "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+                            }
+                          ]      
+                        },
+                        "tierFeePlan": {
+                        "code": "HLVAR01-BASE-TIER-FEE",
+                        "name": "HLVAR01-BASE-TIER-FEES",
+                        "description": "Fee Plan associated with the Base Pricing Tier",
+                        "fees": [
+                            {
+                            "name": "LATE PAYMENT FEE",
+                            "feeType": "EVENT",
+                            "amount": "20.00",
+                            "currency": "AUD",
+                            "additionalInfo": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears."
+                            },
+                            {
+                            "name": "ANZ LOAN DISCHARGE FEE",
+                            "feeType": "EVENT",
+                            "amount": "350.00",
+                            "currency": "AUD",
+                            "additionalInfo": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required."
+                            },
+                            {
+                            "name": "PRODUCTION FEE",
+                            "feeType": "EVENT",
+                            "amount": "150.00",
+                            "currency": "AUD",
+                            "additionalInfo": "This fee is payable each time ANZ produce title documents for you (in person, electronically or another way) on your request."
+                            },
+                            {
+                            "name": "REGISTRATION OF MORTGAGE",
+                            "feeType": "VARIABLE",
+                            "currency": "AUD",
+                            "additionalInfo": "Payable to the government body when registering a mortgage over a property. Refer to the relevant state/territory revenue office for the amount."
+                            },
+                            {
+                            "name": "DISCHARGE OF MORTGAGE",
+                            "feeType": "VARIABLE",
+                            "currency": "AUD",
+                            "additionalInfo": "Payable to the government body when discharging an existing mortgage over a property. Refer to the relevant state/territory revenue office for the amount."
+                            }
+                          ]
+                        }
+                        },
+                        {
+                        "code": "HLVAR01-SPECIAL-PRICE",
+                        "name": "HLVAR01-SPECIAL-TIER-PRICING",
+                        "description": "Special Pricing Plan for the ANZ Plus Home Loan Variable product",
+                        "tierRatePlan": {
+                            "code": "HLVAR01-SPECIAL-TIER-RATE",
+                            "name": "HLVAR01-SPECIAL-TIER-RATE",
+                            "description": "Fee Plan associated with the Special Pricing Tier",
+                            "lendingRates": [
+                            {
+                            "lendingRateType": "VARIABLE",
+                            "rate": "0.0864",
+                            "calculationFrequency": "P1D",
+                            "applicationFrequency": "P1M",
+                            "interestPaymentDue": "IN_ARREARS",
+                            "repaymentType": "PRINCIPAL_AND_INTEREST",
+                            "loanPurpose": "OWNER_OCCUPIED",
+                            "additionalValue": "",
+                            "additionalInfo": "Principal and Interest, Owner Occupied, Index Rate",
+                            "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+                            },
+                            {
+                            "lendingRateType": "VARIABLE",
+                            "rate": "0.0614",
+                            "comparisonRate": "0.0615",
+                            "calculationFrequency": "P1D",
+                            "applicationFrequency": "P1M",
+                            "interestPaymentDue": "IN_ARREARS",
+                            "repaymentType": "PRINCIPAL_AND_INTEREST",
+                            "loanPurpose": "OWNER_OCCUPIED",
+                            "additionalInfo": "Principal and Interest, Owner Occupied, Discounted Rate",
+                            "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+                            }
+                            ]
+                        },
+                        "tierFeePlan": {
+                          "code": "HLVAR01-SPECIAL-TIER-FEE",
+                          "name": "HLVAR01-SPECIAL-TIER-FEES",
+                          "description": "Fee Plan associated with the Special Pricing Tier",
+                          "fees": [
+                            {
+                            "name": "LATE PAYMENT FEE",
+                            "feeType": "EVENT",
+                            "amount": "10.00",
+                            "currency": "AUD",
+                            "additionalInfo": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears."
+                            },
+                            {
+                            "name": "ANZ LOAN DISCHARGE FEE",
+                            "feeType": "EVENT",
+                            "amount": "300.00",
+                            "currency": "AUD",
+                            "additionalInfo": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required."
+                            },
+                            {
+                            "name": "PRODUCTION FEE",
+                            "feeType": "EVENT",
+                            "amount": "100.00",
+                            "currency": "AUD",
+                            "additionalInfo": "This fee is payable each time ANZ produce title documents for you (in person, electronically or another way) on your request."
+                            },
+                            {
+                            "name": "REGISTRATION OF MORTGAGE",
+                            "feeType": "VARIABLE",
+                            "currency": "AUD",
+                            "additionalInfo": "Payable to the government body when registering a mortgage over a property. Refer to the relevant state/territory revenue office for the amount."
+                            },
+                            {
+                            "name": "DISCHARGE OF MORTGAGE",
+                            "feeType": "VARIABLE",
+                            "currency": "AUD",
+                            "additionalInfo": "Payable to the government body when discharging an existing mortgage over a property. Refer to the relevant state/territory revenue office for the amount."
+                            }
+                            ]
+                        }
+                        },
+                        {
+                        "code": "HLVAR01-ULTIMATE-PRICE",
+                        "name": "HLVAR01-ULTIMATE-TIER-PRICING",
+                        "description": "Ultimate Pricing Plan for the ANZ Plus Home Loan Variable product",
+                        "tierRatePlan": {
+                            "code": "HLVAR01-ULTIMATE-TIER-RATE",
+                            "name": "HLVAR01-ULTIMATE-TIER-RATE",
+                            "description": "Fee Plan associated with the Ulitmate Pricing Tier",
+                            "lendingRates": [
+                                {
+                                "lendingRateType": "VARIABLE",
+                                "rate": "0.0864",
+                                "calculationFrequency": "P1D",
+                                "applicationFrequency": "P1M",
+                                "interestPaymentDue": "IN_ARREARS",
+                                "repaymentType": "PRINCIPAL_AND_INTEREST",
+                                "loanPurpose": "OWNER_OCCUPIED",
+                                "additionalValue": "",
+                                "additionalInfo": "Principal and Interest, Owner Occupied, Index Rate",
+                                "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+                                },
+                                {
+                                "lendingRateType": "VARIABLE",
+                                "rate": "0.0614",
+                                "comparisonRate": "0.0615",
+                                "calculationFrequency": "P1D",
+                                "applicationFrequency": "P1M",
+                                "interestPaymentDue": "IN_ARREARS",
+                                "repaymentType": "PRINCIPAL_AND_INTEREST",
+                                "loanPurpose": "OWNER_OCCUPIED",
+                                "additionalInfo": "Principal and Interest, Owner Occupied, Discounted Rate",
+                                "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+                                }
+                            ]
+                            },
+                        "tierFeePlan": {
+                              "code": "HLVAR01-ULTIMATE-TIER-FEE",
+                              "name": "HLVAR01-ULTIMATE-TIER-FEES",
+                              "description": "Fee Plan associated with the Base Pricing Tier",
+                              "fees": [
+                                  {
+                                    "name": "LATE PAYMENT FEE",
+                                    "feeType": "EVENT",
+                                    "amount": "20.00",
+                                    "currency": "AUD",
+                                    "additionalInfo": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears."
+                                  },
+                                  {
+                                    "name": "ANZ LOAN DISCHARGE FEE",
+                                    "feeType": "EVENT",
+                                    "amount": "350.00",
+                                    "currency": "AUD",
+                                    "additionalInfo": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required."
+                                  },
+                                  {
+                                    "name": "PRODUCTION FEE",
+                                    "feeType": "EVENT",
+                                    "amount": "150.00",
+                                    "currency": "AUD",
+                                    "additionalInfo": "This fee is payable each time ANZ produce title documents for you (in person, electronically or another way) on your request."
+                                  },
+                                  {
+                                    "name": "REGISTRATION OF MORTGAGE",
+                                    "feeType": "VARIABLE",
+                                    "currency": "AUD",
+                                    "additionalInfo": "Payable to the government body when registering a mortgage over a property. Refer to the relevant state/territory revenue office for the amount."
+                                  },
+                                  {
+                                    "name": "DISCHARGE OF MORTGAGE",
+                                    "feeType": "VARIABLE",
+                                    "currency": "AUD",
+                                    "additionalInfo": "Payable to the government body when discharging an existing mortgage over a property. Refer to the relevant state/territory revenue office for the amount."
+                                  }
+                                ]
+                            }
+                        },
+                        {
+                        "code": "HLVAR01-HARDSHIP-PRICE",
+                        "name": "HLVAR01-HARDSHIP-TIER-PRICING",
+                        "description": "Hardship Pricing Plan for the ANZ Plus Home Loan Variable product",
+                        "tierRatePlan": {
+                            "code": "HLVAR01-HARDSHIP-TIER-RATE",
+                            "name": "HLVAR01-HARDSHIP-TIER-RATE",
+                            "description": "Tier Plan associated with the Hardship Pricing Tier",
+                            "lendingRates": [
+                                {
+                                "lendingRateType": "VARIABLE",
+                                "rate": "0.0864",
+                                "calculationFrequency": "P1D",
+                                "applicationFrequency": "P1M",
+                                "interestPaymentDue": "IN_ARREARS",
+                                "repaymentType": "PRINCIPAL_AND_INTEREST",
+                                "loanPurpose": "OWNER_OCCUPIED",
+                                "additionalValue": "",
+                                "additionalInfo": "Principal and Interest, Owner Occupied, Index Rate",
+                                "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+                                },
+                                {
+                                "lendingRateType": "VARIABLE",
+                                "rate": "0.0614",
+                                "comparisonRate": "0.0615",
+                                "calculationFrequency": "P1D",
+                                "applicationFrequency": "P1M",
+                                "interestPaymentDue": "IN_ARREARS",
+                                "repaymentType": "PRINCIPAL_AND_INTEREST",
+                                "loanPurpose": "OWNER_OCCUPIED",
+                                "additionalInfo": "Principal and Interest, Owner Occupied, Discounted Rate",
+                                "additionalInfoUri": "https://www.anz.com.au/plus/digital-home-loans/"
+                                }
+                                ]              
+                                },
+                              "tierFeePlan": {
+                                "code": "HLVAR01-HARDSHIP-TIER-FEE",
+                                "name": "HLVAR01-HARDSHIP-TIER-FEES",
+                                "description": "Fee Plan associated with the Hardship Pricing Tier",
+                                "fees": [
+                                    {
+                                    "name": "LATE PAYMENT FEE",
+                                    "feeType": "EVENT",
+                                    "amount": "10.00",
+                                    "currency": "AUD",
+                                    "additionalInfo": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears."
+                                    },
+                                    {
+                                    "name": "ANZ LOAN DISCHARGE FEE",
+                                    "feeType": "EVENT",
+                                    "amount": "300.00",
+                                    "currency": "AUD",
+                                    "additionalInfo": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required."
+                                    },
+                                    {
+                                    "name": "PRODUCTION FEE",
+                                    "feeType": "EVENT",
+                                    "amount": "100.00",
+                                    "currency": "AUD",
+                                    "additionalInfo": "This fee is payable each time ANZ produce title documents for you (in person, electronically or another way) on your request."
+                                    },
+                                    {
+                                    "name": "REGISTRATION OF MORTGAGE",
+                                    "feeType": "VARIABLE",
+                                    "currency": "AUD",
+                                    "additionalInfo": "Payable to the government body when registering a mortgage over a property. Refer to the relevant state/territory revenue office for the amount."
+                                    },
+                                    {
+                                    "name": "DISCHARGE OF MORTGAGE",
+                                    "feeType": "VARIABLE",
+                                    "currency": "AUD",
+                                    "additionalInfo": "Payable to the government body when discharging an existing mortgage over a property. Refer to the relevant state/territory revenue office for the amount."
+                                    }
+                                  ]
+                                }
+                              }  
+                    ]
+                    },      
                 "productEligibilityDetails": {
                     "fromDate": "2021-07-16T00:00:00Z",
                     "toDate": "9999-01-01T23:59:59Z",

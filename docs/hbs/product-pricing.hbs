@@ -1,0 +1,53 @@
+{{log 'product pricing' this}}
+
+<div class="table_wrapper">
+<table id="{{uniqueTableId}}" class="table table-sm table-bordered"
+    data-toggle="table"
+    data-filter-control="true"
+    data-search="false"
+    data-show-columns="false"
+    data-pagination="true"
+    data-page-size="25"
+    data-page-length="25"
+    data-sortable="true"
+    data-show-loading="true">
+    <thead class="thead-dark">
+    <tr>
+    <th data-field="productCode" data-sortable="true" data-filter-control="select" title="Product">Product</th>
+    <th data-field="pricingTierType" data-sortable="true" data-filter-control="select" title="Pricing Tier Type" title="Pricing Tier Type">Tier Type</th>
+    <th data-field="pricingTierName" data-sortable="true" data-filter-control="select" title="Pricing Tier Name">Tier Name</th>
+    <th data-field="pricingItemType" data-sortable="true" data-filter-control="select" title="Pricing Item Type">Pricing Type</th>
+    <th data-field="pricingItemName" data-sortable="true" data-filter-control="select" title="Pricing Item Name">Name</th>
+    <th data-field="pricingItemRuleset" data-sortable="true" data-filter-control="select" title="Pricing Item Ruleset">Ruleset</th>
+    <th data-field="pricingItemValueType" data-sortable="true" data-filter-control="select" title="Pricing Item Value Type">Value Type</th>
+    <th data-field="pricingItemValue" data-sortable="true"   title="Pricing Value">Value</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each products}}
+        {{#each productPricing.productPricingTier}}
+            {{#each pricingTierItem}}
+            <tr>
+            <td>{{../../productCode}}</td>
+            <td>{{../pricingTierType}}</td>
+            <td>{{../pricingTierName}}</td>        
+            <td>{{pricingItemType}}</td>
+            <td>{{pricingItemName}}</td>
+            <td>{{pricingItemRuleset}}</td>
+            <td>{{pricingItemValueType}}</td>
+            <td>{{pricingItemValue}}</td>
+            </tr>
+            {{/each}}
+        {{/each}}
+    {{/each}}
+    </tbody>
+</table>
+{{initializeTable}}
+</div>
+
+
+
+
+
+  
+

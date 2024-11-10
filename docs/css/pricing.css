@@ -1,0 +1,143 @@
+body {
+  font-family: Arial;
+}
+
+h1, h2, h3, h4 {
+  padding-top: 12px;
+  cursor: pointer;
+  color: #371282;
+}
+.content {
+    display: block;
+    margin-left: 20px;
+}
+
+.table_wrapper{
+display: block;
+overflow-x: auto;
+white-space: nowrap;
+}
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-container > div {
+width: 300px;
+margin: 10px;
+padding: 10px;
+}
+
+/* Optional tooltip styling */
+.table th[title]:hover, 
+.table td[title]:hover {
+position: relative;
+cursor: pointer; /* Optional: add cursor pointer on hover */
+}
+
+.table th[title]:hover:after, 
+.table td[title]:hover:after {
+content: attr(title);
+position: absolute;
+background-color: #333;
+color: #fff;
+padding: 5px 10px;
+border-radius: 5px;
+white-space: nowrap;
+top: -30px; /* Position above the element */
+left: 50%; /* Center tooltip */
+transform: translateX(-50%);
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s ease;
+z-index: 1;
+}
+
+.table th[title]:hover:after, 
+.table td[title]:hover:after {
+opacity: 1;
+}
+
+.table th, .table td {
+  word-wrap: break-word;
+  white-space: normal !important; /* Allow text to wrap */;
+  width: 10px; /* Set this based on your requirement */
+  max-width: 100px;
+  overflow: hidden;
+  vertical-align: top;
+  text-overflow: ellipsis; /* Add ellipsis for overflow text */
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  background: #eee;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  /* text-align: center; */
+  text-align: top;
+  vertical-align: top;
+  font-size: 14px;
+}
+
+
+select {
+font-family: Arial, sans-serif;
+font-size: 14px;
+padding: 10px 15px;
+margin: 5px 0;
+border-radius: 5px;
+border: 1px solid #ccc;
+box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+background-color: #f7f7f7;
+cursor: pointer;
+transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+select:focus {
+outline: none;
+border-color: #007bff;
+box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+}
+
+select:hover {
+background-color: #eaeaea;
+}
+
+select:disabled {
+background-color: #e0e0e0;
+cursor: not-allowed;
+}
+
+select {
+width: auto;
+min-width: 100px;
+max-width: 100%;
+}
+
+button {
+  background-color: white;
+  color: #3949ab;
+  border: 1px solid #3949ab;
+  border-radius: 8px;
+  padding: 10px 20px;
+  transition-duration: 0.4s;
+}
+
+button[disabled]:hover {
+  background: red;
+}
+
+button:hover {
+background-color: #3949ab; /* purple */
+color: white;
+}
+
+.thead-dark th {
+  background: #eee;
+}
