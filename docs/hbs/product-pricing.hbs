@@ -1,23 +1,23 @@
-{{log 'product pricing' this}}
-
-<div class="table_wrapper">
-<table id="{{uniqueTableId}}" class="table table-sm table-bordered"
-    data-toggle="table"
-    data-filter-control="true"
-    data-search="false"
-    data-show-columns="false"
-    data-pagination="true"
-    data-page-size="25"
-    data-page-length="25"
-    data-sortable="true"
-    data-show-loading="true">
-    <thead class="thead-dark">
+{{!log 'product pricing' this}}
+<div class="table-responsive table_wrapper" style="overflow-x: auto;">
+<table id="product-pricing" class="table table-sm table-bordered"
+data-toggle="table"
+data-filter-control="true"
+data-search="false"
+data-show-columns="false"
+data-pagination="true"
+data-page-size="25"
+data-page-length="25"
+data-sortable="true"
+data-show-loading="true"
+style="table-layout: fixed; width: 100%;">
+<thead class="thead-dark">
     <tr>
     <th data-field="productCode" data-sortable="true" data-filter-control="select" title="Product">Product</th>
-    <th data-field="pricingTierType" data-sortable="true" data-filter-control="select" title="Pricing Tier Type" title="Pricing Tier Type">Tier Type</th>
-    <th data-field="pricingTierName" data-sortable="true" data-filter-control="select" title="Pricing Tier Name">Tier Name</th>
-    <th data-field="pricingItemType" data-sortable="true" data-filter-control="select" title="Pricing Item Type">Pricing Type</th>
-    <th data-field="pricingItemName" data-sortable="true" data-filter-control="select" title="Pricing Item Name">Name</th>
+    <th data-field="pricingTierType" data-sortable="true" data-filter-control="select" title="Pricing Tier Type" title="Tier Type">Pricing Tier Type</th>
+    <th data-field="pricingTierName" data-sortable="true" data-filter-control="select" title="Pricing Tier Name">Pricing Tier</th>
+    <th data-field="pricingItemType" data-sortable="true" data-filter-control="select" title="Pricing Item Type">Pricing Item Type</th>
+    <th data-field="pricingItemName" data-sortable="true" data-filter-control="select" title="Pricing Item Name">Pricing Item</th>
     <th data-field="pricingItemRuleset" data-sortable="true" data-filter-control="select" title="Pricing Item Ruleset">Ruleset</th>
     <th data-field="pricingItemValueType" data-sortable="true" data-filter-control="select" title="Pricing Item Value Type">Value Type</th>
     <th data-field="pricingItemValue" data-sortable="true"   title="Pricing Value">Value</th>
@@ -42,7 +42,6 @@
     {{/each}}
     </tbody>
 </table>
-{{initializeTable}}
 </div>
 
 
