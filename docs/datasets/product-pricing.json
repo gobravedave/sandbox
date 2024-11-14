@@ -2,7 +2,7 @@
     "requestDate": "2024-08-27T23:27:47Z",
     "dataCount": 1,
     "data": [
-        { 
+        {
         "eventStatus": "SUCCESS",
         "productDetails": [
             {
@@ -14,13 +14,14 @@
                     "productPricingTier": [
                         {
                         "pricingTierCode": "HLVAR01-BASE-PRICE",
-                        "pricingTierName": "BASE-CARDED-PRICE",
+                        "pricingTierName": "BASE CARDED PRICE",
+                        "pricingTierName": "BASE CARDED PRICE",
                         "pricingTierType": "CARDED-PRICE",
                         "pricingTierDescription": "Base Pricing Plan for the ANZ Plus Home Loan Variable product",
                         "pricingTierItem": [
                           {
                           "pricingItemCode": "HLVAR01-BASE-RATE",
-                          "pricingItemName": "HLVAR01-CARDED-RATE",
+                          "pricingItemName": "HLVAR01 OWNER-PI RATE",
                           "pricingItemType": "CARDED-LENDING-RATE",
                           "pricingItemDescription": "Variable Rate used for Owner Occupied, Principal & Interst type loans",
                           "pricingItemRuleset": "OWNER-PI-RULE",
@@ -29,7 +30,7 @@
                           },
                           {
                           "pricingItemCode": "HLVAR01-LATE-FEE",
-                          "pricingItemName": "BASE-LATE-FEE",
+                          "pricingItemName": "LATE FEE",
                           "pricingItemType": "CARDED-FEE",
                           "pricingItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
                           "pricingItemRuleset": "LATE-FEE-RULE",
@@ -38,7 +39,7 @@
                           },
                           {
                           "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                          "pricingItemName": "BASE DISCHARGE FEE",
+                          "pricingItemName": "DISCHARGE FEE",
                           "pricingItemType": "CARDED-FEE",
                           "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
                           "pricingItemRuleset": "",
@@ -46,43 +47,43 @@
                           "pricingItemValue": "$350"
                           },
                           {
-                            "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                            "pricingItemName": "BASE DISCHARGE FEE",
+                            "pricingItemCode": "HLVAR01-STAFF-DISCHARGE-FEE",
+                            "pricingItemName": "DISCHARGE FEE",
                             "pricingItemType": "NEGOTIATED-FEE",
                             "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
                             "pricingItemRuleset": "STAFF-RULE",
                             "pricingItemValueType": "DISCOUNTED AMOUNT",
                             "pricingItemValue": "$0"
-                            }  
+                            }
                           ]
                         },
                         {
                           "pricingTierCode": "HLVAR01-SPECIAL-PRICE",
-                          "pricingTierName": "SPECIAL-CARDED-PRICE",
+                          "pricingTierName": "SPECIAL CARDED PRICE",
                           "pricingTierType": "CARDED-PRICE",
                           "pricingTierDescription": "Special Pricing Plan for the ANZ Plus Home Loan Variable product",
                           "pricingTierItem": [
                             {
                             "pricingItemCode": "HLVAR01-SPECIAL-RATE",
-                            "pricingItemName": "SPECIAL-CARDED-RATE",
+                            "pricingItemName": "HLVAR01 OWNER-PI RATE",
                             "pricingItemType": "CARDED-LENDING-RATE",
-                            "pricingItemDescription": "Special Variable Rate used for Owner Occupied, Principal & Interst type loans",
-                            "pricingItemRuleset": "OWNER-PI-RULE",
+                            "pricingItemDescription": "Special Variable Rate used for Owner Occupied, Principal & Interest type loans",
+                            "pricingItemRuleset": "OWNER-PI-RATEGRID",
                             "pricingItemValueType": "DISCOUNT PERCENTAGE",
                             "pricingItemValue": "5%"
                             },
                             {
                             "pricingItemCode": "HLVAR01-LATE-FEE",
-                            "pricingItemName": "SPECIAL-LATE-FEE",
+                            "pricingItemName": "LATE FEE",
                             "pricingItemType": "CARDED-FEE",
                             "pricingItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
                             "pricingItemRuleset": "LATE-FEE-RULE",
                             "pricingItemValueType": "DISCOUNTED AMOUNT",
-                            "pricingItemValue": "$10.00"
+                            "pricingItemValue": "$10"
                             },
                             {
                             "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                            "pricingItemName": "SPECIAL-DISCHARGE-FEE",
+                            "pricingItemName": "DISCHARGE FEE",
                             "pricingItemType": "CARDED-FEE",
                             "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
                             "pricingItemRuleset": "",
@@ -93,13 +94,13 @@
                         },
                         {
                           "pricingTierCode": "HLVAR01-ULTIMATE-PRICE",
-                          "pricingTierName": "ULTIMATE-CARDED-PRICE",
+                          "pricingTierName": "ULTIMATE CARDED PRICE",
                           "pricingTierType": "CARDED-PRICE",
                           "pricingTierDescription": "Ultimate Pricing Plan for the ANZ Plus Home Loan Variable product",
                           "pricingTierItem": [
                             {
                             "pricingItemCode": "HLVAR01-ULTIMTE-RATE",
-                            "pricingItemName": "ULTIMATE-CARDED-RATE",
+                            "pricingItemName": "HLVAR01 OWNER-PI RATE",
                             "pricingItemType": "CARDED-LENDING-RATE",
                             "pricingItemDescription": "Ultimate Variable Rate used for Owner Occupied, Principal & Interst type loans",
                             "pricingItemRuleset": "OWNER-PI-RULE",
@@ -108,7 +109,7 @@
                             },
                             {
                               "pricingItemCode": "HLVAR01-LATE-FEE",
-                              "pricingItemName": "ULTIMATE-LATE-FEE",
+                              "pricingItemName": "LATE FEE",
                               "pricingItemType": "CARDED-FEE",
                               "pricingItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
                               "pricingItemRuleset": "LATE-FEE-RULE",
@@ -117,25 +118,26 @@
                               },
                               {
                               "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                              "pricingItemName": "ULTIMATE-DISCHARGE-FEE",
+                              "pricingItemName": "DISCHARGE FEE",
                               "pricingItemType": "CARDED-FEE",
                               "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
                               "pricingItemRuleset": "",
                               "pricingItemValueType": "DISCOUNTED AMOUNT",
                               "pricingItemValue": "$100"
                               }
-                            ]
+                          ]
                         },
                         {
                           "pricingTierCode": "HLVAR01-HARDSHIP-PRICE",
-                          "pricingTierName": "HARDSHIP-PRICE",
+                          "pricingTierName": "HARDSHIP PRICE",
+                          "pricingTierName": "HARDSHIP PRICE",
                           "pricingTierType": "NEGOTIATED-PRICE",
                           "pricingTierDescription": "Hardship Pricing Plan for the ANZ Plus Home Loan Variable product",
                           "pricingTierItem": [
                             {
                             "pricingItemCode": "HLVAR01-HARDSHIP-RATE",
-                            "pricingItemName": "HARDSHIP-CARDED-RATE",
-                            "pricingItemType": "HARDSHIP-LENDING-RATE",
+                            "pricingItemName": "HLVAR01 OWNER-PI RATE",
+                            "pricingItemType": "NEGOTIATED-LENDING-RATE",
                             "pricingItemDescription": "Hardship Variable Rate used for Owner Occupied, Principal & Interst type loans",
                             "pricingItemRuleset": "HARDSHIP-RULE",
                             "pricingItemValueType": "DISCOUNT PERCENTAGE",
@@ -143,7 +145,7 @@
                             },
                             {
                             "pricingItemCode": "HLVAR01-LATE-FEE",
-                            "pricingItemName": "HARDSHIP-LATE-FEE",
+                            "pricingItemName": "LATE FEE",
                             "pricingItemType": "NEGOTIATED-FEE",
                             "pricingItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
                             "pricingItemRuleset": "HARDSHIP-RULE",
@@ -152,25 +154,25 @@
                             },
                             {
                             "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                            "pricingItemName": "HARDSHIP-DISCHARGE-FEE",
+                            "pricingItemName": "DISCHARGE FEE",
                             "pricingItemType": "CARDED-FEE",
                             "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
                             "pricingItemRuleset": "HARDSHIP-RULE",
                             "pricingItemValueType": "DISCOUNTED AMOUNT",
                             "pricingItemValue": "$0"
                             }
-                            ]
+                          ]
                         },
                         {
                           "pricingTierCode": "HLVAR01-BROKER-PRICE",
-                          "pricingTierName": "BROKER-PRICE",
+                          "pricingTierName": "BROKER PRICE",
                           "pricingTierType": "NEGOTIATED-PRICE",
                           "pricingTierDescription": "Broker Pricing Plan for the ANZ Plus Home Loan Variable product",
                           "pricingTierItem": [
                             {
                             "pricingItemCode": "HLVAR01-BROKER-RATE",
-                            "pricingItemName": "BROKER-CARDED-RATE",
-                            "pricingItemType": "BROKER-LENDING-RATE",
+                            "pricingItemName": "HLVAR01 OWNER-PI RATE",
+                            "pricingItemType": "NEGOTIATED-LENDING-RATE",
                             "pricingItemDescription": "Broker Variable Rate used for Owner Occupied, Principal & Interst type loans",
                             "pricingItemRuleset": "BROKER-RULE",
                             "pricingItemValueType": "DISCOUNT PERCENTAGE",
@@ -178,7 +180,7 @@
                             },
                             {
                             "pricingItemCode": "HLVAR01-LATE-FEE",
-                            "pricingItemName": "BROKER-LATE-FEE",
+                            "pricingItemName": "LATE FEE",
                             "pricingItemType": "NEGOTIATED-FEE",
                             "pricingItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
                             "pricingItemRuleset": "BROKER-RULE",
@@ -187,25 +189,25 @@
                             },
                             {
                             "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                            "pricingItemName": "BROKER-DISCHARGE-FEE",
+                            "pricingItemName": "DISCHARGE FEE",
                             "pricingItemType": "NEGOTIATED-FEE",
                             "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
                             "pricingItemRuleset": "BROKER-RULE",
                             "pricingItemValueType": "DISCOUNTED AMOUNT",
                             "pricingItemValue": "$0"
                             }
-                            ]
+                          ]
                         },
                         {
                           "pricingTierCode": "HLVAR01-COACH-PRICE",
-                          "pricingTierName": "COACH-PRICE",
+                          "pricingTierName": "COACH PRICE",
                           "pricingTierType": "NEGOTIATED-PRICE",
                           "pricingTierDescription": "Coach Pricing Plan for the ANZ Plus Home Loan Variable product",
                           "pricingTierItem": [
                             {
                             "pricingItemCode": "HLVAR01-COACH-RATE",
-                            "pricingItemName": "COACH-CARDED-RATE",
-                            "pricingItemType": "COACH-LENDING-RATE",
+                            "pricingItemName": "HLVAR01 OWNER-PI RATE",
+                            "pricingItemType": "NEGOTIATED-LENDING-RATE",
                             "pricingItemDescription": "COACH Variable Rate used for Owner Occupied, Principal & Interst type loans",
                             "pricingItemRuleset": "COACH-RULE",
                             "pricingItemValueType": "DISCOUNT PERCENTAGE",
@@ -213,7 +215,7 @@
                             },
                             {
                             "pricingItemCode": "HLVAR01-LATE-FEE",
-                            "pricingItemName": "COACH-LATE-FEE",
+                            "pricingItemName": "LATE FEE",
                             "pricingItemType": "NEGOTIATED-FEE",
                             "pricingItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
                             "pricingItemRuleset": "COACH-RULE",
@@ -222,17 +224,17 @@
                             },
                             {
                             "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                            "pricingItemName": "COACH-DISCHARGE-FEE",
+                            "pricingItemName": "DISCHARGE FEE",
                             "pricingItemType": "NEGOTIATED-FEE",
                             "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
                             "pricingItemRuleset": "COACH-RULE",
                             "pricingItemValueType": "DISCOUNTED AMOUNT",
                             "pricingItemValue": "$0"
                             }
-                            ]
+                          ]
                         }
                         ]
-                      }  
+                      }
             },
             {
               "productCode": "SAVING01",
@@ -243,18 +245,28 @@
                   "productPricingTier": [
                       {
                       "pricingTierCode": "SAVING01-BASE-PRICE",
-                      "pricingTierName": "BASE-CARDED-PRICE",
+                      "pricingTierName": "BASE CARDED PRICE",
                       "pricingTierType": "CARDED-PRICE",
                       "pricingTierDescription": "Base Pricing Plan for the ANZ Save",
                       "pricingTierItem": [
                         {
-                        "pricingItemCode": "SAVING01-BASE-RATE",
-                        "pricingItemName": "SAVING01-CARDED-RATE",
+                        "pricingItemCode": "SAVING01-BASE-BONUS-RATE",
+                        "pricingItemName": "TIER1 BASE RATE",
                         "pricingItemType": "CARDED-DEPOSIT-RATE",
                         "pricingItemDescription": "Grow $100 by last business day of month",
-                        "pricingItemRuleset": "grow your balance rule",
+                        "pricingItemRuleset": "BALANCE-GROW-RULE",
+                        "pricingItemRuleset": "BALANCE-GROW-RULE",
                         "pricingItemValueType": "PERCENTAGE",
                         "pricingItemValue": "4.5%"
+                        },
+                        {
+                        "pricingItemCode": "SAVING01-BASE-RATE",
+                        "pricingItemName": "TIER1 BASE RATE",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "Base Rate applied",
+                        "pricingItemRuleset": "BALANCE-NOT-GROW-RULE",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "0.5%"
                         }
                       ]
                     }
@@ -262,6 +274,6 @@
                 }
             }
           ]
-        }
+        }s
     ]
 }
