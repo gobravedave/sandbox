@@ -287,7 +287,7 @@
                         "pricingItemCode": "SAVING01-BASE-IMT-IN-FEE",
                         "pricingItemName": "IMT-In Fee",
                         "pricingItemType": "CARDED-FEE",
-                        "pricingItemDescription": "Iinternational Inward Money Transfer Fee",
+                        "pricingItemDescription": "International Inward Money Transfer Fee",
                         "pricingItemRuleset": "IMT-FEE-RULE",
                         "pricingItemValueType": "AMOUNT",
                         "pricingItemValue": "$15"
@@ -332,7 +332,7 @@
                           "pricingItemCode": "SAVING02-BASE-IMT-IN-FEE",
                           "pricingItemName": "IMT-In Fee",
                           "pricingItemType": "CARDED-FEE",
-                          "pricingItemDescription": "Iinternational Inward Money Transfer Fee",
+                          "pricingItemDescription": "International Inward Money Transfer Fee",
                           "pricingItemRuleset": "IMT-FEE-RULE",
                           "pricingItemValueType": "AMOUNT",
                           "pricingItemValue": "$15"
@@ -342,6 +342,52 @@
                   ]
                 }
             },
+            {
+              "productCode": "CREDITCARD01",
+              "productName": "ANZ Plus Credit Card",
+              "productDescription": "ANZ Plus Credit Card",
+              "productClassification": "CREDIT_CARD",
+              "productPricing": {
+                  "productPricingTier": [
+                      {
+                      "pricingTierCode": "CREDITCARD01-BASE-PRICE",
+                      "pricingTierName": "Base Price",
+                      "pricingTierType": "CARDED-PRICE",
+                      "pricingTierDescription": "Base Pricing Plan for the ANZ Plus Credit Card",
+                      "pricingTierItem": [
+                        {
+                        "pricingItemCode": "CREDITCARD01-BASE-PURCHASE-RATE",
+                        "pricingItemName": "Purchase Rate",
+                        "pricingItemType": "CARDED-LENDING-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "20.99%"
+                        },
+                        {
+                        "pricingItemCode": "CREDITCARD01-CASHADVANCE-RATE",
+                        "pricingItemName": "Cash Advance Rate",
+                        "pricingItemType": "CARDED-LENDING-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "21.99%"
+                        },
+                        {
+                        "pricingItemCode": "CREDITCARD01-BASE-IMT-IN-FEE",
+                        "pricingItemName": "Overlimit Fee",
+                        "pricingItemType": "CARDED-FEE",
+                        "pricingItemDescription": "Overlimit Fee",
+                        "pricingItemRuleset": "",
+                        "pricingItemValueType": "AMOUNT",
+                        "pricingItemValue": "$20"
+                        }
+                      ]
+                    }
+                  ]
+                }
+            },
+
             {
               "productCode": "TDTEST01",
               "productName": "Test Term Deposit Product",
