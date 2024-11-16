@@ -14,8 +14,7 @@
                     "productPricingTier": [
                         {
                         "pricingTierCode": "HLVAR01-BASE-PRICE",
-                        "pricingTierName": "BASE CARDED PRICE",
-                        "pricingTierName": "BASE CARDED PRICE",
+                        "pricingTierName": "Base Price",
                         "pricingTierType": "CARDED-PRICE",
                         "pricingTierDescription": "Base Pricing Plan for the ANZ Plus Home Loan Variable product",
                         "pricingTierItem": [
@@ -59,7 +58,7 @@
                         },
                         {
                           "pricingTierCode": "HLVAR01-SPECIAL-PRICE",
-                          "pricingTierName": "SPECIAL CARDED PRICE",
+                          "pricingTierName": "Special Price",
                           "pricingTierType": "CARDED-PRICE",
                           "pricingTierDescription": "Special Pricing Plan for the ANZ Plus Home Loan Variable product",
                           "pricingTierItem": [
@@ -94,7 +93,7 @@
                         },
                         {
                           "pricingTierCode": "HLVAR01-ULTIMATE-PRICE",
-                          "pricingTierName": "ULTIMATE CARDED PRICE",
+                          "pricingTierName": "Ultimate Price",
                           "pricingTierType": "CARDED-PRICE",
                           "pricingTierDescription": "Ultimate Pricing Plan for the ANZ Plus Home Loan Variable product",
                           "pricingTierItem": [
@@ -129,8 +128,7 @@
                         },
                         {
                           "pricingTierCode": "HLVAR01-HARDSHIP-PRICE",
-                          "pricingTierName": "HARDSHIP PRICE",
-                          "pricingTierName": "HARDSHIP PRICE",
+                          "pricingTierName": "Hardship Price",
                           "pricingTierType": "NEGOTIATED-PRICE",
                           "pricingTierDescription": "Hardship Pricing Plan for the ANZ Plus Home Loan Variable product",
                           "pricingTierItem": [
@@ -165,7 +163,7 @@
                         },
                         {
                           "pricingTierCode": "HLVAR01-BROKER-PRICE",
-                          "pricingTierName": "BROKER PRICE",
+                          "pricingTierName": "Broker Price",
                           "pricingTierType": "NEGOTIATED-PRICE",
                           "pricingTierDescription": "Broker Pricing Plan for the ANZ Plus Home Loan Variable product",
                           "pricingTierItem": [
@@ -200,7 +198,7 @@
                         },
                         {
                           "pricingTierCode": "HLVAR01-COACH-PRICE",
-                          "pricingTierName": "COACH PRICE",
+                          "pricingTierName": "Coach Price",
                           "pricingTierType": "NEGOTIATED-PRICE",
                           "pricingTierDescription": "Coach Pricing Plan for the ANZ Plus Home Loan Variable product",
                           "pricingTierItem": [
@@ -240,39 +238,219 @@
               "productCode": "SAVING01",
               "productName": "ANZ Save",
               "productDescription": "Get an ANZ Save account to help smash your savings goals",
-              "productClassification": "DEPSOSIT",
+              "productClassification": "DEPOSIT",
               "productPricing": {
                   "productPricingTier": [
                       {
                       "pricingTierCode": "SAVING01-BASE-PRICE",
-                      "pricingTierName": "BASE CARDED PRICE",
+                      "pricingTierName": "Base Price",
                       "pricingTierType": "CARDED-PRICE",
                       "pricingTierDescription": "Base Pricing Plan for the ANZ Save",
                       "pricingTierItem": [
                         {
                         "pricingItemCode": "SAVING01-BASE-BONUS-RATE",
-                        "pricingItemName": "TIER1 BASE RATE",
+                        "pricingItemName": "Saver Bonus Rate",
                         "pricingItemType": "CARDED-DEPOSIT-RATE",
                         "pricingItemDescription": "Grow $100 by last business day of month",
                         "pricingItemRuleset": "BALANCE-GROW-RULE",
-                        "pricingItemRuleset": "BALANCE-GROW-RULE",
-                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValueType": "BONUS-PERCENTAGE",
                         "pricingItemValue": "4.5%"
                         },
                         {
                         "pricingItemCode": "SAVING01-BASE-RATE",
-                        "pricingItemName": "TIER1 BASE RATE",
+                        "pricingItemName": "Saver Base Rate",
                         "pricingItemType": "CARDED-DEPOSIT-RATE",
                         "pricingItemDescription": "Base Rate applied",
                         "pricingItemRuleset": "BALANCE-NOT-GROW-RULE",
                         "pricingItemValueType": "PERCENTAGE",
                         "pricingItemValue": "0.5%"
-                        }
+                        },
+                        {
+                        "pricingItemCode": "SAVING01-BASE-OS-TXN-FEE",
+                        "pricingItemName": "OS Transaction Fee",
+                        "pricingItemType": "CARDED-FEE",
+                        "pricingItemDescription": "International Transaction Fee",
+                        "pricingItemRuleset": "INT-TXN-FEE-RULE",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "3%"
+                        },
+                        {
+                        "pricingItemCode": "SAVING01-BASE-OS-ATM-FEE",
+                        "pricingItemName": "OS ATM Fee",
+                        "pricingItemType": "CARDED-FEE",
+                        "pricingItemDescription": "International ATM Fee",
+                        "pricingItemRuleset": "INT-ATM-FEE-RULE",
+                        "pricingItemValueType": "AMOUNT",
+                        "pricingItemValue": "$5"
+                        },
+                        {
+                        "pricingItemCode": "SAVING01-BASE-IMT-IN-FEE",
+                        "pricingItemName": "IMT-In Fee",
+                        "pricingItemType": "CARDED-FEE",
+                        "pricingItemDescription": "Iinternational Inward Money Transfer Fee",
+                        "pricingItemRuleset": "IMT-FEE-RULE",
+                        "pricingItemValueType": "AMOUNT",
+                        "pricingItemValue": "$15"
+                        }  
                       ]
                     }
                   ]
                 }
+            },
+            {
+              "productCode": "SAVING02",
+              "productName": "ANZ Plus Flex Saver",
+              "productDescription": "Flex Saver",
+              "productClassification": "DEPOSIT",
+              "productPricing": {
+                  "productPricingTier": [
+                      {
+                      "pricingTierCode": "SAVING02-BASE-PRICE",
+                      "pricingTierName": "Base Price",
+                      "pricingTierType": "CARDED-PRICE",
+                      "pricingTierDescription": "Base Pricing Plan for the ANZ Flex Saver",
+                      "pricingTierItem": [
+                        {
+                        "pricingItemCode": "SAVING02-BASE-BALANCE-TIER1",
+                        "pricingItemName": "Flex Saver Tier1",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "FLEX-RATEGRID",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "5.0%"
+                        },
+                        {
+                        "pricingItemCode": "SAVING02-BASE-RATE",
+                        "pricingItemName": "Flex Saver Tier2",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "Rates when balance greater than $5,000",
+                        "pricingItemRuleset": "FLEX-RATEGRID",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "2.0%"
+                        },
+                        {
+                          "pricingItemCode": "SAVING02-BASE-IMT-IN-FEE",
+                          "pricingItemName": "IMT-In Fee",
+                          "pricingItemType": "CARDED-FEE",
+                          "pricingItemDescription": "Iinternational Inward Money Transfer Fee",
+                          "pricingItemRuleset": "IMT-FEE-RULE",
+                          "pricingItemValueType": "AMOUNT",
+                          "pricingItemValue": "$15"
+                          }
+                      ]
+                    }
+                  ]
+                }
+            },
+            {
+              "productCode": "TDTEST01",
+              "productName": "Test Term Deposit Product",
+              "productDescription": "Enjoy the security of a fixed rate of interest over the investment term of your choice",
+              "productClassification": "TIME_DEPSOIT",
+              "productPricing": {
+                  "productPricingTier": [
+                      {
+                      "pricingTierCode": "TDTEST01-BASE-PRICE",
+                      "pricingTierName": "Base Price",
+                      "pricingTierType": "CARDED-PRICE",
+                      "pricingTierDescription": "Base Pricing Plan for the Test Term Deposit",
+                      "pricingTierItem": [
+                        {
+                        "pricingItemCode": "TDTEST01-BASE-1-2-MONTHS",
+                        "pricingItemName": "1-2-Month-Rate",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "TD-RATEGRID",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "1.25%"
+                        },
+                        {
+                        "pricingItemCode": "TDTEST01-BASE-2-3-MONTHS",
+                        "pricingItemName": "2-3-Month-Rate",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "TD-RATEGRID",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "1.50%"
+                        },
+                        {
+                        "pricingItemCode": "TDTEST01-BASE-3-4-MONTH-MONTHLY",
+                        "pricingItemName": "3-4-Month-Rate",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "Maturity=Monthly",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "3.49%"
+                        },
+                        {
+                        "pricingItemCode": "TDTEST01-BASE-3-4-MONTH-ONMATURITY",
+                        "pricingItemName": "3-4-Month-Rate",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "Maturity=OnMaturity",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "3.50%"
+                        },
+                        {
+                        "pricingItemCode": "TDTEST01-BASE-4-5-MONTH-MONTHLY",
+                        "pricingItemName": "4-5-Month-Rate",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "Maturity=Monthly",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "3.58%"
+                        },      
+                        {
+                        "pricingItemCode": "TDTEST01-BASE-4-5-MONTH-QUARTERLY",
+                        "pricingItemName": "4-5-Month-Rate",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "Maturity=Quarterly",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "3.59%"
+                        },      
+                        {
+                        "pricingItemCode": "TDTEST01-BASE-4-5-MONTH-ONMATURITY",
+                        "pricingItemName": "4-5-Month-Rate",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "Maturity=OnMaturity",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "3.60%"
+                        },
+                        {
+                        "pricingItemCode": "TDTEST01-BASE-5-6-MONTH-MONTHLY",
+                        "pricingItemName": "5-6-Month-Rate",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "Maturity=Monthly",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "3.68%"
+                        },      
+                        {
+                        "pricingItemCode": "TDTEST01-BASE-5-6-MONTH-QUARTERLY",
+                        "pricingItemName": "5-6-Month-Rate",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "Maturity=Quarterly",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "3.69%"
+                        },      
+                        {
+                        "pricingItemCode": "TDTEST01-BASE-5-6-MONTH-ONMATURITY",
+                        "pricingItemName": "5-6-Month-Rate",
+                        "pricingItemType": "CARDED-DEPOSIT-RATE",
+                        "pricingItemDescription": "",
+                        "pricingItemRuleset": "Maturity=OnMaturity",
+                        "pricingItemValueType": "PERCENTAGE",
+                        "pricingItemValue": "3.70%"
+                        }      
+                        ]
+                    }
+                  ]
+                }
             }
+
           ]
         }
     ]
