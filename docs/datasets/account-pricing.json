@@ -1,0 +1,36 @@
+{
+  "accounts": [
+    {
+    "accountId": "a100",
+    "customerId": "c100",
+    "productId": "p100",
+    "priceTier": "Advertised",
+    "lvr": 50,
+    "staffPricing": true
+    },
+    {
+    "accountId": "a200",
+    "customerId": "c200",
+    "productId": "p100",
+    "priceTier": "Advertised",
+    "lvr": 70,
+    "staffPricing": false
+    },
+    {
+    "accountId": "a300",
+    "customerId": "c300",
+    "productId": "p100",
+    "priceTier": "Advertised",
+    "lvr": 90,
+    "staffPricing": false
+    },
+    {
+    "accountId": "a400",
+    "customerId": "c300",
+    "productId": "p100",
+    "priceTier": "Hardship",
+    "lvr": 90,
+    "staffPricing": false
+    }
+  ]
+}

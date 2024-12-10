@@ -1,0 +1,22 @@
+{
+    "customers": [
+        {            
+        "customerId": "c100",
+        "isStaff": true,
+        "isLoyal": false,
+        "isDesparate": false
+        },
+        {            
+        "customerId": "c200",
+        "isStaff": false,
+        "isLoyal": true,
+        "isDesparate": false
+        },
+        {            
+        "customerId": "c300",
+        "isStaff": false,
+        "isLoyal": false,
+        "isDesparate": true
+        }
+    ]
+}

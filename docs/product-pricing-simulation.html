@@ -3,12 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Product Pricing Simulation</title>
-    <!-- Bootstrap Table and Filter Control CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/bootstrap-table.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.css">
-    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"> -->
-    <link rel="stylesheet" type="text/css" href="css/pricing.css">
+    <title>Multi-Price Product Pricing Demonstration</title>
 
     <!-- jQuery (required for Bootstrap) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -22,31 +17,44 @@
 
     <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
 
-
+    <!-- Bootstrap Table and Filter Control CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="css/pricing.css">
+    
 </head>
 <body>
-    <h1>Product Pricing Simulation</h1>
+    <h1>Multi-Price Product Demonstration</h1>
     <div id="product-details"></div> <!-- Container for rendered HTML -->
 
     <!-- Main Product Template -->
     <script id="pricing-template" type="text/x-handlebars-template">
         <div id="product-pricing">
-        <h2 class="toggle-header">Product Pricing</h2>
-        <div class="content">            
-        {{> product-pricing-template}}
+            <h2 class="toggle-header">Product Settings</h2>
+            <div class="content">            
+            {{> product-pricing-template}}
+            </div>
         </div>
+        <div id="customers">
+            <h2 class="toggle-header">Customer Settings</h2>
+            <div class="content">
+            {{> customer-pricing-template}}
+            </div>
         </div>
-        <!-- <div id="customer-pricing">
-          <h2 class="toggle-header">Compare Prices</h2>
-          <div class="content">
-            <p>add customer pricing comparison based on what currnet account and current pricing tier and the proposed target tier</p> -->
-            <!-- Customer tier select and show price button can go here -->
-          <!-- </div>
-        </div> -->
-        
+        <div id="accounts">
+            <h2 class="toggle-header">Account Pricing</h2>
+            <div class="content">
+            {{> account-pricing-template}}
+            </div>
+        </div>
+          
     </script>
 
     <script>
+    let productArray = []; // Global variable to store product data
+    let customerArray = []; // Global variable to store customer data
+
       async function loadPartial(name, path) {
           return fetch(path)
             .then(response => response.text())
@@ -61,21 +69,46 @@
           try {
               const productResponse = await fetch(productJsonUrl);
               const productData = await productResponse.json();
-              return { products: productData.data[0].productDetails };
+              productArray = productData.products; // Assign to global variable
+              return productArray;
           } catch (err) {
               console.error(`Error getting product pricing data: ${err}`);
               return { products: [] };
           }
       }
+      async function getCustomers() {
+          const customerJsonUrl = 'datasets/customer-pricing.json';
+          try {
+              const customerResponse = await fetch(customerJsonUrl);
+              const customerData = await customerResponse.json();
+              customerArray = customerData.customers; // Assign to global variable
+              return customerArray;
+          } catch (err) {
+              console.error(`Error getting customer pricing data: ${err}`);
+              return { customers: [] };
+          }
+      }
+      async function getAccounts() {
+          const accountJsonUrl = 'datasets/account-pricing.json';
+          try {
+              const accountResponse = await fetch(accountJsonUrl);
+              const accountData = await accountResponse.json();
+              return accountData.accounts; // Assign to global variable
 
-      function renderPricingDetails(data) {
+          } catch (err) {
+              console.error(`Error getting account data: ${err}`);
+              return { accounts: [] };
+          }
+      }
+
+      function renderPricingDetails(context) {
           const templateSource = document.getElementById('pricing-template').innerHTML;
           const template = Handlebars.compile(templateSource);
-          const html = template(data);
+          const html = template(context);
           document.getElementById('product-details').innerHTML = html;
 
           // Initialize the Bootstrap Table with filter control
-          $('#product-pricing table').bootstrapTable({
+          $('product-pricing table').bootstrapTable({
             filterControl: true,
             search: false,
             pagination: true,
@@ -85,8 +118,9 @@
             showLoading: true,
             showColumns: false
         });
-          
+        
       }
+
 
       function addToggleEventListener() {
           document.querySelectorAll('.toggle-header').forEach(heading => {
@@ -99,13 +133,113 @@
           });
       }
 
-      window.onload = async function () {
-          await loadPartial('product-pricing-template', 'hbs/product-pricing.hbs');
-          const data = await getProducts();
-          renderPricingDetails(data);
-          // Add toggle event listener after rendering content
-          addToggleEventListener();
+
+    window.onload = async function () {
+        await loadPartial('product-pricing-template', 'hbs/product-pricing.hbs');
+        await loadPartial('customer-pricing-template', 'hbs/customer-pricing.hbs');
+        await loadPartial('account-pricing-template', 'hbs/account-pricing.hbs');
+        const productData = await getProducts();
+
+        const customerData = await getCustomers();
+        let accountData = await getAccounts();
+        // Resolve pricing attributes for each account
+        accountData = accountData.map(account => {
+        // accountData.accounts = accountData.accounts.map(account => {
+        // const productId = account.productId; // Assuming account has a productId
+        // const customerId = account.customerId; // Assuming account has a customerId
+
+        return {
+            ...account,
+            rate: resolveRate(account),
+            rateDiscount: resolveRateDiscount(account),
+            lateFee: resolveLateFee(account),
+            notes: resolveNotes(account)
+            };
+        });
+
+        // Combine the product and customer data into a single object
+        const context = {
+            productData,
+            customerData,
+            accountData
+            };
+
+        renderPricingDetails(context);
+        // Add toggle event listener after rendering content
+        addToggleEventListener();
       };
+
+
+    function resolveRate(account) {
+
+        const { productId, priceTier, accountId, customerId } = account;
+
+        console.log(`resolveRate(${accountId}, ${productId}, ${priceTier}, ${customerId})`);
+
+    // Validate account attributes
+    if (!productId) throw new Error(`Product ID is missing in account: ${accountId}`);
+    if (!priceTier) throw new Error(`Price tier is missing in account: ${accountId}`);
+
+    // Loop through the product data to find a match
+
+    // console.log("productArray:", productArray);
+
+    for (const product of productArray) {
+        // console.log("Product structure:", product);
+
+        const { productId, priceTier, pricingItem, rule, value } = product;
+
+        // console.log("product.productId:", product.productId);
+        // console.log("account.productId:", account.productId);
+        // console.log("product.priceTier:", product.priceTier);
+        // console.log("account.priceTier:", account.priceTier);
+        // console.log("pricingItem:", pricingItem);
+
+        // Match productId, priceTier, and item
+        if (account.productId === product.productId && account.priceTier === product.priceTier && pricingItem === "Rate") {
+
+            console.log(`Match found for account ${accountId} and product ${product.productId}`);
+
+            // Check the rule, if any
+            if (rule && !resolveRule(rule, account)) {
+                console.log(`Rule "${rule}" failed for account ${accountId}`);
+
+                return `Error: Rule "${rule}" failed for account ${accountId}`;
+            }
+
+        return value; // Return the resolved rate
+        }
+    }
+
+    // If no match is found
+    console.log(`No match found for account ${accountId}`);
+
+    throw new Error(`Rate not found for productId: ${productId} and priceTier: ${priceTier}`);
+    }
+
+    function resolveRateDiscount(productId, account) {
+    // Logic to resolve rateDiscount based on productId and account details
+    return "tbc"; // Example value
+    }
+
+    function resolveLateFee(account) {
+    // Logic to resolve lateFee based on productId and account details
+    return "tbc"; // Example value
+    }
+
+    function resolveNotes(account) {
+    // Logic to generate notes based on productId and account details
+    return "add checking if staff or hardship is consistent with customer"; // Example value
+    }
+    function resolveRule(rule, account) {
+
+    console.log("resolveRule:", rule, account);
+
+    // Implement your rule validation logic here
+    // Example: return true if the rule is satisfied, false otherwise
+    return true; // Placeholder implementation
+}
+
     </script>
 </body>
 </html>
