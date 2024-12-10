@@ -1,503 +1,68 @@
 {
-    "requestDate": "2024-08-27T23:27:47Z",
-    "dataCount": 1,
-    "data": [
-        {
-        "eventStatus": "SUCCESS",
-        "productDetails": [
-            {
-                "productCode": "HLVAR01",
-                "productName": "ANZ Plus Home Loan Variable (prod)",
-                "productDescription": "ANZ Plus Home Loan Variable",
-                "productClassification": "MORTGAGE",
-                "productPricing": {
-                    "productPricingTier": [
-                        {
-                        "pricingTierCode": "HLVAR01-BASE-PRICE",
-                        "pricingTierName": "Base Price",
-                        "pricingTierType": "CARDED-PRICE",
-                        "pricingTierDescription": "Base Pricing Plan for the ANZ Plus Home Loan Variable product",
-                        "pricingTierItem": [
-                          {
-                          "pricingItemCode": "HLVAR01-BASE-RATE",
-                          "pricingItemName": "HLVAR01 OWNER-PI RATE",
-                          "pricingItemType": "CARDED-LENDING-RATE",
-                          "pricingItemDescription": "Variable Rate used for Owner Occupied, Principal & Interst type loans",
-                          "pricingItemRuleset": "OWNER-PI-RULE",
-                          "pricingItemValueType": "PERCENTAGE",
-                          "pricingItemValue": "8.64%"
-                          },
-                          {
-                          "pricingItemCode": "HLVAR01-LATE-FEE",
-                          "pricingItemName": "LATE FEE",
-                          "pricingItemType": "CARDED-FEE",
-                          "pricingItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
-                          "pricingItemRuleset": "LATE-FEE-RULE",
-                          "pricingItemValueType": "AMOUNT",
-                          "pricingItemValue": "$20"
-                          },
-                          {
-                          "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                          "pricingItemName": "DISCHARGE FEE",
-                          "pricingItemType": "CARDED-FEE",
-                          "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
-                          "pricingItemRuleset": "",
-                          "pricingItemValueType": "AMOUNT",
-                          "pricingItemValue": "$350"
-                          },
-                          {
-                            "pricingItemCode": "HLVAR01-STAFF-DISCHARGE-FEE",
-                            "pricingItemName": "DISCHARGE FEE",
-                            "pricingItemType": "NEGOTIATED-FEE",
-                            "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
-                            "pricingItemRuleset": "STAFF-RULE",
-                            "pricingItemValueType": "DISCOUNTED AMOUNT",
-                            "pricingItemValue": "$0"
-                            }
-                          ]
-                        },
-                        {
-                          "pricingTierCode": "HLVAR01-SPECIAL-PRICE",
-                          "pricingTierName": "Special Price",
-                          "pricingTierType": "CARDED-PRICE",
-                          "pricingTierDescription": "Special Pricing Plan for the ANZ Plus Home Loan Variable product",
-                          "pricingTierItem": [
-                            {
-                            "pricingItemCode": "HLVAR01-SPECIAL-RATE",
-                            "pricingItemName": "HLVAR01 OWNER-PI RATE",
-                            "pricingItemType": "CARDED-LENDING-RATE",
-                            "pricingItemDescription": "Special Variable Rate used for Owner Occupied, Principal & Interest type loans",
-                            "pricingItemRuleset": "OWNER-PI-RATEGRID",
-                            "pricingItemValueType": "DISCOUNT PERCENTAGE",
-                            "pricingItemValue": "5%"
-                            },
-                            {
-                            "pricingItemCode": "HLVAR01-LATE-FEE",
-                            "pricingItemName": "LATE FEE",
-                            "pricingItemType": "CARDED-FEE",
-                            "pricingItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
-                            "pricingItemRuleset": "LATE-FEE-RULE",
-                            "pricingItemValueType": "DISCOUNTED AMOUNT",
-                            "pricingItemValue": "$10"
-                            },
-                            {
-                            "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                            "pricingItemName": "DISCHARGE FEE",
-                            "pricingItemType": "CARDED-FEE",
-                            "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
-                            "pricingItemRuleset": "",
-                            "pricingItemValueType": "DISCOUNT PERCENTAGE",
-                            "pricingItemValue": "20%"
-                            }
-                            ]
-                        },
-                        {
-                          "pricingTierCode": "HLVAR01-ULTIMATE-PRICE",
-                          "pricingTierName": "Ultimate Price",
-                          "pricingTierType": "CARDED-PRICE",
-                          "pricingTierDescription": "Ultimate Pricing Plan for the ANZ Plus Home Loan Variable product",
-                          "pricingTierItem": [
-                            {
-                            "pricingItemCode": "HLVAR01-ULTIMTE-RATE",
-                            "pricingItemName": "HLVAR01 OWNER-PI RATE",
-                            "pricingItemType": "CARDED-LENDING-RATE",
-                            "pricingItemDescription": "Ultimate Variable Rate used for Owner Occupied, Principal & Interst type loans",
-                            "pricingItemRuleset": "OWNER-PI-RULE",
-                            "pricingItemValueType": "DISCOUNT PERCENTAGE",
-                            "pricingItemValue": "10%"
-                            },
-                            {
-                              "pricingItemCode": "HLVAR01-LATE-FEE",
-                              "pricingItemName": "LATE FEE",
-                              "pricingItemType": "CARDED-FEE",
-                              "pricingItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
-                              "pricingItemRuleset": "LATE-FEE-RULE",
-                              "pricingItemValueType": "DISCOUNTED AMOUNT",
-                              "pricingItemValue": "$1"
-                              },
-                              {
-                              "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                              "pricingItemName": "DISCHARGE FEE",
-                              "pricingItemType": "CARDED-FEE",
-                              "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
-                              "pricingItemRuleset": "",
-                              "pricingItemValueType": "DISCOUNTED AMOUNT",
-                              "pricingItemValue": "$100"
-                              }
-                          ]
-                        },
-                        {
-                          "pricingTierCode": "HLVAR01-HARDSHIP-PRICE",
-                          "pricingTierName": "Hardship Price",
-                          "pricingTierType": "NEGOTIATED-PRICE",
-                          "pricingTierDescription": "Hardship Pricing Plan for the ANZ Plus Home Loan Variable product",
-                          "pricingTierItem": [
-                            {
-                            "pricingItemCode": "HLVAR01-HARDSHIP-RATE",
-                            "pricingItemName": "HLVAR01 OWNER-PI RATE",
-                            "pricingItemType": "NEGOTIATED-LENDING-RATE",
-                            "pricingItemDescription": "Hardship Variable Rate used for Owner Occupied, Principal & Interst type loans",
-                            "pricingItemRuleset": "HARDSHIP-RULE",
-                            "pricingItemValueType": "DISCOUNT PERCENTAGE",
-                            "pricingItemValue": "20%"
-                            },
-                            {
-                            "pricingItemCode": "HLVAR01-LATE-FEE",
-                            "pricingItemName": "LATE FEE",
-                            "pricingItemType": "NEGOTIATED-FEE",
-                            "pricingItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
-                            "pricingItemRuleset": "HARDSHIP-RULE",
-                            "pricingItemValueType": "DISCOUNTED AMOUNT",
-                            "pricingItemValue": "$0"
-                            },
-                            {
-                            "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                            "pricingItemName": "DISCHARGE FEE",
-                            "pricingItemType": "CARDED-FEE",
-                            "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
-                            "pricingItemRuleset": "HARDSHIP-RULE",
-                            "pricingItemValueType": "DISCOUNTED AMOUNT",
-                            "pricingItemValue": "$0"
-                            }
-                          ]
-                        },
-                        {
-                          "pricingTierCode": "HLVAR01-BROKER-PRICE",
-                          "pricingTierName": "Broker Price",
-                          "pricingTierType": "NEGOTIATED-PRICE",
-                          "pricingTierDescription": "Broker Pricing Plan for the ANZ Plus Home Loan Variable product",
-                          "pricingTierItem": [
-                            {
-                            "pricingItemCode": "HLVAR01-BROKER-RATE",
-                            "pricingItemName": "HLVAR01 OWNER-PI RATE",
-                            "pricingItemType": "NEGOTIATED-LENDING-RATE",
-                            "pricingItemDescription": "Broker Variable Rate used for Owner Occupied, Principal & Interst type loans",
-                            "pricingItemRuleset": "BROKER-RULE",
-                            "pricingItemValueType": "DISCOUNT PERCENTAGE",
-                            "pricingItemValue": "20%"
-                            },
-                            {
-                            "pricingItemCode": "HLVAR01-LATE-FEE",
-                            "pricingItemName": "LATE FEE",
-                            "pricingItemType": "NEGOTIATED-FEE",
-                            "pricingItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
-                            "pricingItemRuleset": "BROKER-RULE",
-                            "pricingItemValueType": "DISCOUNTED AMOUNT",
-                            "pricingItemValue": "$0"
-                            },
-                            {
-                            "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                            "pricingItemName": "DISCHARGE FEE",
-                            "pricingItemType": "NEGOTIATED-FEE",
-                            "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
-                            "pricingItemRuleset": "BROKER-RULE",
-                            "pricingItemValueType": "DISCOUNTED AMOUNT",
-                            "pricingItemValue": "$0"
-                            }
-                          ]
-                        },
-                        {
-                          "pricingTierCode": "HLVAR01-COACH-PRICE",
-                          "pricingTierName": "Coach Price",
-                          "pricingTierType": "NEGOTIATED-PRICE",
-                          "pricingTierDescription": "Coach Pricing Plan for the ANZ Plus Home Loan Variable product",
-                          "pricingTierItem": [
-                            {
-                            "pricingItemCode": "HLVAR01-COACH-RATE",
-                            "pricingItemName": "HLVAR01 OWNER-PI RATE",
-                            "pricingItemType": "NEGOTIATED-LENDING-RATE",
-                            "pricingItemDescription": "COACH Variable Rate used for Owner Occupied, Principal & Interst type loans",
-                            "pricingItemRuleset": "COACH-RULE",
-                            "pricingItemValueType": "DISCOUNT PERCENTAGE",
-                            "pricingItemValue": "20%"
-                            },
-                            {
-                            "pricingItemCode": "HLVAR01-LATE-FEE",
-                            "pricingItemName": "LATE FEE",
-                            "pricingItemType": "NEGOTIATED-FEE",
-                            "pricingItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
-                            "pricingItemRuleset": "COACH-RULE",
-                            "pricingItemValueType": "DISCOUNTED AMOUNT",
-                            "pricingItemValue": "$0"
-                            },
-                            {
-                            "pricingItemCode": "HLVAR01-DISCHARGE-FEE",
-                            "pricingItemName": "DISCHARGE FEE",
-                            "pricingItemType": "NEGOTIATED-FEE",
-                            "pricingItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required.",
-                            "pricingItemRuleset": "COACH-RULE",
-                            "pricingItemValueType": "DISCOUNTED AMOUNT",
-                            "pricingItemValue": "$0"
-                            }
-                          ]
-                        }
-                        ]
-                      }
-            },
-            {
-              "productCode": "SAVING01",
-              "productName": "ANZ Save",
-              "productDescription": "Get an ANZ Save account to help smash your savings goals",
-              "productClassification": "DEPOSIT",
-              "productPricing": {
-                  "productPricingTier": [
-                      {
-                      "pricingTierCode": "SAVING01-BASE-PRICE",
-                      "pricingTierName": "Base Price",
-                      "pricingTierType": "CARDED-PRICE",
-                      "pricingTierDescription": "Base Pricing Plan for the ANZ Save",
-                      "pricingTierItem": [
-                        {
-                        "pricingItemCode": "SAVING01-BASE-BONUS-RATE",
-                        "pricingItemName": "Saver Bonus Rate",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "Grow $100 by last business day of month",
-                        "pricingItemRuleset": "BALANCE-GROW-RULE",
-                        "pricingItemValueType": "BONUS-PERCENTAGE",
-                        "pricingItemValue": "4.5%"
-                        },
-                        {
-                        "pricingItemCode": "SAVING01-BASE-RATE",
-                        "pricingItemName": "Saver Base Rate",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "Base Rate applied",
-                        "pricingItemRuleset": "BALANCE-NOT-GROW-RULE",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "0.5%"
-                        },
-                        {
-                        "pricingItemCode": "SAVING01-BASE-OS-TXN-FEE",
-                        "pricingItemName": "OS Transaction Fee",
-                        "pricingItemType": "CARDED-FEE",
-                        "pricingItemDescription": "International Transaction Fee",
-                        "pricingItemRuleset": "INT-TXN-FEE-RULE",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "3%"
-                        },
-                        {
-                        "pricingItemCode": "SAVING01-BASE-OS-ATM-FEE",
-                        "pricingItemName": "OS ATM Fee",
-                        "pricingItemType": "CARDED-FEE",
-                        "pricingItemDescription": "International ATM Fee",
-                        "pricingItemRuleset": "INT-ATM-FEE-RULE",
-                        "pricingItemValueType": "AMOUNT",
-                        "pricingItemValue": "$5"
-                        },
-                        {
-                        "pricingItemCode": "SAVING01-BASE-IMT-IN-FEE",
-                        "pricingItemName": "IMT-In Fee",
-                        "pricingItemType": "CARDED-FEE",
-                        "pricingItemDescription": "International Inward Money Transfer Fee",
-                        "pricingItemRuleset": "IMT-FEE-RULE",
-                        "pricingItemValueType": "AMOUNT",
-                        "pricingItemValue": "$15"
-                        }  
-                      ]
-                    }
-                  ]
-                }
-            },
-            {
-              "productCode": "SAVING02",
-              "productName": "ANZ Plus Flex Saver",
-              "productDescription": "Flex Saver",
-              "productClassification": "DEPOSIT",
-              "productPricing": {
-                  "productPricingTier": [
-                      {
-                      "pricingTierCode": "SAVING02-BASE-PRICE",
-                      "pricingTierName": "Base Price",
-                      "pricingTierType": "CARDED-PRICE",
-                      "pricingTierDescription": "Base Pricing Plan for the ANZ Flex Saver",
-                      "pricingTierItem": [
-                        {
-                        "pricingItemCode": "SAVING02-BASE-BALANCE-TIER1",
-                        "pricingItemName": "Flex Saver Tier1",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "FLEX-RATEGRID",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "5.0%"
-                        },
-                        {
-                        "pricingItemCode": "SAVING02-BASE-RATE",
-                        "pricingItemName": "Flex Saver Tier2",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "Rates when balance greater than $5,000",
-                        "pricingItemRuleset": "FLEX-RATEGRID",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "2.0%"
-                        },
-                        {
-                          "pricingItemCode": "SAVING02-BASE-IMT-IN-FEE",
-                          "pricingItemName": "IMT-In Fee",
-                          "pricingItemType": "CARDED-FEE",
-                          "pricingItemDescription": "International Inward Money Transfer Fee",
-                          "pricingItemRuleset": "IMT-FEE-RULE",
-                          "pricingItemValueType": "AMOUNT",
-                          "pricingItemValue": "$15"
-                          }
-                      ]
-                    }
-                  ]
-                }
-            },
-            {
-              "productCode": "CREDITCARD01",
-              "productName": "ANZ Plus Credit Card",
-              "productDescription": "ANZ Plus Credit Card",
-              "productClassification": "CREDIT_CARD",
-              "productPricing": {
-                  "productPricingTier": [
-                      {
-                      "pricingTierCode": "CREDITCARD01-BASE-PRICE",
-                      "pricingTierName": "Base Price",
-                      "pricingTierType": "CARDED-PRICE",
-                      "pricingTierDescription": "Base Pricing Plan for the ANZ Plus Credit Card",
-                      "pricingTierItem": [
-                        {
-                        "pricingItemCode": "CREDITCARD01-BASE-PURCHASE-RATE",
-                        "pricingItemName": "Purchase Rate",
-                        "pricingItemType": "CARDED-LENDING-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "20.99%"
-                        },
-                        {
-                        "pricingItemCode": "CREDITCARD01-CASHADVANCE-RATE",
-                        "pricingItemName": "Cash Advance Rate",
-                        "pricingItemType": "CARDED-LENDING-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "21.99%"
-                        },
-                        {
-                        "pricingItemCode": "CREDITCARD01-BASE-IMT-IN-FEE",
-                        "pricingItemName": "Overlimit Fee",
-                        "pricingItemType": "CARDED-FEE",
-                        "pricingItemDescription": "Overlimit Fee",
-                        "pricingItemRuleset": "",
-                        "pricingItemValueType": "AMOUNT",
-                        "pricingItemValue": "$20"
-                        }
-                      ]
-                    }
-                  ]
-                }
-            },
-
-            {
-              "productCode": "TDTEST01",
-              "productName": "Test Term Deposit Product",
-              "productDescription": "Enjoy the security of a fixed rate of interest over the investment term of your choice",
-              "productClassification": "TIME_DEPSOIT",
-              "productPricing": {
-                  "productPricingTier": [
-                      {
-                      "pricingTierCode": "TDTEST01-BASE-PRICE",
-                      "pricingTierName": "Base Price",
-                      "pricingTierType": "CARDED-PRICE",
-                      "pricingTierDescription": "Base Pricing Plan for the Test Term Deposit",
-                      "pricingTierItem": [
-                        {
-                        "pricingItemCode": "TDTEST01-BASE-1-2-MONTHS",
-                        "pricingItemName": "1-2-Month-Rate",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "TD-RATEGRID",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "1.25%"
-                        },
-                        {
-                        "pricingItemCode": "TDTEST01-BASE-2-3-MONTHS",
-                        "pricingItemName": "2-3-Month-Rate",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "TD-RATEGRID",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "1.50%"
-                        },
-                        {
-                        "pricingItemCode": "TDTEST01-BASE-3-4-MONTH-MONTHLY",
-                        "pricingItemName": "3-4-Month-Rate",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "Maturity=Monthly",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "3.49%"
-                        },
-                        {
-                        "pricingItemCode": "TDTEST01-BASE-3-4-MONTH-ONMATURITY",
-                        "pricingItemName": "3-4-Month-Rate",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "Maturity=OnMaturity",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "3.50%"
-                        },
-                        {
-                        "pricingItemCode": "TDTEST01-BASE-4-5-MONTH-MONTHLY",
-                        "pricingItemName": "4-5-Month-Rate",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "Maturity=Monthly",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "3.58%"
-                        },      
-                        {
-                        "pricingItemCode": "TDTEST01-BASE-4-5-MONTH-QUARTERLY",
-                        "pricingItemName": "4-5-Month-Rate",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "Maturity=Quarterly",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "3.59%"
-                        },      
-                        {
-                        "pricingItemCode": "TDTEST01-BASE-4-5-MONTH-ONMATURITY",
-                        "pricingItemName": "4-5-Month-Rate",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "Maturity=OnMaturity",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "3.60%"
-                        },
-                        {
-                        "pricingItemCode": "TDTEST01-BASE-5-6-MONTH-MONTHLY",
-                        "pricingItemName": "5-6-Month-Rate",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "Maturity=Monthly",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "3.68%"
-                        },      
-                        {
-                        "pricingItemCode": "TDTEST01-BASE-5-6-MONTH-QUARTERLY",
-                        "pricingItemName": "5-6-Month-Rate",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "Maturity=Quarterly",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "3.69%"
-                        },      
-                        {
-                        "pricingItemCode": "TDTEST01-BASE-5-6-MONTH-ONMATURITY",
-                        "pricingItemName": "5-6-Month-Rate",
-                        "pricingItemType": "CARDED-DEPOSIT-RATE",
-                        "pricingItemDescription": "",
-                        "pricingItemRuleset": "Maturity=OnMaturity",
-                        "pricingItemValueType": "PERCENTAGE",
-                        "pricingItemValue": "3.70%"
-                        }      
-                        ]
-                    }
-                  ]
-                }
-            }
-
-          ]
-        }
-    ]
+  "products": [
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate",
+      "rule": "OWNER-PI-RATE",
+      "valueType": "PERCENTAGE",
+      "value": "8.64%"
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate Discount",
+      "rule": "LVRisLow",
+      "valueType": "DISCOUNT MARGIN",
+      "value": "-1"
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate Discount",
+      "rule": "LVRisMedium",
+      "valueType": "DISCOUNT MARGIN",
+      "value": "-2"
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate Discount",
+      "rule": "LVRisHigh",
+      "valueType": "DISCOUNT MARGIN",
+      "value": "-3"
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Late Fee",
+      "rule": "isStaff",
+      "valueType": "AMOUNT",
+      "value": "0"
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Late Fee",
+      "rule": "",
+      "valueType": "AMOUNT",
+      "value": "20"
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Hardship",
+      "pricingItem": "Rate",
+      "rule": "OWNER-PI-RATE",
+      "valueType": "PERCENTAGE",
+      "value": "6.64%"
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Hardship",
+      "pricingItem": "Late Fee",
+      "rule": "",
+      "valueType": "AMOUNT",
+      "value": "0"
+    }
+  ]
 }
