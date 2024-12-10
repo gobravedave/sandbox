@@ -30,6 +30,14 @@
 
     <!-- Main Product Template -->
     <script id="pricing-template" type="text/x-handlebars-template">
+        <div id="pricing-rules">
+            <h2 class="toggle-header">Pricing Rules</h2>
+            <div class="content">            
+            <li>Loan Size: Small < 200k, Medium 200k - 600k, Large 600k+ </li>
+            <li>LVR Band: Low < 60%, Medium 60% - 80%, High 80%+ </li>
+            </div>
+        </div>
+
         <div id="product-pricing">
             <h2 class="toggle-header">Product Settings</h2>
             <div class="content">            
@@ -187,13 +195,7 @@
     for (const product of productArray) {
         console.log("Product structure:", product);
 
-        const { productId, priceTier, pricingItem, rule, value } = product;
-
-        // console.log("product.productId:", product.productId);
-        // console.log("account.productId:", account.productId);
-        // console.log("product.priceTier:", product.priceTier);
-        // console.log("account.priceTier:", account.priceTier);
-        // console.log("pricingItem:", pricingItem);
+        const { productId, priceTier, pricingItem, rule } = product;
 
         // Match productId, priceTier, and item
         if (account.productId === product.productId && account.priceTier === product.priceTier && pricingItem === "Rate") {
@@ -201,16 +203,14 @@
             console.log(`Match found for account ${accountId} and product ${product.productId}`);
 
             // Check the rule, if any
-            if (rule && !resolveRule(rule, account)) {
-                console.log(`Rule "${rule}" failed for account ${accountId}`);
-
-                return `Error: Rule "${rule}" failed for account ${accountId}`;
+            if (rule && resolveRule(rule, account)) {
+                console.log(`Rule "${rule}" passed for account ${accountId}`);
+                return product.value;
             }
-
-        return value; // Return the resolved rate
         }
     }
 
+    return false; // Return false if the array is exhausted
     // If no match is found
     console.log(`No match found for account ${accountId}`);
 
@@ -233,12 +233,24 @@
     }
     function resolveRule(rule, account) {
 
-    console.log("resolveRule:", rule, account);
+        console.log("resolveRule:", rule, account);
 
-    // Implement your rule validation logic here
-    // Example: return true if the rule is satisfied, false otherwise
-    return true; // Placeholder implementation
-}
+        // Define rule mapping
+        const ruleMap = {
+            "is Owner & PI": (account) => account.purpose === "Owner" && account.repayment === "P&I",
+            "is Owner & IO": (account) => account.purpose === "Owner" && account.repayment === "IO",
+            "is Investor & PI": (account) => account.purpose === "Investor" && account.repayment === "P&I",
+            "is Investor & IO": (account) => account.purpose === "Investor" && account.repayment === "IO",
+            "if Staff Pricing": (account) => account.staffPricing
+        };
+
+        // Check if the rule exists in the map and apply it
+        if (rule in ruleMap) {
+            return ruleMap[rule](account);
+        }
+        return false; // Return false if the rule is not found
+    }
+
 
     </script>
 </body>

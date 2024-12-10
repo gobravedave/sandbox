@@ -5,6 +5,9 @@
     "customerId": "c100",
     "productId": "p100",
     "priceTier": "Advertised",
+    "loanAmt": 100000,
+    "purpose": "Owner",
+    "repayment": "P&I",
     "lvr": 50,
     "staffPricing": true
     },
@@ -13,6 +16,9 @@
     "customerId": "c200",
     "productId": "p100",
     "priceTier": "Advertised",
+    "loanAmt": 100000,
+    "purpose": "Owner",
+    "repayment": "P&I",
     "lvr": 70,
     "staffPricing": false
     },
@@ -21,6 +27,9 @@
     "customerId": "c300",
     "productId": "p100",
     "priceTier": "Advertised",
+    "loanAmt": 100000,
+    "purpose": "Owner",
+    "repayment": "P&I",
     "lvr": 90,
     "staffPricing": false
     },
@@ -29,8 +38,22 @@
     "customerId": "c300",
     "productId": "p100",
     "priceTier": "Hardship",
+    "loanAmt": 100000,
+    "purpose": "Owner",
+    "repayment": "P&I",
     "lvr": 90,
     "staffPricing": false
-    }
+    },
+    {
+    "accountId": "a500",
+    "customerId": "c100",
+    "productId": "p100",
+    "priceTier": "Advertised",
+    "loanAmt": 100000,
+    "purpose": "Investor",
+    "repayment": "IO",
+    "lvr": 50,
+    "staffPricing": true
+    }  
   ]
 }

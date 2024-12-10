@@ -4,15 +4,39 @@
       "productId": "p100",
       "priceTier": "Advertised",
       "pricingItem": "Rate",
-      "rule": "OWNER-PI-RATE",
+      "rule": "is Owner & PI",
       "valueType": "PERCENTAGE",
       "value": "8.64%"
     },
     {
       "productId": "p100",
       "priceTier": "Advertised",
+      "pricingItem": "Rate",
+      "rule": "is Owner & IO",
+      "valueType": "PERCENTAGE",
+      "value": "8.74%"
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate",
+      "rule": "is Investor & PI",
+      "valueType": "PERCENTAGE",
+      "value": "8.84%"
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate",
+      "rule": "is Investor & IO",
+      "valueType": "PERCENTAGE",
+      "value": "8.94%"
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
       "pricingItem": "Rate Discount",
-      "rule": "LVRisLow",
+      "rule": "is Small Loan & Low LVR",
       "valueType": "DISCOUNT MARGIN",
       "value": "-1"
     },
@@ -20,7 +44,7 @@
       "productId": "p100",
       "priceTier": "Advertised",
       "pricingItem": "Rate Discount",
-      "rule": "LVRisMedium",
+      "rule": "is Small Loan & Medium LVR",
       "valueType": "DISCOUNT MARGIN",
       "value": "-2"
     },
@@ -28,7 +52,7 @@
       "productId": "p100",
       "priceTier": "Advertised",
       "pricingItem": "Rate Discount",
-      "rule": "LVRisHigh",
+      "rule": "is Small Loan & High LVR",
       "valueType": "DISCOUNT MARGIN",
       "value": "-3"
     },
@@ -36,7 +60,7 @@
       "productId": "p100",
       "priceTier": "Advertised",
       "pricingItem": "Late Fee",
-      "rule": "isStaff",
+      "rule": "if Staff Pricing",
       "valueType": "AMOUNT",
       "value": "0"
     },
@@ -52,7 +76,7 @@
       "productId": "p100",
       "priceTier": "Hardship",
       "pricingItem": "Rate",
-      "rule": "OWNER-PI-RATE",
+      "rule": "is Owner & PI",
       "valueType": "PERCENTAGE",
       "value": "6.64%"
     },
