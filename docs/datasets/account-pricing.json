@@ -54,6 +54,18 @@
     "repayment": "IO",
     "lvr": 50,
     "staffPricing": true
+    },
+    {
+    "accountId": "a600",
+    "customerId": "c100",
+    "productId": "p100",
+    "priceTier": "Advertised",
+    "loanAmt": 400000,
+    "purpose": "Investor",
+    "repayment": "IO",
+    "lvr": 90,
+    "staffPricing": false
     }  
+    
   ]
 }

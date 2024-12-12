@@ -6,7 +6,7 @@
       "pricingItem": "Rate",
       "rule": "is Owner & PI",
       "valueType": "PERCENTAGE",
-      "value": "8.64%"
+      "value": 8.64
     },
     {
       "productId": "p100",
@@ -14,7 +14,7 @@
       "pricingItem": "Rate",
       "rule": "is Owner & IO",
       "valueType": "PERCENTAGE",
-      "value": "8.74%"
+      "value": 8.74
     },
     {
       "productId": "p100",
@@ -22,7 +22,7 @@
       "pricingItem": "Rate",
       "rule": "is Investor & PI",
       "valueType": "PERCENTAGE",
-      "value": "8.84%"
+      "value": 8.84
     },
     {
       "productId": "p100",
@@ -30,7 +30,7 @@
       "pricingItem": "Rate",
       "rule": "is Investor & IO",
       "valueType": "PERCENTAGE",
-      "value": "8.94%"
+      "value": 8.94
     },
     {
       "productId": "p100",
@@ -38,7 +38,7 @@
       "pricingItem": "Rate Discount",
       "rule": "is Small Loan & Low LVR",
       "valueType": "DISCOUNT MARGIN",
-      "value": "-1"
+      "value": -1
     },
     {
       "productId": "p100",
@@ -46,7 +46,7 @@
       "pricingItem": "Rate Discount",
       "rule": "is Small Loan & Medium LVR",
       "valueType": "DISCOUNT MARGIN",
-      "value": "-2"
+      "value": -2
     },
     {
       "productId": "p100",
@@ -54,7 +54,54 @@
       "pricingItem": "Rate Discount",
       "rule": "is Small Loan & High LVR",
       "valueType": "DISCOUNT MARGIN",
-      "value": "-3"
+      "value": -3
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate Discount",
+      "rule": "is Average Loan & Low LVR",
+      "valueType": "DISCOUNT MARGIN",
+      "value": -1.5
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate Discount",
+      "rule": "is Average Loan & Medium LVR",
+      "valueType": "DISCOUNT MARGIN",
+      "value": -2.5
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate Discount",
+      "rule": "is Average Loan & High LVR",
+      "valueType": "DISCOUNT MARGIN",
+      "value": -3.5
+    },    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate Discount",
+      "rule": "is Big Loan & Low LVR",
+      "valueType": "DISCOUNT MARGIN",
+      "value": -1.9
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate Discount",
+      "rule": "is Big Loan & Medium LVR",
+      "valueType": "DISCOUNT MARGIN",
+      "value": -2.9
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate Discount",
+      "rule": "is Big Loan & High LVR",
+      "valueType": "DISCOUNT MARGIN",
+      "value": -3.9
     },
     {
       "productId": "p100",
@@ -62,7 +109,7 @@
       "pricingItem": "Late Fee",
       "rule": "if Staff Pricing",
       "valueType": "AMOUNT",
-      "value": "10"
+      "value": 10
     },
     {
       "productId": "p100",
@@ -70,15 +117,31 @@
       "pricingItem": "Late Fee",
       "rule": "",
       "valueType": "AMOUNT",
-      "value": "20"
+      "value": 20
     },
     {
-      "productId": "p100",
-      "priceTier": "Hardship",
-      "pricingItem": "Rate",
-      "rule": "is Owner & PI",
-      "valueType": "PERCENTAGE",
-      "value": "6.64%"
+    "productId": "p100",
+    "priceTier": "Advertised",
+    "pricingItem": "Cashback",
+    "rule": "Cashback conditions",
+    "valueType": "AMOUNT",
+    "value": 2000
+    },
+    {
+    "productId": "p100",
+    "priceTier": "Advertised",
+    "pricingItem": "Cashback",
+    "rule": "",
+    "valueType": "AMOUNT",
+    "value": 0
+    },
+    {
+    "productId": "p100",
+    "priceTier": "Hardship",
+    "pricingItem": "Rate",
+    "rule": "is Owner & PI",
+    "valueType": "PERCENTAGE",
+    "value": 6.64
     },
     {
       "productId": "p100",
@@ -86,7 +149,7 @@
       "pricingItem": "Rate Discount",
       "rule": "",
       "valueType": "DISCOUNT MARGIN",
-      "value": "0%"
+      "value": 0
     },
     {
       "productId": "p100",
@@ -94,7 +157,15 @@
       "pricingItem": "Late Fee",
       "rule": "",
       "valueType": "AMOUNT",
-      "value": "0"
-    }
+      "value": 0
+    },
+    {
+      "productId": "p100",
+      "priceTier": "Hardship",
+      "pricingItem": "Cashback",
+      "rule": "",
+      "valueType": "AMOUNT",
+      "value": 0
+      }  
   ]
 }

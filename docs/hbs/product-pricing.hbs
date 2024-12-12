@@ -1,6 +1,6 @@
 {{!log 'product pricing' this}}
 <div class="table-responsive table_wrapper" style="overflow-x: auto;">
-<table id="product-pricing" class="table table-sm table-bordered"
+<table id="{{uniqueTableId}}" class="table table-sm table-bordered"
 data-toggle="table"
 data-filter-control="true"
 data-search="false"
@@ -16,9 +16,9 @@ style="table-layout: fixed; width: 100%;">
     <th data-field="productId" data-sortable="true" data-filter-control="select" title="Product">Product</th>
     <th data-field="priceTier" data-sortable="true" data-filter-control="select" title="Tier">Pricing Tier</th>
     <th data-field="pricingItem" data-sortable="true" data-filter-control="select" title="Pricing Item">Pricing Item</th>
-    <th data-field="rule" data-sortable="true" data-filter-control="select" title="Rule">Rule</th>
-    <th data-field="valueType" data-sortable="true" data-filter-control="select" title="Pricing Item Value Type">Value Type</th>
-    <th data-field="value" data-sortable="true"   title="Value">Value</th>
+    <th data-field="rule"  title="Rule">Rule</th>
+    <th data-field="valueType"  title="Pricing Item Value Type">Value Type</th>
+    <th data-field="value"  title="Value">Value</th>
     </tr>
     </thead>
     <tbody>
@@ -35,3 +35,4 @@ style="table-layout: fixed; width: 100%;">
     </tbody>
 </table>
 </div>
+{{initializeTable}} <!-- Call the helper here -->

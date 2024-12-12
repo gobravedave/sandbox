@@ -26,17 +26,44 @@
 </head>
 <body>
     <h1>Multi-Price Product Demonstration</h1>
+
+    <div id="pricing-rules">
+        <h2 class="toggle-header">Rule Variables</h2>
+        <div class="content">
+        <h3>Loan Size</h3> 
+            <label>
+            <span><b>Small: </b></span>
+            <input type="text" id="loan-size-small" value="200000">
+            </label>
+            <label>
+            <span><b>Average: </b></span>
+            <span id="loan-size-average">200000 to 600000</span>
+            </label>
+            <label>
+            <span><b>Big: </b></span>
+            <input type="text" id="loan-size-big" value="600000">
+            </label>
+        
+        <h3>LVR Band</h3> 
+            <label>
+            <span><b>Low: </b></span>
+            <input type="text" id="lvr-band-low" value="60">
+            </label>
+            <label>
+            <span><b>Medium: </b></span>
+            <span id="lvr-band-medium"">60% - 80%</span>
+            </label>
+            <label>
+            <span><b>High: </b></span>
+            <input type="text" id="lvr-band-high" value="80">
+            </label>        
+        </div>
+    </div>
+
     <div id="product-details"></div> <!-- Container for rendered HTML -->
 
     <!-- Main Product Template -->
     <script id="pricing-template" type="text/x-handlebars-template">
-        <div id="pricing-rules">
-            <h2 class="toggle-header">Pricing Rules</h2>
-            <div class="content">            
-            <li>Loan Size: Small < 200k, Medium 200k - 600k, Large 600k+ </li>
-            <li>LVR Band: Low < 60%, Medium 60% - 80%, High 80%+ </li>
-            </div>
-        </div>
 
         <div id="product-pricing">
             <h2 class="toggle-header">Product Settings</h2>
@@ -44,6 +71,7 @@
             {{> product-pricing-template}}
             </div>
         </div>
+
         <div id="customers">
             <h2 class="toggle-header">Customer Settings</h2>
             <div class="content">
@@ -110,23 +138,11 @@
       }
 
       function renderPricingDetails(context) {
+        console.log(context);
           const templateSource = document.getElementById('pricing-template').innerHTML;
           const template = Handlebars.compile(templateSource);
           const html = template(context);
-          document.getElementById('product-details').innerHTML = html;
-
-          // Initialize the Bootstrap Table with filter control
-          $('product-pricing table').bootstrapTable({
-            filterControl: true,
-            search: false,
-            pagination: true,
-            pageSize: 20,  // Setting page size directly here
-            pageLength: 20,  // Setting page length directly here
-            sortable: true,
-            showLoading: true,
-            showColumns: false
-        });
-        
+          document.getElementById('product-details').innerHTML = html;        
       }
 
       function addToggleEventListener() {
@@ -141,24 +157,62 @@
       }
 
     window.onload = async function () {
+
+        let tableIndex = 0; // Global counter for table IDs
+        Handlebars.registerHelper('uniqueTableId', function() {
+        return `table-${tableIndex++}`;
+        });
+
+        // Register a Handlebars helper to execute JavaScript code after rendering
+        Handlebars.registerHelper('initializeTable', function() {
+        // After the DOM is updated, initialize each table separately
+        setTimeout(() => {
+            $('[id^=table-]').each(function() {
+            const tableId = $(this).attr('id');
+            $('#' + tableId).bootstrapTable(); // Initialize the Bootstrap Table
+            });
+        }, 100);
+        });
+
         await loadPartial('product-pricing-template', 'hbs/product-pricing.hbs');
         await loadPartial('customer-pricing-template', 'hbs/customer-pricing.hbs');
         await loadPartial('account-pricing-template', 'hbs/account-pricing.hbs');
         const productData = await getProducts();
 
-        const customerData = await getCustomers();
+        let customerData = await getCustomers();
+
         let accountData = await getAccounts();
-        // Resolve pricing attributes for each account
+
+        // Resolve account pricing attributes for each account
         accountData = accountData.map(account => {
+        const rate = resolvePricingItem("Rate", account);
+        const rateDiscount = resolvePricingItem("Rate Discount", account);
+        const lateFee = resolvePricingItem("Late Fee", account);
+        const cashback = resolvePricingItem("Cashback", account);
+        const netRate = (parseFloat(rate) + parseFloat(rateDiscount)).toFixed(2);
+        const comparisonRate = resolveComparisonRate(parseFloat(account.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25); 
 
         return {
             ...account,
-            rate: resolvePricingItem("Rate", account),
-            rateDiscount: resolvePricingItem("Rate Discount", account),
-            lateFee: resolvePricingItem("Late Fee", account),
+            rate,
+            rateDiscount,
+            netRate,
+            lateFee,
+            comparisonRate,
+            cashback,
             notes: resolveNotes(account)
             };
         });
+
+        // Resolve customer attributes for each account
+        customerData = customerData.map(customer => {
+        const count_of_accounts = accountData.filter(account => account.customerId === customer.customerId).length;
+            return {
+            ...customer,
+            count_of_accounts
+            };
+        });
+        // console.log(accountData);
 
         // Combine the product and customer data into a single object
         const context = {
@@ -170,8 +224,43 @@
         renderPricingDetails(context);
         // Add toggle event listener after rendering content
         addToggleEventListener();
-      };
+      
+        // document.getElementById('loan-size-small').addEventListener('input', () => {
+        //     updateAverageLoanSize();
+        //     console.log('Average loan size updated - refresh pricing page');
+        //     // add logic to refresh the account pricing attributes and refresh the account details
+        // });
+        // document.getElementById('loan-size-big').addEventListener('input', () => {
+        //     updateAverageLoanSize();
+        // });
+        // document.getElementById('lvr-band-low').addEventListener('input', () => {
+        //     updateMediumLVRBand();
+        //     console.log('low lvr band updated - refresh pricing page');
+        // });
+        // document.getElementById('lvr-band-high').addEventListener('input', updateMediumLVRBand);
 
+    };
+
+    function updateAverageLoanSize() {
+        let smallValue = parseFloat(document.getElementById('loan-size-small').value) || 0;
+        let bigValue = parseFloat(document.getElementById('loan-size-big').value) || 0;
+        if (bigValue <= smallValue) {
+            bigValue = smallValue + 1; // Ensure bigValue is greater than smallValue
+            document.getElementById('loan-size-big').value = bigValue; // Update the input field
+        }
+        const mediumValueElement = document.getElementById('loan-size-average');
+        mediumValueElement.textContent = `${smallValue} to ${bigValue}`;
+    }
+    function updateMediumLVRBand() {
+        let smallValue = parseFloat(document.getElementById('lvr-band-low').value) || 0;
+        let bigValue = parseFloat(document.getElementById('lvr-band-high').value) || 0;
+        if (bigValue <= smallValue) {
+            bigValue = smallValue + 1; // Ensure bigValue is greater than smallValue
+            document.getElementById('lvr-band-high').value = bigValue; // Update the input field
+        }
+        const mediumValueElement = document.getElementById('lvr-band-medium');
+        mediumValueElement.textContent = `${smallValue}% to ${bigValue}%`;
+    }
 
     function resolvePricingItem(item, account) {
 
@@ -212,12 +301,46 @@
     // throw new Error(`${item} not found for productId: ${productId} and priceTier: ${priceTier}`);
     }
 
+    function resolveComparisonRate(principal, interestRate, fees, termYears) {
 
+    // console.log(`resolveComparisonRate called with principal: ${principal}, interestRate: ${interestRate}, fees: ${fees}, termYears: ${termYears}`);
+        
+    // Convert annual interest rate to monthly
+    let monthlyInterestRate = interestRate / 12 / 100;
+    let numberOfPayments = termYears * 12;
+
+    // Monthly payment calculation (principal and interest)
+    let monthlyPayment = (principal * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+    
+    // Total fees spread over the life of the loan
+    let totalFees = fees / numberOfPayments;
+    
+    // Comparison rate calculation
+    let monthlyComparisonRate = ((monthlyPayment + totalFees) / principal) * 100;
+    let comparisonRate = monthlyComparisonRate * 12; // Convert to annual rate
+    // console.log(`The comparison rate is ${comparisonRate}.%`);
+    
+    return comparisonRate.toFixed(2);
+}
 
     function resolveNotes(account) {
-    // Logic to generate notes based on productId and account details
-    return "add checking if staff or hardship is consistent with customer"; // Example value
+    const notes = [];
+    const customer = customerArray.find(customer => customer.customerId === account.customerId);
+    console.log("resolveNotes:", account, customer);  
+    if (account.staffPricing && !customer.isStaff) {
+        notes.push("Staff pricing is selected but customer is not a staff member.");
     }
+    if (!account.staffPricing && customer.isStaff) {
+        notes.push("Staff pricing is not selected but customer is a staff member.");
+    }
+    if (account.priceTier === "Hardship" && !customer.isDesparate) {
+        notes.push("Hardship pricing is selected but customer is not in hardship.");
+    }
+    if (customer.isDesparate && account.priceTier !== "Hardship") {
+        notes.push("Customer is in hardship but hardship pricing is not selected.");
+    }
+    return notes.join("\n"); // Example value
+    }    
     function resolveRule(rule, account) {
 
         console.log("resolveRule:", rule, account);
@@ -229,15 +352,16 @@
             "is Investor & PI": (account) => account.purpose === "Investor" && account.repayment === "P&I",
             "is Investor & IO": (account) => account.purpose === "Investor" && account.repayment === "IO",
             "if Staff Pricing": (account) => account.staffPricing,
-            "is Small Loan & Low LVR": (account) => account.loanAmt < 200000 && account.lvr < 60,
-            "is Small Loan & Medium LVR": (account) => account.loanAmt < 200000 && account.lvr >= 60 && account.lvr < 80,
-            "is Small Loan & High LVR": (account) => account.loanAmt < 200000 && account.lvr >= 80,
-            "is Medium Loan & Low LVR": (account) => account.loanAmt >= 200000 && account.loanAmt < 600000 && account.lvr < 60,
-            "is Medium Loan & Medium LVR": (account) => account.loanAmt >= 200000 && account.loanAmt < 600000 && account.lvr >= 60 && account.lvr < 80,
-            "is Medium Loan & High LVR": (account) => account.loanAmt >= 200000 && account.loanAmt < 600000 && account.lvr >= 80,
-            "is High Loan & Low LVR": (account) => account.loanAmt >=  600000 && account.lvr < 60,
-            "is High Loan & Medium LVR": (account) => account.loanAmt >= 600000 && account.lvr >= 60 && account.lvr < 80,
-            "is High Loan & High LVR": (account) => account.loanAmt >=  600000 && account.lvr >= 80
+            "is Small Loan & Low LVR": (account) => account.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.lvr < parseFloat(document.getElementById('lvr-band-low').value),
+            "is Small Loan & Medium LVR": (account) => account.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Small Loan & High LVR": (account) => account.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "is Average Loan & Low LVR": (account) => account.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.lvr < parseFloat(document.getElementById('lvr-band-low').value),
+            "is Average Loan & Medium LVR": (account) => account.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Average Loan & High LVR": (account) => account.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "is Big Loan & Low LVR": (account) => account.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.lvr < parseFloat(document.getElementById('lvr-band-low').value),
+            "is Big Loan & Medium LVR": (account) => account.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Big Loan & High LVR": (account) => account.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "Cashback conditions": (account) => account.loanAmt >=250000 && account.lvr >= parseFloat(document.getElementById('lvr-band-high').value)
         };
 
         // Check if the rule exists in the map and apply it
@@ -250,3 +374,4 @@
     </script>
 </body>
 </html>
+
