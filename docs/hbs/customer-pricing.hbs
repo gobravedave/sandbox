@@ -2,8 +2,8 @@
 <div class="table-responsive table_wrapper" style="overflow-x: auto;">
 <table id="{{uniqueTableId}}" class="table table-sm table-bordered"
 data-toggle="table"
-data-filter-control="true"
-data-search="false"
+data-filter-control="flase"
+data-search="true"
 data-show-columns="false"
 data-pagination="true"
 data-page-size="25"
@@ -13,17 +13,19 @@ data-show-loading="true"
 style="table-layout: fixed; width: 50%; overflow-x: scroll; white-space: nowrap;"> 
 <thead class="thead-dark">
     <tr>
-    <th data-field="customerId" data-sortable="true" data-filter-control="select" title="Customer">Customer</th>
-    <th data-field="isStaff" data-sortable="true" data-filter-control="select" title="isStaff">Is Staff</th>
-    <th data-field="isLoyal" data-sortable="true" data-filter-control="select" title="isLoyal">Is Loyal</th>
-    <th data-field="isDesparate" data-sortable="true" data-filter-control="select" title="isDesparate">Is Desparate</th>
+    <th data-field="customerId" data-sortable="true" title="Customer">Customer</th>
+    <th data-field="isStaff" data-sortable="true" title="isStaff">Is Staff</th>
+    <th data-field="isLoyal" data-sortable="true" title="isLoyal">Is Loyal</th>
+    <th data-field="isDesparate" data-sortable="true" title="isDesparate">Is Desparate</th>
     <th data-field="Accounts"  title="Account">Accounts Owned</th>
     </tr>
     </thead>
     <tbody>
     {{#each customerData}}
-        <tr>
-        <td>{{customerId}}</td>
+        <tr>    
+        <td>
+        <button class="customer-button" title="Negotiate me" data-customerid="{{customerId}}">{{customerId}}</button>
+        </td>
         <td>{{isStaff}}</td>        
         <td>{{isLoyal}}</td>
         <td>{{isDesparate}}</td>

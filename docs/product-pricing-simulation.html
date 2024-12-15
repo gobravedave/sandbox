@@ -16,6 +16,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
     <!-- Bootstrap Table and Filter Control CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/bootstrap-table.min.css">
@@ -29,11 +30,11 @@
 
     <div id="pricing-rules">
         <h2 class="toggle-header">Rule Variables</h2>
-        <div class="content">
+        <div class="content" style="display: none;">
         <h3>Loan Size</h3> 
             <label>
             <span><b>Small: </b></span>
-            <input type="text" id="loan-size-small" value="200000">
+            <input type="text" id="loan-size-small" value="200000" disabled="true">
             </label>
             <label>
             <span><b>Average: </b></span>
@@ -41,33 +42,42 @@
             </label>
             <label>
             <span><b>Big: </b></span>
-            <input type="text" id="loan-size-big" value="600000">
+            <input type="text" id="loan-size-big" value="600000" disabled="true">
             </label>
         
         <h3>LVR Band</h3> 
             <label>
             <span><b>Low: </b></span>
-            <input type="text" id="lvr-band-low" value="60">
+            <input type="text" id="lvr-band-low" value="60" disabled="true">
             </label>
             <label>
             <span><b>Medium: </b></span>
-            <span id="lvr-band-medium"">60% - 80%</span>
+            <span id="lvr-band-medium">60% - 80%</span>
             </label>
             <label>
             <span><b>High: </b></span>
-            <input type="text" id="lvr-band-high" value="80">
+            <input type="text" id="lvr-band-high" value="80" disabled="true">
             </label>        
         </div>
     </div>
 
     <div id="product-details"></div> <!-- Container for rendered HTML -->
-
+    <div id="negotiation-details">
+        <div id="negotiation-details-content">
+            <div id="swim-lanes" class="swim-lanes-container">
+                <!-- Swim lanes will be dynamically rendered here -->
+            </div>            
+        </div>
+    </div> <!-- Container for rendered HTML -->
+    <script id="negotiation-template" type="text/x-handlebars-template">
+        {{> negotiated-pricing-template}}
+</script>
     <!-- Main Product Template -->
     <script id="pricing-template" type="text/x-handlebars-template">
 
         <div id="product-pricing">
             <h2 class="toggle-header">Product Settings</h2>
-            <div class="content">            
+            <div class="content" style="display: none;">            
             {{> product-pricing-template}}
             </div>
         </div>
@@ -90,6 +100,7 @@
     <script>
     let productArray = []; // Global variable to store product data
     let customerArray = []; // Global variable to store customer data
+    let accountArray = []; // Global variable to store account data
 
       async function loadPartial(name, path) {
           return fetch(path)
@@ -129,7 +140,8 @@
           try {
               const accountResponse = await fetch(accountJsonUrl);
               const accountData = await accountResponse.json();
-              return accountData.accounts; // Assign to global variable
+              accountArray = accountData.accounts;
+              return accountArray; // Assign to global variable
 
           } catch (err) {
               console.error(`Error getting account data: ${err}`);
@@ -157,6 +169,9 @@
       }
 
     window.onload = async function () {
+        Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+        return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+        });
 
         let tableIndex = 0; // Global counter for table IDs
         Handlebars.registerHelper('uniqueTableId', function() {
@@ -177,6 +192,7 @@
         await loadPartial('product-pricing-template', 'hbs/product-pricing.hbs');
         await loadPartial('customer-pricing-template', 'hbs/customer-pricing.hbs');
         await loadPartial('account-pricing-template', 'hbs/account-pricing.hbs');
+        await loadPartial('negotiated-pricing-template', 'hbs/negotiated-pricing.hbs');
         const productData = await getProducts();
 
         let customerData = await getCustomers();
@@ -201,7 +217,7 @@
             comparisonRate,
             cashback,
             notes: resolveNotes(account)
-            };
+            }
         });
 
         // Resolve customer attributes for each account
@@ -212,7 +228,6 @@
             count_of_accounts
             };
         });
-        // console.log(accountData);
 
         // Combine the product and customer data into a single object
         const context = {
@@ -223,24 +238,41 @@
 
         renderPricingDetails(context);
         // Add toggle event listener after rendering content
+        // Add event listener to customer button
+        // Use event delegation for dynamically added elements
+        document.getElementById('product-details').addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('customer-button')) {
+        const customerId = e.target.dataset.customerid; // Get customerId from the button
+        console.log('Customer button clicked for ID:', customerId);
+
+        // Fetch customer and account data for this customer
+        const customer = customerArray.find(c => c.customerId === customerId);
+        const customerAccounts = accountData.filter(account => account.customerId === customerId);
+
+        if (customer) {
+            const negotiationDetails = document.getElementById('negotiation-details');
+            negotiationDetails.style.display = 'block';
+
+            // Render negotiation details using Handlebars
+            const negotiationTemplateSource = document.getElementById('negotiation-template').innerHTML;
+            const negotiationTemplate = Handlebars.compile(negotiationTemplateSource);
+            const swimlanes = { lane: ["Advertised", "Loyalty", "Hardship", "Tailored"] };
+
+            const html = negotiationTemplate({ customer, accounts: customerAccounts, swimlanes });
+            document.getElementById('negotiation-details-content').innerHTML = html;
+
+            // Add close functionality
+            document.getElementById('negotiation-details-close').addEventListener('click', function () {
+                negotiationDetails.style.display = 'none';
+            });
+            initializeDragAndDrop();
+        } else {
+            console.error(`Customer with ID ${customerId} not found.`);
+        }
+    }
+});
         addToggleEventListener();
-      
-        // document.getElementById('loan-size-small').addEventListener('input', () => {
-        //     updateAverageLoanSize();
-        //     console.log('Average loan size updated - refresh pricing page');
-        //     // add logic to refresh the account pricing attributes and refresh the account details
-        // });
-        // document.getElementById('loan-size-big').addEventListener('input', () => {
-        //     updateAverageLoanSize();
-        // });
-        // document.getElementById('lvr-band-low').addEventListener('input', () => {
-        //     updateMediumLVRBand();
-        //     console.log('low lvr band updated - refresh pricing page');
-        // });
-        // document.getElementById('lvr-band-high').addEventListener('input', updateMediumLVRBand);
-
-    };
-
+    }
     function updateAverageLoanSize() {
         let smallValue = parseFloat(document.getElementById('loan-size-small').value) || 0;
         let bigValue = parseFloat(document.getElementById('loan-size-big').value) || 0;
@@ -326,7 +358,7 @@
     function resolveNotes(account) {
     const notes = [];
     const customer = customerArray.find(customer => customer.customerId === account.customerId);
-    console.log("resolveNotes:", account, customer);  
+    // console.log("resolveNotes:", account, customer);  
     if (account.staffPricing && !customer.isStaff) {
         notes.push("Staff pricing is selected but customer is not a staff member.");
     }
@@ -343,7 +375,7 @@
     }    
     function resolveRule(rule, account) {
 
-        console.log("resolveRule:", rule, account);
+        // console.log("resolveRule:", rule, account);
 
         // Define rule mapping
         const ruleMap = {
@@ -371,7 +403,56 @@
         return false; // Return false if the rule is not found
     }
 
+    function initializeDragAndDrop() {
+    console.log('Initializing drag and drop...');
+    const swimLanes = document.querySelectorAll('.swim-lane');
+    console.log(`Found ${swimLanes.length} swim lanes.`);
+
+    swimLanes.forEach(lane => {
+        console.log('Setting up Sortable for a swim lane...');
+        Sortable.create(lane, {
+            group: 'accounts', // Allow dragging between swim lanes
+            animation: 150,
+            onStart(evt) {
+                const selectedCard = evt.item;
+                console.log(`----->Dragging account ID: ${selectedCard.dataset.accountid}`);
+                const accountId = selectedCard.dataset.accountid;
+
+                if (!accountId) {
+                    console.error('Account ID is undefined:', selectedCard);
+                }
+
+                console.log(`Dragging account ID: ${accountId}`);
+                selectedCard.classList.add('dragging');
+            },
+            onEnd(evt) {
+                const selectedCard = evt.item;
+                console.log (`----->Dropping account ID: ${selectedCard.dataset} onto ${evt.to.dataset.tier}`);
+                const accountId = selectedCard.dataset.accountid;
+
+                console.log(`----->Dropping account ID: ${accountId} onto ${evt.to.dataset.tier}`);
+                selectedCard.classList.remove('dragging');
+
+                // Update the account's pricing tier in accountArray
+                if (!accountArray) {
+                    console.error('accountArray is not defined');
+                    return;
+                }
+
+                const newTier = evt.to.dataset.tier;
+                console.log(`Dragged account ID: ${accountId}, New tier: ${newTier}`);
+
+                const account = accountArray.find(acc => acc.accountId === accountId);
+                if (account) {
+                    account.priceTier = newTier;
+                    console.log(`Account ${accountId} moved to ${newTier}`);
+                } else {
+                    console.warn(`Account with ID ${accountId} not found.`);
+                }
+            }
+        });
+    });
+}
     </script>
 </body>
 </html>
-

@@ -2,7 +2,7 @@ body {
   font-family: Arial;
 }
 
-h1, h2, h3, h4 {
+h1, h2, h3{
   padding-top: 12px;
   cursor: pointer;
   color: #371282;
@@ -42,7 +42,7 @@ content: attr(title);
 position: absolute;
 background-color: #333;
 color: #fff;
-padding: 5px 10px;
+padding: 5px 5px;
 border-radius: 5px;
 white-space: nowrap;
 top: -30px; /* Position above the element */
@@ -120,25 +120,98 @@ min-width: 100px;
 max-width: 100%;
 } */
 
-/* button {
+.customer-button {
   background-color: white;
   color: #3949ab;
   border: 1px solid #3949ab;
-  border-radius: 8px;
-  padding: 10px 20px;
+  border-radius: 4px;
+  /* padding: 10px 10px; */ 
   transition-duration: 0.4s;
-} */
+} 
 
-/* button[disabled]:hover {
-  background: red;
-} */
+.customer-button:hover {
+  background-color: #3949ab; /* purple */
+  color: #FFF;
+}
 
-/* button:hover { */
-/* background-color: #3949ab; purple */
-/* color: white; */
-/* } */
+.customer-button {
+  cursor: pointer;
+}
 
 .thead-dark th {
   background: #eee;
 }
 
+#negotiation-details {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+#negotiation-details-content {
+  background-color: #fefefe;
+  margin: 50px auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+#negotiation-details-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+#negotiation-details-close:hover,
+#negotiation-details-close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.swim-lanes-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.swim-lane {
+  flex: 1;
+  margin: 5px 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: #f9f9f9;
+  min-height: 200px;
+}
+
+.swim-lane h5 {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.account-card {
+  margin: 5px 5px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #3e0481;
+  border-radius: 3px;
+  cursor: grab;
+}
+.account-card.dragging {
+  opacity: 0.5;
+  border: 2px dashed #000;
+}
+
+.green-button {
+  background-color: #15aa04; /* Green */
+  color: black;
+  margin: 4px 2px;
+  cursor: auto;
+}
