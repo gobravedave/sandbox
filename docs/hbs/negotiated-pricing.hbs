@@ -38,10 +38,9 @@
         {{log '****accounts' accountId}}
             <div class="account-card" draggable="true" data-accountid="{{accountId}}">
                 {{accountId}} 
-                {{#with attributes}}
-                {{> account-attributes-template }}
-                {{/with}}
-                <li>Rate: {{rate}}%</li>
+                {{#each attributes}}
+                <li>{{@key}}: {{this}}</li>
+                {{/each}}                <li>Rate: {{rate}}%</li>
                 <li>Discount: {{rateDiscount}}%</li>
                 <li>Net Rate: {{netRate}}%</li>
                 <li>Compare Rate: {{comparisonRate}}%</li>
