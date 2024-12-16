@@ -4,19 +4,19 @@
         "customerId": "c100",
         "isStaff": true,
         "isLoyal": false,
-        "isDesparate": false
+        "isInHardship": false
         },
         {            
         "customerId": "c200",
         "isStaff": false,
         "isLoyal": true,
-        "isDesparate": false
+        "isInHardship": false
         },
         {            
         "customerId": "c300",
         "isStaff": false,
         "isLoyal": false,
-        "isDesparate": true
+        "isInHardship": true
         }
     ]
 }

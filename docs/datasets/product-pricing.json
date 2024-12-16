@@ -166,6 +166,14 @@
       "rule": "",
       "valueType": "AMOUNT",
       "value": 0
+      },  
+      {
+      "productId": "p200",
+      "priceTier": "Advertised",
+      "pricingItem": "Rate",
+      "rule": "",
+      "valueType": "PERCENTAGE",
+      "value": 10.0
       }  
-  ]
+    ]
 }

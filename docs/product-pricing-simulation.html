@@ -192,6 +192,7 @@
         await loadPartial('product-pricing-template', 'hbs/product-pricing.hbs');
         await loadPartial('customer-pricing-template', 'hbs/customer-pricing.hbs');
         await loadPartial('account-pricing-template', 'hbs/account-pricing.hbs');
+        await loadPartial('account-attributes-template', 'hbs/account-attributes.hbs');
         await loadPartial('negotiated-pricing-template', 'hbs/negotiated-pricing.hbs');
         const productData = await getProducts();
 
@@ -206,7 +207,7 @@
         const lateFee = resolvePricingItem("Late Fee", account);
         const cashback = resolvePricingItem("Cashback", account);
         const netRate = (parseFloat(rate) + parseFloat(rateDiscount)).toFixed(2);
-        const comparisonRate = resolveComparisonRate(parseFloat(account.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25); 
+        const comparisonRate = resolveComparisonRate(parseFloat(account.attributes.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25); 
 
         return {
             ...account,
@@ -374,26 +375,23 @@
     return notes.join("\n"); // Example value
     }    
     function resolveRule(rule, account) {
-
-        // console.log("resolveRule:", rule, account);
-
         // Define rule mapping
         const ruleMap = {
-            "is Owner & PI": (account) => account.purpose === "Owner" && account.repayment === "P&I",
-            "is Owner & IO": (account) => account.purpose === "Owner" && account.repayment === "IO",
-            "is Investor & PI": (account) => account.purpose === "Investor" && account.repayment === "P&I",
-            "is Investor & IO": (account) => account.purpose === "Investor" && account.repayment === "IO",
+            "is Owner & PI": (account) => account.attributes.purpose === "Owner" && account.attributes.repayment === "P&I",
+            "is Owner & IO": (account) => account.attributes.purpose === "Owner" && account.attributes.repayment === "IO",
+            "is Investor & PI": (account) => account.attributes.purpose === "Investor" && account.attributes.repayment === "P&I",
+            "is Investor & IO": (account) => account.attributes.purpose === "Investor" && account.attributes.repayment === "IO",
             "if Staff Pricing": (account) => account.staffPricing,
-            "is Small Loan & Low LVR": (account) => account.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.lvr < parseFloat(document.getElementById('lvr-band-low').value),
-            "is Small Loan & Medium LVR": (account) => account.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.lvr < parseFloat(document.getElementById('lvr-band-high').value),
-            "is Small Loan & High LVR": (account) => account.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
-            "is Average Loan & Low LVR": (account) => account.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.lvr < parseFloat(document.getElementById('lvr-band-low').value),
-            "is Average Loan & Medium LVR": (account) => account.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.lvr < parseFloat(document.getElementById('lvr-band-high').value),
-            "is Average Loan & High LVR": (account) => account.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
-            "is Big Loan & Low LVR": (account) => account.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.lvr < parseFloat(document.getElementById('lvr-band-low').value),
-            "is Big Loan & Medium LVR": (account) => account.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.lvr < parseFloat(document.getElementById('lvr-band-high').value),
-            "is Big Loan & High LVR": (account) => account.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
-            "Cashback conditions": (account) => account.loanAmt >=250000 && account.lvr >= parseFloat(document.getElementById('lvr-band-high').value)
+            "is Small Loan & Low LVR": (account) => account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-low').value),
+            "is Small Loan & Medium LVR": (account) => account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Small Loan & High LVR": (account) => account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "is Average Loan & Low LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-low').value),
+            "is Average Loan & Medium LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Average Loan & High LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "is Big Loan & Low LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-low').value),
+            "is Big Loan & Medium LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Big Loan & High LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "Cashback conditions": (account) => account.attributes.loanAmt >=250000 && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value)
         };
 
         // Check if the rule exists in the map and apply it
@@ -445,6 +443,7 @@
                 const account = accountArray.find(acc => acc.accountId === accountId);
                 if (account) {
                     account.priceTier = newTier;
+                    // to do: resolve account pricing and fresh account-card based on the new tier
                     console.log(`Account ${accountId} moved to ${newTier}`);
                 } else {
                     console.warn(`Account with ID ${accountId} not found.`);

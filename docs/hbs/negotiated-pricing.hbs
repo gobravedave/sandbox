@@ -24,7 +24,7 @@
         {{#ifEquals customer.isLoyal true}}
         <button class="button green-button" disabled="true">Loyal</button>
         {{/ifEquals}}
-        {{#ifEquals customer.isDesparate true}}
+        {{#ifEquals customer.isInHardship true}}
         <button class="button green-button" disabled="true">Hardship</button>
         {{/ifEquals}}
 </div>
@@ -38,10 +38,9 @@
         {{log '****accounts' accountId}}
             <div class="account-card" draggable="true" data-accountid="{{accountId}}">
                 {{accountId}} 
-                <li>Purpose: {{purpose}}</li>
-                <li>Repayment: {{repayment}}</li>
-                <li>LoanAMT: ${{loanAmt}}</li>
-                <li>LVR: {{lvr}}%</li>
+                {{#with attributes}}
+                {{> account-attributes-template }}
+                {{/with}}
                 <li>Rate: {{rate}}%</li>
                 <li>Discount: {{rateDiscount}}%</li>
                 <li>Net Rate: {{netRate}}%</li>

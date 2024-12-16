@@ -16,18 +16,10 @@ style="table-layout: fixed; width: 100%;">
     <th data-field="accountId" data-sortable="true" data-filter-control="select" title="Account">Account</th>
     <th data-field="customerId" data-sortable="true" data-filter-control="select" title="Customer">Customer</th>
     <th data-field="productId" data-sortable="true" data-filter-control="select" title="Product">Product</th>
-    <th data-field="purpose" data-sortable="true" data-filter-control="select" title="Loan Purpose">Purpose</th>
-    <th data-field="repayment" data-sortable="true"  data-filter-control="select" title="Repayment Type">Repayment</th>
     <th data-field="priceTier" data-sortable="true" data-filter-control="select" title="Price Tier">Price Tier</th>
+    <th data-field="attributes" data-sortable="true" data-filter-control="input" title="Attributes">Attributes</th>
     <th data-field="staffPricing" data-sortable="true" data-filter-control="select" title="staffPricing">Staff Pricing</th>    
-    <th data-field="loanAmt" data-sortable="true"  title="Loan Amount">Loan Amount</th>
-    <th data-field="lvr" data-sortable="true"  title="lvr">LVR</th>
-    <th data-field="rate" data-sortable="true"  title="rate">Rate</th>
-    <th data-field="rateDiscount" data-sortable="true"  title="rateDiscount">Rate Discount</th>
-    <th data-field="netRate" data-sortable="true" title="netRrate">Net Rate</th>
-    <th data-field="comparisonRate" data-sortable="true"  title="comparisonRate">Compare Rate</th>
-    <th data-field="cashback" data-sortable="true" title="cashback">Cashback</th>
-    <th data-field="lateFee" data-sortable="true" title="lateFee">Late Fee</th>
+    <th data-field="pricing" data-sortable="true"  title="pricing">Pricing</th>
     <th data-field="notes"  title="notes">Notes</th>
     </tr>
     </thead>
@@ -37,18 +29,21 @@ style="table-layout: fixed; width: 100%;">
         <td>{{accountId}}</td>
         <td>{{customerId}}</td>
         <td>{{productId}}</td>
-        <td>{{purpose}}</td>  
-        <td>{{repayment}}</td>      
-        <td>{{priceTier}}</td>        
+        <td>{{priceTier}}</td>
+        <td>
+            {{#with attributes}}
+            {{> account-attributes-template }}
+            {{/with}}
+        </td>
         <td>{{staffPricing}}</td>
-        <td>{{loanAmt}}</td>        
-        <td>{{lvr}}%</td>
-        <td>{{rate}}%</td>
-        <td>{{rateDiscount}}%</td>
-        <td>{{netRate}}%</td>
-        <td>{{comparisonRate}}%</td>
-        <td>${{cashback}}</td>
-        <td>${{lateFee}}</td>
+        <td>
+            <li>Rate: {{rate}}%</li>
+            <li>Rate Discount: {{rateDiscount}}%</li>
+            <li>Net Rate: {{netRate}}%</li>
+            <li>Compare Rate: {{comparisonRate}}%</li>
+            <li>Cashback: ${{cashback}}</li>
+            <li>Late Fee: ${{lateFee}}</li>
+        </td>
         <td>{{notes}}</td>
         </tr>
     {{/each}}
