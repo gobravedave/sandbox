@@ -31,9 +31,15 @@ style="table-layout: fixed; width: 100%;">
         <td>{{productId}}</td>
         <td>{{priceTier}}</td>
         <td>
-            {{#each attributes}}
-            <li>{{@key}}: {{this}}</li>
-            {{/each}}
+        {{#each attributes}}
+            {{#if (ifEquals @key "loanAmt")}}
+                <li>{{@key}}: ${{this}} </li>
+            {{else if (ifEquals @key "lvr")}}
+                <li>{{@key}}: {{this}}% </li>
+            {{else}}
+                <li>{{@key}}: {{this}}</li>
+            {{/if}}
+        {{/each}}
         </td>
         <td>{{staffPricing}}</td>
         <td>

@@ -1,7 +1,7 @@
 {
   "accounts": [
     {
-    "accountId": "a100",
+    "accountId": "HL-100",
     "customerId": "c100",
     "productId": "p100",
     "priceTier": "Advertised",

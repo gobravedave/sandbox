@@ -169,9 +169,13 @@
       }
 
     window.onload = async function () {
-        Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
-        return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+        Handlebars.registerHelper('ifEquals', function(arg1, arg2) {
+        return arg1 === arg2; // Return true or false
         });
+
+        // Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+        // return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+        // });
 
         Handlebars.registerHelper('formatValue', function(val, format) {
             let formattedVal;
@@ -182,14 +186,18 @@
             switch (format) {
                 case 'AMOUNT':
                     if (isNumber) {
-                        formattedVal = '$' + val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+                        formattedVal = `$${val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}`;
+                    } else if (val !== null) {
+                        formattedVal = `$${val}`;
                     } else {
-                        formattedVal = 'Invalid amount';
+                        formattedVal = 'Invalid amount (datatype: ' + (typeof val) + ')';
                     }
                     break;
                 case 'PERCENTAGE':
                     if (isNumber) {
                         formattedVal = (val ).toFixed(2) + '%';
+                    } else if (val !== undefined && val !== null) {
+                        formattedVal = val + '%';
                     } else {
                         formattedVal = 'Invalid percentage';
                     }
@@ -228,8 +236,6 @@
  
         // Resolve account pricing attributes for each account
         accountData = accountData.map(account => {
-
-            // const comparisonRate = resolveComparisonRate(parseFloat(account.attributes.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25); 
 
         return {
             ...account,
@@ -327,13 +333,25 @@
         return product.productId === account.productId &&
             product.priceTier === account.priceTier;
     })
-    console.log('pricingItems', pricingItems);
-
+ 
     // Loop through the pricingItems and call resolvePricingItem for pricingItem.. the result is then added to the pricing array
     pricingItems.forEach(pricingItem => {
         const value = resolvePricingItem(pricingItem, account);
         if (value !== null) pricing.push({ name: pricingItem.pricingItem, valueType: pricingItem.valueType, value });
     });
+
+    // If account Id starts with HL, calculate netRate and comparisonRate
+    if (accountId.startsWith('HL')) {
+        const rate = pricing.find(element => element.name === 'Rate').value || 0;
+        const rateDiscount = pricing.find(element => element.name === 'Rate Discount').value || 0;
+        const lateFee = pricing.find(element => element.name === 'Late Fee').value || 0;
+        const netRate = (parseFloat(rate) + parseFloat(rateDiscount)).toFixed(2);
+        const comparisonRate = resolveComparisonRate(parseFloat(account.attributes.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25);
+        console.log('netRate', netRate);
+        console.log('comparisonRate', comparisonRate);
+        pricing.push({ name: 'Net Rate', valueType: 'PERCENTAGE', value: netRate}); 
+        pricing.push({ name: 'Compare Rate', valueType: 'PERCENTAGE', value: comparisonRate});
+    }
     
     return pricing;
 }
