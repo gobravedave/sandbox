@@ -198,24 +198,19 @@
         let customerData = await getCustomers();
 
         let accountData = await getAccounts();
-
+ 
         // Resolve account pricing attributes for each account
         accountData = accountData.map(account => {
-        const rate = resolvePricingItem("Rate", account);
-        const rateDiscount = resolvePricingItem("Rate Discount", account);
-        const lateFee = resolvePricingItem("Late Fee", account);
-        const cashback = resolvePricingItem("Cashback", account);
-        const netRate = (parseFloat(rate) + parseFloat(rateDiscount)).toFixed(2);
-        const comparisonRate = resolveComparisonRate(parseFloat(account.attributes.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25); 
+        // const rate = resolvePricingItem("Rate", account);
+        // const rateDiscount = resolvePricingItem("Rate Discount", account);
+        // const lateFee = resolvePricingItem("Late Fee", account);
+        // const cashback = resolvePricingItem("Cashback", account);
+        // const netRate = (parseFloat(rate) + parseFloat(rateDiscount)).toFixed(2);
+        // const comparisonRate = resolveComparisonRate(parseFloat(account.attributes.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25); 
 
         return {
             ...account,
-            rate,
-            rateDiscount,
-            netRate,
-            lateFee,
-            comparisonRate,
-            cashback,
+            pricing: resolvePricing(account),
             notes: resolveNotes(account)
             }
         });
@@ -294,8 +289,7 @@
         mediumValueElement.textContent = `${smallValue}% to ${bigValue}%`;
     }
 
-    function resolvePricingItem(item, account) {
-
+    function resolvePricing(account) {
         const { productId, priceTier, accountId, customerId } = account;
 
         console.log(`resolvePricingItem(${accountId}, ${productId}, ${priceTier}, ${customerId})`);
@@ -304,33 +298,47 @@
     if (!productId) throw new Error(`Product ID is missing in account: ${accountId}`);
     if (!priceTier) throw new Error(`Price tier is missing in account: ${accountId}`);
 
-    // Loop through the product data to find a match
-
-    const products = productArray.filter(product => {
+    // Filter all pricingItems in Product based on productCode
+    let pricing = [];
+    const pricingItems = productArray.filter(product => {
         return product.productId === account.productId &&
-            product.priceTier === account.priceTier &&
-            product.pricingItem === item;
+            product.priceTier === account.priceTier;
+    })
+    console.log('pricingItems', pricingItems);
+
+    // Loop through the pricingItems and call resolvePricingItem for pricingItem.. the result is then added to the pricing array
+    pricingItems.forEach(pricingItem => {
+        const value = resolvePricingItem(pricingItem, account);
+        if (value !== null) pricing.push({ name: pricingItem.pricingItem, value });
     });
+    
+    return pricing;
+}
 
-    for (const product of products) {
-        console.log(`Match found for account ${accountId} and product ${product.productId}`);
 
-        // Check the rule, if any
-        if (product.rule) {
-            console.log(`Rule "${product.rule}" evaluated for account ${accountId}`);
-            if (resolveRule(product.rule, account)) {
-                console.log(`Rule "${product.rule}" passed for account ${accountId}`);
-                return product.value;
+    function resolvePricingItem(pricingItem, account) {
+
+        const { productId, priceTier, accountId, customerId } = account;
+
+        console.log(`resolvePricingItem(${pricingItem},${accountId}, ${productId}, ${priceTier}, ${customerId})`);
+
+        // Validate account attributes
+        if (!productId) throw new Error(`Product ID is missing in account: ${accountId}`);
+        if (!priceTier) throw new Error(`Price tier is missing in account: ${accountId}`);
+            // Check the rule, if any
+        if (pricingItem.rule) {
+            console.log(`Rule "${pricingItem.rule}" evaluated for account ${accountId}`);
+            if (resolveRule(pricingItem.rule, account)) {
+                console.log(`Rule "${pricingItem.rule}" passed for account ${accountId}`);
+                return pricingItem.value;
+            } else {
+                console.log(`Rule "${pricingItem.rule}" failed for account ${accountId}`);
+                return null;
             }
         } else {
-            console.log(`No rule for account ${accountId} and product ${product.productId}`);
-            return product.value;
+            console.log(`No rule for account ${accountId} and product ${pricingItem.productId}`);
+            return pricingItem.value;
         }
-    }
-
-    console.log(`No match found for account ${accountId}`);
-    return null;
-    // throw new Error(`${item} not found for productId: ${productId} and priceTier: ${priceTier}`);
     }
 
     function resolveComparisonRate(principal, interestRate, fees, termYears) {
@@ -365,15 +373,16 @@
     if (!account.staffPricing && customer.isStaff) {
         notes.push("Staff pricing is not selected but customer is a staff member.");
     }
-    if (account.priceTier === "Hardship" && !customer.isDesparate) {
+    if (account.priceTier === "Hardship" && !customer.isInHardship) {
         notes.push("Hardship pricing is selected but customer is not in hardship.");
     }
-    if (customer.isDesparate && account.priceTier !== "Hardship") {
+    if (customer.isInHardship && account.priceTier !== "Hardship") {
         notes.push("Customer is in hardship but hardship pricing is not selected.");
     }
     return notes.join("\n"); // Example value
     }    
     function resolveRule(rule, account) {
+        console.log(`resolveRule(${rule},${account})`);
         // Define rule mapping
         const ruleMap = {
             "is Owner & PI": (account) => account.attributes.purpose === "Owner" && account.attributes.repayment === "P&I",

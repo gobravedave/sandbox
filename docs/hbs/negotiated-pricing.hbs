@@ -40,12 +40,10 @@
                 {{accountId}} 
                 {{#each attributes}}
                 <li>{{@key}}: {{this}}</li>
-                {{/each}}                <li>Rate: {{rate}}%</li>
-                <li>Discount: {{rateDiscount}}%</li>
-                <li>Net Rate: {{netRate}}%</li>
-                <li>Compare Rate: {{comparisonRate}}%</li>
-                <li>Cashback: ${{cashback}}</li>
-                <li>Late Fee: ${{lateFee}}</li>
+                {{/each}}
+                {{#each pricing}}
+                <li>{{name}}: {{value}}</li>
+                {{/each}}
             </div>
         {{/ifEquals}}
         {{/each}}

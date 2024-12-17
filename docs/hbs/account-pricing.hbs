@@ -37,12 +37,9 @@ style="table-layout: fixed; width: 100%;">
         </td>
         <td>{{staffPricing}}</td>
         <td>
-            <li>Rate: {{rate}}%</li>
-            <li>Rate Discount: {{rateDiscount}}%</li>
-            <li>Net Rate: {{netRate}}%</li>
-            <li>Compare Rate: {{comparisonRate}}%</li>
-            <li>Cashback: ${{cashback}}</li>
-            <li>Late Fee: ${{lateFee}}</li>
+            {{#each pricing}}
+            <li>{{name}}: {{value}}</li>
+            {{/each}}
         </td>
         <td>{{notes}}</td>
         </tr>
