@@ -39,7 +39,7 @@
             <div class="account-card" draggable="true" data-accountid="{{accountId}}">
                 {{accountId}} 
                 {{#each attributes}}
-                <li>{{@key}}: {{this}}</li>
+                    <li>{{@key}}: {{this}}</li>
                 {{/each}}
                 {{#each pricing}}
                 <li>{{name}}: {{formatValue value valueType}}</li>

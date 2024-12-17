@@ -167,15 +167,21 @@
               });
           });
       }
+        // Handlebars.registerHelper('ifEqual', function(arg1, arg2) {
+        // return arg1 === arg2; // Return true or false
+        // });
 
     window.onload = async function () {
-        Handlebars.registerHelper('ifEquals', function(arg1, arg2) {
-        return arg1 === arg2; // Return true or false
+
+        Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+        // If options.fn exists, it's being used as a block helper
+        if (options && typeof options.fn === 'function') {
+            return arg1 === arg2 ? options.fn(this) : options.inverse(this);
+        }
+        // If options.fn doesn't exist, it's being used as a subexpression
+        return arg1 === arg2;
         });
 
-        // Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
-        // return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
-        // });
 
         Handlebars.registerHelper('formatValue', function(val, format) {
             let formattedVal;
