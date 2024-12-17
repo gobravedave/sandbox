@@ -390,6 +390,7 @@
             "is Investor & PI": (account) => account.attributes.purpose === "Investor" && account.attributes.repayment === "P&I",
             "is Investor & IO": (account) => account.attributes.purpose === "Investor" && account.attributes.repayment === "IO",
             "if Staff Pricing": (account) => account.staffPricing,
+            "if Not Staff Pricing": (account) => account.staffPricing === false,
             "is Small Loan & Low LVR": (account) => account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-low').value),
             "is Small Loan & Medium LVR": (account) => account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
             "is Small Loan & High LVR": (account) => account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
@@ -399,7 +400,11 @@
             "is Big Loan & Low LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-low').value),
             "is Big Loan & Medium LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
             "is Big Loan & High LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
-            "Cashback conditions": (account) => account.attributes.loanAmt >=250000 && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value)
+            "if Cashback conditions met": (account) => account.attributes.loanAmt >=250000 && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "if Cashback conditions not met": (account) => account.attributes.loanAmt < 250000 || account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Eligible for BT":(account) => account.attributes.eligibleForBT,
+            "if New Card":(account) => account.attributes.balanceTransferTtype ==="New Card",
+            "if Existing Card":(account) => account.attributes.balanceTransferTtype ==="Existing Card"
         };
 
         // Check if the rule exists in the map and apply it

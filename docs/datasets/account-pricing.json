@@ -79,15 +79,37 @@
     "staffPricing": false
     },
     {
-      "accountId": "a700",
+    "accountId": "cc-100",
+    "customerId": "c100",
+    "productId": "p200",
+    "priceTier": "Advertised",
+    "attributes": {
+      "eligibleForBT": true,
+      "balanceTransferTtype": "New Card"
+    },
+    "staffPricing": false
+    },     
+    {
+    "accountId": "cc-200",
+    "customerId": "c100",
+    "productId": "p200",
+    "priceTier": "Advertised",
+    "attributes": {
+      "eligibleForBT": true,
+      "balanceTransferTtype": "Existing Card"
+    },
+    "staffPricing": false
+    },     
+    {
+      "accountId": "cc-300",
       "customerId": "c100",
       "productId": "p200",
       "priceTier": "Advertised",
       "attributes": {
-        "xxxx": "yyyy"
+        "eligibleForBT": false
       },
       "staffPricing": false
       }     
-       
+           
   ]
 }

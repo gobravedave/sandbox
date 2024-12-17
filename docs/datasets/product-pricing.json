@@ -115,7 +115,7 @@
       "productId": "p100",
       "priceTier": "Advertised",
       "pricingItem": "Late Fee",
-      "rule": "",
+      "rule": "if Not Staff Pricing",
       "valueType": "AMOUNT",
       "value": 20
     },
@@ -123,7 +123,7 @@
     "productId": "p100",
     "priceTier": "Advertised",
     "pricingItem": "Cashback",
-    "rule": "Cashback conditions",
+    "rule": "if Cashback conditions met",
     "valueType": "AMOUNT",
     "value": 2000
     },
@@ -131,7 +131,7 @@
     "productId": "p100",
     "priceTier": "Advertised",
     "pricingItem": "Cashback",
-    "rule": "",
+    "rule": "if Cashback conditions not met",
     "valueType": "AMOUNT",
     "value": 0
     },
@@ -170,10 +170,34 @@
       {
       "productId": "p200",
       "priceTier": "Advertised",
-      "pricingItem": "Rate",
+      "pricingItem": "Purchase Rate",
       "rule": "",
       "valueType": "PERCENTAGE",
-      "value": 10.0
-      }  
-    ]
+      "value": 20.0
+      },
+      {
+      "productId": "p200",
+      "priceTier": "Advertised",
+      "pricingItem": "Balance Transfer Rate",
+      "rule": "is Eligible for BT",
+      "valueType": "PERCENTAGE",
+      "value": 0.0
+      },  
+      {
+      "productId": "p200",
+      "priceTier": "Advertised",
+      "pricingItem": "Balance Transfer Term",
+      "rule": "if New Card",
+      "valueType": "NUMBER",
+      "value": "28 Months"
+      },  
+      {
+      "productId": "p200",
+      "priceTier": "Advertised",
+      "pricingItem": "Balance Transfer Term",
+      "rule": "if Existing Card",
+      "valueType": "NUMBER",
+      "value": "18 Months"
+      }          
+  ]
 }
