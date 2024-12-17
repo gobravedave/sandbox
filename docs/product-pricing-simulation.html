@@ -167,9 +167,6 @@
               });
           });
       }
-        // Handlebars.registerHelper('ifEqual', function(arg1, arg2) {
-        // return arg1 === arg2; // Return true or false
-        // });
 
     window.onload = async function () {
 
@@ -273,7 +270,7 @@
         document.getElementById('product-details').addEventListener('click', function (e) {
         if (e.target && e.target.classList.contains('customer-button')) {
         const customerId = e.target.dataset.customerid; // Get customerId from the button
-        console.log('Customer button clicked for ID:', customerId);
+        // console.log('Customer button clicked for ID:', customerId);
 
         // Fetch customer and account data for this customer
         const customer = customerArray.find(c => c.customerId === customerId);
@@ -327,7 +324,7 @@
     function resolvePricing(account) {
         const { productId, priceTier, accountId, customerId } = account;
 
-        console.log(`resolvePricingItem(${accountId}, ${productId}, ${priceTier}, ${customerId})`);
+        // console.log(`resolvePricingItem(${accountId}, ${productId}, ${priceTier}, ${customerId})`);
 
     // Validate account attributes
     if (!productId) throw new Error(`Product ID is missing in account: ${accountId}`);
@@ -353,8 +350,6 @@
         const lateFee = pricing.find(element => element.name === 'Late Fee').value || 0;
         const netRate = (parseFloat(rate) + parseFloat(rateDiscount)).toFixed(2);
         const comparisonRate = resolveComparisonRate(parseFloat(account.attributes.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25);
-        console.log('netRate', netRate);
-        console.log('comparisonRate', comparisonRate);
         pricing.push({ name: 'Net Rate', valueType: 'PERCENTAGE', value: netRate}); 
         pricing.push({ name: 'Compare Rate', valueType: 'PERCENTAGE', value: comparisonRate});
     }
@@ -366,23 +361,23 @@
 
         const { productId, priceTier, accountId, customerId } = account;
 
-        console.log(`resolvePricingItem(${pricingItem},${accountId}, ${productId}, ${priceTier}, ${customerId})`);
+        // console.log(`resolvePricingItem(${pricingItem},${accountId}, ${productId}, ${priceTier}, ${customerId})`);
 
         // Validate account attributes
         if (!productId) throw new Error(`Product ID is missing in account: ${accountId}`);
         if (!priceTier) throw new Error(`Price tier is missing in account: ${accountId}`);
             // Check the rule, if any
         if (pricingItem.rule) {
-            console.log(`Rule "${pricingItem.rule}" evaluated for account ${accountId}`);
+            // console.log(`Rule "${pricingItem.rule}" evaluated for account ${accountId}`);
             if (resolveRule(pricingItem.rule, account)) {
-                console.log(`Rule "${pricingItem.rule}" passed for account ${accountId}`);
+                // console.log(`Rule "${pricingItem.rule}" passed for account ${accountId}`);
                 return pricingItem.value;
             } else {
-                console.log(`Rule "${pricingItem.rule}" failed for account ${accountId}`);
+                // console.log(`Rule "${pricingItem.rule}" failed for account ${accountId}`);
                 return null;
             }
         } else {
-            console.log(`No rule for account ${accountId} and product ${pricingItem.productId}`);
+            // console.log(`No rule for account ${accountId} and product ${pricingItem.productId}`);
             return pricingItem.value;
         }
     }
@@ -428,7 +423,7 @@
     return notes.join("\n"); // Example value
     }    
     function resolveRule(rule, account) {
-        console.log(`resolveRule(${rule},${account})`);
+        // console.log(`resolveRule(${rule},${account})`);
         // Define rule mapping
         const ruleMap = {
             "is Owner & PI": (account) => account.attributes.purpose === "Owner" && account.attributes.repayment === "P&I",
