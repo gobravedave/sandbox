@@ -173,6 +173,33 @@
         return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
         });
 
+        Handlebars.registerHelper('formatValue', function(val, format) {
+            let formattedVal;
+
+            // Ensure 'val' is a number where needed
+            const isNumber = typeof val === 'number' && !isNaN(val);
+
+            switch (format) {
+                case 'AMOUNT':
+                    if (isNumber) {
+                        formattedVal = '$' + val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+                    } else {
+                        formattedVal = 'Invalid amount';
+                    }
+                    break;
+                case 'PERCENTAGE':
+                    if (isNumber) {
+                        formattedVal = (val ).toFixed(2) + '%';
+                    } else {
+                        formattedVal = 'Invalid percentage';
+                    }
+                    break;
+                default:
+                    formattedVal = val !== undefined && val !== null ? val : 'N/A';
+            }
+            return formattedVal;
+        });
+
         let tableIndex = 0; // Global counter for table IDs
         Handlebars.registerHelper('uniqueTableId', function() {
         return `table-${tableIndex++}`;
@@ -201,12 +228,8 @@
  
         // Resolve account pricing attributes for each account
         accountData = accountData.map(account => {
-        // const rate = resolvePricingItem("Rate", account);
-        // const rateDiscount = resolvePricingItem("Rate Discount", account);
-        // const lateFee = resolvePricingItem("Late Fee", account);
-        // const cashback = resolvePricingItem("Cashback", account);
-        // const netRate = (parseFloat(rate) + parseFloat(rateDiscount)).toFixed(2);
-        // const comparisonRate = resolveComparisonRate(parseFloat(account.attributes.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25); 
+
+            // const comparisonRate = resolveComparisonRate(parseFloat(account.attributes.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25); 
 
         return {
             ...account,
@@ -309,12 +332,11 @@
     // Loop through the pricingItems and call resolvePricingItem for pricingItem.. the result is then added to the pricing array
     pricingItems.forEach(pricingItem => {
         const value = resolvePricingItem(pricingItem, account);
-        if (value !== null) pricing.push({ name: pricingItem.pricingItem, value });
+        if (value !== null) pricing.push({ name: pricingItem.pricingItem, valueType: pricingItem.valueType, value });
     });
     
     return pricing;
 }
-
 
     function resolvePricingItem(pricingItem, account) {
 

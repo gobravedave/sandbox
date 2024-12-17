@@ -42,7 +42,7 @@
                 <li>{{@key}}: {{this}}</li>
                 {{/each}}
                 {{#each pricing}}
-                <li>{{name}}: {{value}}</li>
+                <li>{{name}}: {{formatValue value valueType}}</li>
                 {{/each}}
             </div>
         {{/ifEquals}}

@@ -38,7 +38,7 @@ style="table-layout: fixed; width: 100%;">
         <td>{{staffPricing}}</td>
         <td>
             {{#each pricing}}
-            <li>{{name}}: {{value}}</li>
+            <li>{{name}}: {{formatValue value valueType}}</li>
             {{/each}}
         </td>
         <td>{{notes}}</td>
