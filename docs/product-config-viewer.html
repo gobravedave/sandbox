@@ -39,21 +39,21 @@
       loadPartial('deposit-product-config-template', 'hbs/deposit-product-config.hbs'),
       loadPartial('term-deposit-product-config-template', 'hbs/term-deposit-product-config.hbs'),
       loadPartial('lending-product-config-template', 'hbs/lending-product-config.hbs'),
-      loadPartial('financial-parameters-template', 'hbs/financial-parameters.hbs'), 
-      loadPartial('regulatory-parameters-template', 'hbs/regulatory-parameters.hbs'), 
-      loadPartial('product-fees-template', 'hbs/product-fees.hbs'), 
-      loadPartial('deposit-product-rateplan-template', 'hbs/deposit-product-rateplan.hbs'), 
-      loadPartial('lending-product-rateplan-template', 'hbs/lending-product-rateplan.hbs'), 
+      loadPartial('financial-parameters-template', 'hbs/financial-parameters.hbs'),
+      loadPartial('regulatory-parameters-template', 'hbs/regulatory-parameters.hbs'),
+      loadPartial('product-fees-template', 'hbs/product-fees.hbs'),
+      loadPartial('deposit-product-rateplan-template', 'hbs/deposit-product-rateplan.hbs'),
+      loadPartial('lending-product-rateplan-template', 'hbs/lending-product-rateplan.hbs'),
       loadPartial('ratebased-offer-template', 'hbs/ratebased-offer.hbs'),
       loadPartial('ruleset-template', 'hbs/ruleset.hbs'),
       loadPartial('offer-template', 'hbs/offer.hbs'),
       loadPartial('services-template', 'hbs/services.hbs'),
-      loadPartial('rategrid-template', 'hbs/rategrid.hbs'), 
-      loadPartial('entitlements-template', 'hbs/entitlements.hbs'), 
+      loadPartial('rategrid-template', 'hbs/rategrid.hbs'),
+      loadPartial('entitlements-template', 'hbs/entitlements.hbs'),
       loadPartial('documentation-template','hbs/documentation.hbs'),
       loadPartial('open-banking-template', 'hbs/open-banking.hbs'),
       loadPartial('external-product-code-mapping-template', 'hbs/external-product-code-mapping.hbs'),
-      loadPartial('impacted-systems-template', 'hbs/impacted-systems.hbs') 
+      loadPartial('impacted-systems-template', 'hbs/impacted-systems.hbs')
     ]).then(() => {
       let productDetailsTpl = Handlebars.compile(document.getElementById('product-details-template').innerHTML)
     });
@@ -63,11 +63,12 @@
     // let selectedRightProduct = null;
 
     const BANKS = {
-      prod: { name: 'Prod', json: ['datasets/prod-product.json', 'datasets/prod-rules.json', 'datasets/prod-offers.json']},
+//      prod: { name: 'Prod', json: ['datasets/prod-product.json', 'datasets/prod-rules.json', 'datasets/prod-offers.json']},
       preprod: { name: 'Pre-Prod', json: ['datasets/preprod-product.json', 'datasets/preprod-rules.json', 'datasets/preprod-offers.json']},
       sitk: { name: 'SIT-K', json: ['datasets/sitk-product.json', 'datasets/sitk-rules.json', 'datasets/sitk-offers.json']},
       sitl: { name: 'SIT-L', json: ['datasets/sitl-product.json', 'datasets/sitl-rules.json', 'datasets/sitl-offers.json']},
       st: { name: 'ST', json: ['datasets/st-product.json', 'datasets/st-rules.json', 'datasets/st-offers.json']},
+      mock: { name: 'Mock', json: ['datasets/mock-product.json', 'datasets/mock-rules.json', 'datasets/mock-offers.json']},
     }
     let savedBankId
 
@@ -171,7 +172,7 @@
           } else {
             byCategory[category].products = [r];
           }
-        } 
+        }
       });
 
       offers.forEach((o) => {
@@ -187,7 +188,7 @@
           } else {
             byCategory[category].products = [o];
           }
-        } 
+        }
       });
 
 
@@ -261,7 +262,7 @@
         // h2.style.color = 'blue';
         h2.textContent = 'Coming soon...';
         document.getElementById("product-details-checker-content").appendChild(h2);
-        
+
         checkBtn.textContent = 'Hide Checker';
       } else {
         document.getElementById("product-details-checker-content").innerHTML = "";
@@ -318,7 +319,7 @@
       .catch(error => console.error(`Error loading partial ${name}: ${error}`));
     }
 
-    
+
     window.onload = async function () {
 
     Handlebars.logger.level = 0; // for DEBUG
@@ -431,7 +432,7 @@
           })
         })
       }
-      
+
       let $ruleNames = document.querySelectorAll('.rule-name')
       for (let $ruleName of $ruleNames) {
         // clicking on ruleset name will show ruleset details
@@ -548,7 +549,7 @@
     <div><pre id="product-details-compare-content"></pre>
       <select id="compare-with" style="width: 200px; display: none">
         <option value="">Compare with Bank</option>
-      </select>  
+      </select>
     </div>
   {{!log 'main template' this}}
   {{#if ruleset}}
@@ -558,7 +559,7 @@
     {{> ruleset-template}}
     </div>
 
-  {{else if offer}}  
+  {{else if offer}}
   <h2>Offer</h2>
     {{> offer-name-template}}
     {{> offer-template}}
@@ -590,7 +591,7 @@
     <div class="table_wrapper">
       {{> term-deposit-product-config-template}}
     </div>
-    </div>  
+    </div>
     {{/if}}
 
     {{#if product.mortgageProductConfiguration}}
@@ -628,11 +629,11 @@
     {{#if product.serviceAssociation}}
     <h2>Associated Services</h2>
     <div class="content">
-    <div class="table_wrapper">  
-    {{!log 'before service' this}}  
-    {{> services-template rules=rules}}    
+    <div class="table_wrapper">
+    {{!log 'before service' this}}
+    {{> services-template rules=rules}}
     </div>
-    </div>  
+    </div>
     {{/if}}
 
     {{#if product.openBankingConfiguration}}
@@ -650,7 +651,7 @@
     <div class="table_wrapper">
     {{> external-product-code-mapping-template}}
     </div>
-    </div> 
+    </div>
     {{/if}}
 
     {{#if product.impactedSystems}}
