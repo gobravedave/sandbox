@@ -1,0 +1,365 @@
+{
+    "requestDate": "2024-10-14T01:16:11Z",
+    "durationMs": 75,
+    "dataType": "anz.eventresults.GetAllProductDetailsResult",
+    "dataCount": 1,
+    "data": [
+      {
+        "modelType": "com.zafin.zplatform.anz.eventresults.GetAllProductDetailsResult",
+        "eventStatus": "SUCCESS",
+        "productDetails": [
+          {
+            "modelType": "com.zafin.zplatform.anz.models.ProductDetailsTran",
+            "productCode": "PCTTEST",
+            "productName": "ANZ Low Rate Product for PCT Testing",
+            "productDescription": "ANZ Low Rate Product for PCT Testing",
+            "productClassification": "CREDIT_CARD",
+            "productEligibilityDetails": {
+              "modelType": "com.zafin.zplatform.anz.models.ProductEligibilityDetailsTran",
+              "fromDate": "2024-01-01T00:00:00Z",
+              "toDate": "9999-01-01T23:59:59Z",
+              "productStatus": "ON_SALE",
+              "eligibilityCriteria": {
+                "modelType": "com.zafin.zplatform.anz.models.EligibilityTran",
+                "customerSegment": [
+                  {
+                    "modelType": "com.zafin.zplatform.anz.models.CustomerSegmentTran",
+                    "code": "RETAIL",
+                    "customerSegmentName": "Retail",
+                    "customerSegmentDescription": "Retail"
+                  }
+                ],
+                "customerRelationshipType": [
+                  {
+                    "modelType": "com.zafin.zplatform.anz.models.CustomerRelationshipTypeTran",
+                    "code": "SOLE",
+                    "relationshipName": "Sole",
+                    "relationshipDescription": "Account or package is owned by a single individual entity (sole owner)"
+                  },
+                  {
+                    "modelType": "com.zafin.zplatform.anz.models.CustomerRelationshipTypeTran",
+                    "code": "COF",
+                    "relationshipName": "Co-Owner First",
+                    "relationshipDescription": "Co-owner First "
+                  },
+                  {
+                    "modelType": "com.zafin.zplatform.anz.models.CustomerRelationshipTypeTran",
+                    "code": "COO",
+                    "relationshipName": "Co-Owner Other",
+                    "relationshipDescription": "Co-owner Other"
+                  }
+                ],
+                "ageGroup": [
+                  {
+                      "modelType": "com.zafin.zplatform.anz.models.AgeGroupTran",
+                      "name": "Greater than 15 Years",
+                      "code": "15+",
+                      "fromValue": 15,
+                      "toValue": 999
+                  }
+              ],
+              "residencyStatus": [
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.ResidencyStatusTran",
+                    "code": "AU_PERMANENT_RES",
+                    "residenceStatusName": "Australian Permanent Resident",
+                    "residenceStatusDescription": "Australian Permanent Resident"
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.ResidencyStatusTran",
+                    "code": "AU_TEMP_RESIDENT",
+                    "residenceStatusName": "Australian Temporary Resident",
+                    "residenceStatusDescription": "Australian Temporary Resident"
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.ResidencyStatusTran",
+                    "code": "AU_CITIZEN",
+                    "residenceStatusName": "Australian Citizen",
+                    "residenceStatusDescription": "Australian Citizen"
+                }
+              ]
+              }
+            },
+            "currency": {
+              "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+              "name": "Australian Dollar",
+              "description": "Australian Dollar",
+              "code": "AUD"
+            },
+            "externalProductCodeMapping": [
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.ExternalProductCodeMappingTran",
+                    "name": "ANZ Plus PCT Test Product",
+                    "description": "ANZ Plus PCT Test Product",
+                    "code": "399",
+                    "systemOfRecord": {
+                        "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                        "name": "Vision Plus",
+                        "description": "Vision Plus",
+                        "code": "VISION_PLUS"
+                    }
+                }
+            ],
+            "creditCardProductConfiguration": {
+              "modelType": "com.zafin.zplatform.anz.models.CreditCardProductConfigurationTran",
+              "fromDate": "2024-04-17T00:00:00Z",
+              "toDate": "9999-01-01T23:59:59Z",
+              "productParameters": {
+                  "modelType": "com.zafin.zplatform.anz.models.ProductParametersTran",
+                  "brand": {
+                      "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                      "name": "ANZ Plus",
+                      "description": "ANZ Plus",
+                      "code": "ANZPLUS_BRAND"
+                  },
+                  "shortName": "ANZ Plus Low Rate PCT Test",
+                  "detailedDescription": "ANZ Plus Low Rate PCT Test",
+                  "shortDescription": "ANZ Plus Low Rate PCT Test",
+                  "cardScheme": {
+                      "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                      "name": "Visa",
+                      "description": "Visa",
+                      "code": "VISA"
+                  },
+                  "cardClassification": {
+                      "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                      "name": "Visa Low Rate",
+                      "description": "Visa Low Rate",
+                      "code": "VL"
+                  },
+                  "cardDesign": [
+                      {
+                          "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                          "name": "ANZ Plus Visa Low Rate Card Design",
+                          "description": "ANZ Plus Visa Low Rate Card Design",
+                          "code": "CCVL"
+                      }
+                  ],
+                  "minimumCreditLimit": "1000.00",
+                  "maximumCreditLimit": "20000.00",
+                  "interestFreeDays": "55",
+                  "numAdditionalCards": "3",
+                  "dailyWithdrawalLimit": "2500.00"
+              },
+              "statementCycle": [
+                  {
+                      "modelType": "com.zafin.zplatform.anz.models.StatementCycleDetailsTran",
+                      "name": "End of Calendar Month",
+                      "description": "End of Calendar Month",
+                      "code": "END_OF_MONTH",
+                      "frequency": "0000"
+                  }
+              ],
+              "statementType": [
+                  {
+                      "modelType": "com.zafin.zplatform.anz.models.StatementTypeTran",
+                      "code": "DIGITAL_ONLY"
+                  }
+              ]
+            },
+            "financialParameters": {
+              "modelType": "com.zafin.zplatform.anz.models.FinancialParametersTran",
+              "operatingSegment": {
+                  "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                  "name": "Retail",
+                  "description": "Retail",
+                  "code": "RETAIL"
+              },
+              "accountServicingModel": {
+                  "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                  "name": "Retail Unmanaged",
+                  "description": "Customers who have this Retail Product are not assigned a Relationship manager.",
+                  "code": "RETAIL_UNMANAGED"
+              },
+              "costCenter": {
+                  "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                  "name": "ANZx Digital Branch",
+                  "description": "Business Cost Centre for the ANZ Plus Credit Cards",
+                  "code": "4999"
+              },
+              "generalLedger": {
+                  "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                  "name": "Deposit - Non Interest Bearing ",
+                  "description": "General Ledger Account for Credit Card account",
+                  "code": "CC1"
+              },
+              "collections": {
+                  "modelType": "com.zafin.zplatform.anz.models.CollectionsTran",
+                  "unproductiveGeneralLedger": {
+                      "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                      "name": "Unproductive General Ledger",
+                      "description": "Unproductive General Ledger",
+                      "code": "D1"
+                  },
+                  "collectionsCustomerCreditRating": {
+                      "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                      "name": "Unproductive Customer Credit Rating",
+                      "description": "Unproductive Customer Credit Rating",
+                      "code": "10"
+                  }
+              }
+            },
+            "entitlementParameters": {
+              "modelType": "com.zafin.zplatform.anz.models.EntitlementParametersTran",
+              "enabledForOpenBanking": "true",
+              "transactOptions": [
+                  {
+                      "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                      "name": "BPAY",
+                      "description": "BPAY",
+                      "code": "BPAY"
+                  },
+                  {
+                      "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                      "name": "Direct Debit",
+                      "description": "Direct Debit",
+                      "code": "DIRECT_DEBIT"
+                  },
+                  {
+                      "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                      "name": "Direct Credit",
+                      "description": "Direct Credit",
+                      "code": "DIRECT_CREDIT"
+                  },
+                  {
+                      "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                      "name": "Transfer from",
+                      "description": "Transfer from",
+                      "code": "TRANSFER_FROM"
+                  } 
+              ]
+           },
+            "regulatoryParameters": {
+              "modelType": "com.zafin.zplatform.anz.models.RegulatoryParametersTran",
+              "regulations": {
+                  "modelType": "com.zafin.zplatform.anz.models.RegulatoryProductTran",
+                  "regulatoryProductCode": "ANZXLOWCC",
+                  "regulatoryProductName": "ANZx Low Rate Credit Card Product",
+                  "regulatoryProductDescription": "Regulatory and Compliance Product for Credit Cards",
+                  "regulatoryProductConfiguration": {
+                      "modelType": "com.zafin.zplatform.anz.models.RegulatoryProductConfigurationTran",
+                      "riskLevel": {
+                          "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                          "name": "00 - Retail Customers",
+                          "description": "00 is the default value for productive retail customers.",
+                          "code": "00"
+                      },
+                      "withHoldingTax": true
+                  },
+                  "regulatoryReporting": [
+                      {
+                          "modelType": "com.zafin.zplatform.anz.models.RegulatoryReportingTran",
+                          "name": "Australian Prudential Regulation Authority",
+                          "description": "Australian Prudential Regulation Authority",
+                          "code": "APRA",
+                          "reportSeries": [
+                              {
+                                  "modelType": "com.zafin.zplatform.anz.models.ReportSeriesAndClassificationTran",
+                                  "code": "ARF210",
+                                  "reportSeriesName": "APRA Reporting Form 210 Series ",
+                                  "reportSeriesDescription": "APRA Reporting Form 210 Series ",
+                                  "reportingProductClassificationCode": "TRANSACTIONAL",
+                                  "reportingProductClassificationName": "Transactional",
+                                  "reportingProductClassificationDescription": "Transactional"
+                              },
+                              {
+                                  "modelType": "com.zafin.zplatform.anz.models.ReportSeriesAndClassificationTran",
+                                  "code": "ARF720",
+                                  "reportSeriesName": "APRA Reporting Form 720 Series",
+                                  "reportSeriesDescription": "APRA Reporting Form 720 Series",
+                                  "reportingProductClassificationCode": "TRANSACTIONAL",
+                                  "reportingProductClassificationName": "Transactional",
+                                  "reportingProductClassificationDescription": "Transactional"
+                              }
+                          ]
+                      },
+                      {
+                          "modelType": "com.zafin.zplatform.anz.models.RegulatoryReportingTran",
+                          "name": "(US) Internal Revenue Service",
+                          "description": "Internal Revenue Service (US)",
+                          "code": "US_IRS",
+                          "reportSeries": [
+                              {
+                                  "modelType": "com.zafin.zplatform.anz.models.ReportSeriesAndClassificationTran",
+                                  "code": "FATCA_FATCAR",
+                                  "reportSeriesName": "The Foreign Account Tax Compliance Act Report",
+                                  "reportSeriesDescription": "The Foreign Account Tax Compliance Act Report",
+                                  "reportingProductClassificationCode": "DEPOSITORY",
+                                  "reportingProductClassificationName": "Depository",
+                                  "reportingProductClassificationDescription": "Depository"
+                              }
+                          ]
+                      },
+                      {
+                          "modelType": "com.zafin.zplatform.anz.models.RegulatoryReportingTran",
+                          "name": "Common Reporting Standard",
+                          "description": "Common Reporting Standard",
+                          "code": "CRS",
+                          "reportSeries": [
+                              {
+                                  "modelType": "com.zafin.zplatform.anz.models.ReportSeriesAndClassificationTran",
+                                  "code": "CRS",
+                                  "reportSeriesName": "Common Reporting Standard Report Series",
+                                  "reportSeriesDescription": "Common Reporting Standard Report Series",
+                                  "reportingProductClassificationCode": "Credit Cards",
+                                  "reportingProductClassificationName": "Credit Cards",
+                                  "reportingProductClassificationDescription": "Credit Cards"
+                              }
+                          ]
+                      }
+                  ]
+              }
+            },
+           "documentations": {
+              "modelType": "com.zafin.zplatform.anz.models.DocumentationsTran",
+              "termsAndConditions": [
+                  {
+                      "modelType": "com.zafin.zplatform.anz.models.TermsAndConditionsTran",
+                      "name": "ANZ Plus Credit Cards T&Cs",
+                      "description": "ANZ Plus Credit Cards T&Cs",
+                      "code": "TCANZPLUS01",
+                      "documentReferenceID": "TCANZPLUS01",
+                      "documentType": "TERMS_AND_CONDITIONS",
+                      "externalURL": "https://anz.com/plus/terms"
+                  }
+              ],
+              "marketingCollateral": [
+                  {
+                      "modelType": "com.zafin.zplatform.anz.models.TermsAndConditionsTran",
+                      "name": "ANZ Plus Credit Cards T&Cs",
+                      "description": "ANZ Plus Credit Cards T&Cs",
+                      "code": "MCANZPLUS01",
+                      "documentReferenceID": "MCANZPLUS01",
+                      "documentType": "MARKETING_COLLATERAL",
+                      "externalURL": "https://anz.com/plus/products"
+                  }
+              ]
+            },
+            "impactedSystems": [
+              {
+                  "modelType": "com.zafin.zplatform.anz.models.ImpactedSystemTran",
+                  "name": "Vision Plus",
+                  "description": "Vision Plus",
+                  "code": "VISION_PLUS",
+                  "systemType": "CORE_BANKING",
+                  "impactedSystemProductCode": "399",
+                  "impactedSystemProductName": "ANZ Plus Low Rate Product for PCT Testing",
+                  "impactedSystemProductClassification": "Product Logo",
+                  "impactedSystemOrganizationCode": "100"
+              },
+              {
+                  "modelType": "com.zafin.zplatform.anz.models.ImpactedSystemTran",
+                  "name": "Core Transaction Management System",
+                  "description": "Core Transaction Management System",
+                  "code": "CTM",
+                  "systemType": "EXECUTION_PLATFORM",
+                  "impactedSystemProductCode": "101",
+                  "impactedSystemProductName": "CTM Low Rate  and Low Fee Product",
+                  "impactedSystemProductClassification": "PCP"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+}
