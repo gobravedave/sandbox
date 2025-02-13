@@ -1,0 +1,66 @@
+{{log 'credit card product config partial' this}}
+{{#with product.creditCardProductConfiguration}}
+<table>
+    <tr>
+    <td>
+    {{#with productParameters}}
+    <table>
+        <tr><th colspan="2">Product Parameters</th></tr>
+        <tr><th>Brand</th><td>{{brand.name}} ({{brand.code}})</td></tr>
+        <tr><th>Short Name</th><td>{{shortName}}</td></tr>
+        <tr><th>Detailed Description</th><td>{{detailedDescription}}</td></tr>
+        <tr><th>Short Description</th><td>{{shortDescription}}</td></tr>
+        <tr><th>Card Scheme</th><td>{{cardScheme.name}} ({{cardScheme.code}})</td></tr>
+        <tr><th>Card Classification</th><td>{{cardClassification.name}} ({{cardClassification.code}})</td></tr>
+        <tr><th>Card Design</th><td>
+        {{#each cardDesign}}
+            <li>{{name}} ({{code}})</li>
+        {{/each}}
+        </td></tr>
+        <tr><th>Minimum Credit Limit</th><td>${{minimumCreditLimit}}</td></tr>
+        <tr><th>Maximum Credit Limit</th><td>${{maximumCreditLimit}}</td></tr>
+        <tr><th>Interest Free Days</th><td>{{interestFreeDays}}</td></tr>
+        <tr><th>Num Additional Cards</th><td>{{numAdditionalCards}}</td></tr>
+        <tr><th>Daily Withdrawal Limit</th><td>${{dailyWithdrawalLimit}}</td></tr>
+    </table>
+    {{/with}}
+    <br>
+    <table>
+        <tr><th>Statement Cycle</th>
+        <td>
+        {{#each statementCycle}}
+        <li>{{code}} (Frequency = {{frequency}})</li>
+        {{/each}}
+        </td>
+        </tr>
+        <tr><th>Statement Type</th>
+        <td>
+        {{#each statementType}}
+        <li>{{code}}</li>
+        {{/each}}
+        </td>
+        </tr>
+    </table>
+    <br>
+    {{/with}}
+
+    {{log 'before fincancial parameters' this}}
+    {{#with product.financialParameters}}
+    {{> financial-parameters-template}}
+    {{/with}}
+    <br>
+    {{#with product.entitlementParameters}}
+    {{> entitlements-template}}
+    {{/with}}
+    </td>
+    <td>
+    {{#with product.regulatoryParameters}}
+    {{> regulatory-parameters-template}}
+    {{/with}}
+    <br>  
+    {{#with product.documentations}}
+    {{> documentation-template}}
+    {{/with}}          
+    </td>
+    </tr>
+</table>

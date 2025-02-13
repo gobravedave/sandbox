@@ -39,6 +39,7 @@
       loadPartial('deposit-product-config-template', 'hbs/deposit-product-config.hbs'),
       loadPartial('term-deposit-product-config-template', 'hbs/term-deposit-product-config.hbs'),
       loadPartial('lending-product-config-template', 'hbs/lending-product-config.hbs'),
+      loadPartial('credit-card-product-config-template', 'hbs/credit-card-product-config.hbs'),
       loadPartial('financial-parameters-template', 'hbs/financial-parameters.hbs'),
       loadPartial('regulatory-parameters-template', 'hbs/regulatory-parameters.hbs'),
       loadPartial('product-fees-template', 'hbs/product-fees.hbs'),
@@ -599,6 +600,15 @@
     <div class="content">
     <div class="table_wrapper">
     {{> lending-product-config-template}}
+    </div>
+    </div>
+    {{/if}}
+
+    {{#if product.creditCardProductConfiguration}}
+    <h2>Credit Card Configuration</h2>
+    <div class="content">
+    <div class="table_wrapper">
+    {{> credit-card-product-config-template}}
     </div>
     </div>
     {{/if}}
