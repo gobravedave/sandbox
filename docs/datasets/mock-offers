@@ -1,0 +1,15 @@
+{
+    "requestDate": "2025-02-12T22:48:35Z",
+    "durationMs": 5,
+    "dataType": "anz.eventresults.GetAllProductDetailsResult",
+    "dataCount": 1,
+    "data": [
+        {
+            "modelType": "com.zafin.zplatform.anz.eventresults.GetEligibleOffersResult",
+            "eventStatus": "SUCCESS",
+            "listOfOffers": [
+            ]
+          }
+      
+    ]
+}
