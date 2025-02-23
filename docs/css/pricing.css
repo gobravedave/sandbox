@@ -2,7 +2,7 @@ body {
   font-family: Arial;
 }
 
-h1, h2, h3{
+h1, h2, h3, h4{
   padding-top: 12px;
   cursor: pointer;
   color: #371282;
@@ -62,7 +62,8 @@ opacity: 1;
 .table th, .table td {
   word-wrap: break-word;
   white-space: normal !important; /* Allow text to wrap */;
-  width: 10px; /* Set this based on your requirement */
+  width: auto;
+  min-width: fit-content;
   max-width: 100px;
   overflow: hidden;
   vertical-align: top;
@@ -79,46 +80,13 @@ th {
 th, td {
   border: 1px solid #ddd;
   padding: 8px;
-  /* text-align: center; */
+  width: 0;
+  min-width: fit-content;
+    /* text-align: center; */
   text-align: top;
   vertical-align: top;
   font-size: 14px;
 }
-
-
-/* select {
-font-family: Arial, sans-serif;
-font-size: 14px;
-padding: 10px 15px;
-margin: 5px 0;
-border-radius: 5px;
-border: 1px solid #ccc;
-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-background-color: #f7f7f7;
-cursor: pointer;
-transition: background-color 0.3s ease, box-shadow 0.3s ease;
-} */
-
-/* select:focus {
-outline: none;
-border-color: #007bff;
-box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
-} */
-
-/* select:hover {
-background-color: #eaeaea;
-} */
-
-/* select:disabled {
-background-color: #e0e0e0;
-cursor: not-allowed;
-} */
-
-/* select {
-width: auto;
-min-width: 100px;
-max-width: 100%;
-} */
 
 .customer-button {
   background-color: white;
@@ -178,7 +146,7 @@ max-width: 100%;
 .swim-lanes-container {
   display: flex;
   justify-content: space-between;
-  margin: 20px 0;
+  margin: 5px 0;
 }
 
 .swim-lane {
@@ -198,7 +166,7 @@ max-width: 100%;
 
 .account-card {
   margin: 5px 5px;
-  padding: 10px;
+  padding: 5px;
   background-color: #fff;
   border: 1px solid #3e0481;
   border-radius: 3px;
@@ -214,4 +182,37 @@ max-width: 100%;
   color: black;
   margin: 4px 2px;
   cursor: auto;
+}
+
+.tab {
+  display: flex;
+  cursor: pointer;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  margin-right: 5px;
+}
+
+.tab.active {
+  background-color: #cccccc;
+  font-weight: bold;
+}
+
+.tab-content {
+  display: none;
+  border: 1px solid #cccccc;
+  padding: 10px;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Additional styles for better presentation */
+h2 {
+  margin-top: 0;
+}
+
+.content {
+  margin-top: 10px;
 }

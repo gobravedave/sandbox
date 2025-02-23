@@ -1,0 +1,184 @@
+{
+    "products": [
+    {
+        "productId": "HLVAR01",
+        "priceTier": 
+        [
+            {
+            "priceTierName": "Advertised",
+            "appliesTo": ["NEW"],
+            "pricingItems": [
+                {
+                "pricingItem": "Rate",
+                "rule": "is Owner & PI",
+                "valueType": "PERCENTAGE",
+                "value": 8.64
+                },
+                {
+                "pricingItem": "Rate",
+                "rule": "is Owner & IO",
+                "valueType": "PERCENTAGE",
+                "value": 8.74
+                },
+                {
+                "pricingItem": "Rate",
+                "rule": "is Investor & PI",
+                "valueType": "PERCENTAGE",
+                "value": 8.84           
+                },
+                {
+                "pricingItem": "Rate",
+                "rule": "is Investor & IO",
+                "valueType": "PERCENTAGE",
+                "value": 8.94
+                },
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "is Small Loan & Low LVR",
+                "valueType": "DISCOUNT MARGIN",
+                "value": -1
+                },
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "is Small Loan & Medium LVR",
+                "valueType": "DISCOUNT MARGIN",
+                "value": -2
+                },
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "is Small Loan & High LVR",
+                "valueType": "DISCOUNT MARGIN",
+                "value": -3
+                },
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "is Average Loan & Low LVR",
+                "valueType": "DISCOUNT MARGIN",
+                "value": -1.5            
+                },
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "is Average Loan & Medium LVR",
+                "valueType": "DISCOUNT MARGIN",
+                "value": -2.5
+                },
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "is Average Loan & High LVR",
+                "valueType": "DISCOUNT MARGIN",
+                "value": -3.5
+                },
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "is Big Loan & Low LVR",
+                "valueType": "DISCOUNT MARGIN",
+                "value": -1.9            
+                },
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "is Big Loan & Medium LVR",
+                "valueType": "DISCOUNT MARGIN",
+                "value": -2.9
+                },
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "is Big Loan & High LVR",
+                "valueType": "DISCOUNT MARGIN",
+                "value": -3.9
+                },
+                {
+                "pricingItem": "Late Fee",
+                "rule": "",
+                "valueType": "AMOUNT",
+                "value": 20
+                },
+                {
+                "pricingItem": "Cashback",
+                "rule": "if Cashback conditions met",
+                "valueType": "AMOUNT",
+                "value": 2000
+                },
+                {
+                "pricingItem": "Cashback",
+                "rule": "if Cashback conditions not met",
+                "valueType": "AMOUNT",
+                "value": 0
+                }         
+                ]
+            },
+            {
+            "priceTierName": "Retention",
+            "appliesTo": ["Retention"],
+            "pricingItems": [
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "",
+                "valueType": "DISCOUNT MARGIN",
+                "value": -1
+                },    
+                {
+                "pricingItem": "Late Fee",
+                "rule": "",
+                "valueType": "AMOUNT",
+                "value": 10
+                }
+                ]
+            },    
+            {
+            "priceTierName": "Staff",
+            "appliesTo": ["Staff"],
+            "pricingItems": [
+                {
+                "pricingItem": "Late Fee",
+                "rule": "",
+                "valueType": "AMOUNT",
+                "value": 10
+                }
+                ]
+            },
+            {
+            "priceTierName": "Broker",
+            "appliesTo": ["Broker"],
+            "pricingItems": [
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "",
+                "valueType": "DISCOUNT MARGIN",
+                "value": 0.5
+                }
+                ]
+            },    
+            {
+            "priceTierName": "Hardship",
+            "appliesTo": ["Hardship"],
+            "pricingItems": [
+                {
+                "pricingItem": "Rate",
+                "rule": "is Owner",
+                "valueType": "PERCENTAGE",
+                "value": 6.64
+                }, 
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "",
+                "valueType": "DISCOUNT MARGIN",
+                "value": 0            
+                },
+                {
+                "pricingItem": "Late Fee",
+                "rule": "",
+                "valueType": "AMOUNT",
+                "value": 10
+                },
+                {
+                "pricingItem": "Cashback",
+                "rule": "",
+                "valueType": "AMOUNT",
+                "value": 0
+                }
+            ]
+            }
+        ]
+    }
+    ]
+}

@@ -2,21 +2,31 @@
     "customers": [
         {            
         "customerId": "c100",
+        "name": "John Doe",
         "isStaff": true,
         "isLoyal": false,
-        "isInHardship": false
+        "isInHardship": false,
+        "yearsWithBank": 0,
+        "cohorts": ["New", "Staff"]
         },
         {            
         "customerId": "c200",
+        "name": "Jane Doe",
         "isStaff": false,
         "isLoyal": true,
-        "isInHardship": false
+        "isInHardship": false,
+        "yearsWithBank": 20,
+        "cohorts": ["Retention"]
+
         },
         {            
         "customerId": "c300",
+        "name": "Jill Doe",
         "isStaff": false,
         "isLoyal": false,
-        "isInHardship": true
+        "isInHardship": true,        
+        "yearsWithBank": 5,
+        "cohorts": ["Hardship"]
         }
     ]
 }

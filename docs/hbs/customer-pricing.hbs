@@ -3,21 +3,23 @@
 <table id="{{uniqueTableId}}" class="table table-sm table-bordered"
 data-toggle="table"
 data-filter-control="flase"
-data-search="true"
+data-search="false"
 data-show-columns="false"
 data-pagination="true"
 data-page-size="25"
 data-page-length="25"
 data-sortable="true"
 data-show-loading="true"
-style="table-layout: fixed; width: 50%; overflow-x: scroll; white-space: nowrap;"> 
+style="table-layout: fixed; width: 70%; overflow-x: scroll; white-space: nowrap;"> 
 <thead class="thead-dark">
     <tr>
     <th data-field="customerId" data-sortable="true" title="Customer">Customer</th>
     <th data-field="isStaff" data-sortable="true" title="isStaff">Is Staff</th>
     <th data-field="isLoyal" data-sortable="true" title="isLoyal">Is Loyal</th>
     <th data-field="isInHardship" data-sortable="true" title="isInHardship">Is In Hardship</th>
-    <th data-field="Accounts"  title="Account">Accounts Owned</th>
+    <th data-field="yearsWithBank" data-sortable="true" title="yearsWithBank">Years With Bank</th>
+    <th data-field="cohort" data-sortable="true" title="isInHardship">Cohort Membership</th>
+    <th data-field="accounts"  title="Account">Accounts Owned</th>
     </tr>
     </thead>
     <tbody>
@@ -29,6 +31,12 @@ style="table-layout: fixed; width: 50%; overflow-x: scroll; white-space: nowrap;
         <td>{{isStaff}}</td>        
         <td>{{isLoyal}}</td>
         <td>{{isInHardship}}</td>
+        <td>{{yearsWithBank}}</td>
+        <td>
+        {{#each cohorts}}
+        <li>{{this}}</li>
+        {{/each}}
+        </td>
         <td>{{count_of_accounts}}</td>
         </tr>
     {{/each}}

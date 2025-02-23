@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Loan Personalised Pricing Demonstration</title>
+
+    <!-- jQuery (required for Bootstrap) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Bootstrap JS (after jQuery) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Bootstrap Table and Filter Control JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script> -->
+
+    <!-- Bootstrap Table and Filter Control CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/bootstrap-table.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.21.1/dist/extensions/filter-control/bootstrap-table-filter-control.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css"> -->
+    <link rel="stylesheet" type="text/css" href="css/pricing.css">
+    
+</head>
+<body>
+    <h1>Home Loan Personalised Pricing Demonstration</h1>
+    <div class="tabs" id="tabs-container">
+        <button class="tab-button" onclick="openTab(event, 'homeloan-calculator')">Home Loan Calculator</button>
+        <button class="tab-button" onclick="openTab(event, 'pricing-variables')">Pricing Variables</button>
+        <button class="tab-button" onclick="openTab(event, 'price-points')">Price Point</button>
+        <button class="tab-button" onclick="openTab(event, 'customers')">Customers</button>
+    </div>
+
+
+    <div id="product-details"></div> <!-- Container for rendered HTML -->
+    <!-- Main Product Template -->
+
+        <div id="homeloan-calculator" class="tab-content" style="display: block;">
+            <label for="channel">Channel:</label>
+            <select id="channel">
+            <option value="Direct">Direct</option>
+            <option value="Broker">Broker</option>
+            </select>
+            <br>
+            <label for="customer">Customer:</label>
+            <select id="customer-select">
+            <!-- Options will be populated dynamically -->
+            </select>
+            <br>
+            <div id="customer-attributes">
+            <!-- Customer attributes will be displayed here -->
+            </div>
+            <br>
+            <label for="price-type">Price Type:</label>
+            <select id="price-type">
+            <option value="Acquisition">Acquisition</option>
+            <option value="Retention">Retention</option>
+            </select>
+            <br>
+            <!-- add property usage select box with Owner and Investor as options -->
+            <label for="property-usage">Property Usage:</label>
+            <select id="property-usage">
+                <option value="Owner">Owner</option>
+                <option value="Investor">Investor</option>
+            </select>
+            <br>
+            <!-- add interest repayment select box with Principal & Interest and Interest Only as options -->
+            <label for="interest-repayment">Interest Repayment:</label>
+            <select id="interest-repayment">
+                <option value="P&I">Principal & Interest</option>
+                <option value="IO">Interest Only</option>
+            </select>
+            <br>
+            <label for="total-mortgage-lending">Total Mortgage Lending:</label>
+            <input type="number" id="total-mortgage-lending">
+            <br>
+            <label for="loan-to-value">Loan to Value Ratio:</label>
+            <input type="range" id="loan-to-value" min="0" max="100" step="1">
+            <span id="loan-to-value-display">50%</span>
+            <br>
+            <button id="calculate-price">Calculate Personalised Price</button>
+            <br>
+            <div id="calculated-fields">
+            <!-- Calculated fields will be displayed here -->
+            </div>
+        </div>
+
+        <div id="pricing-variables" class="tab-content" style="display: none;">
+            <h2>Loan Size</h2> 
+                <label>
+                <span><b>Small: </b></span>
+                <input type="text" id="loan-size-small" value="200000" disabled="true">
+                </label>
+                <label>
+                <span><b>Average: </b></span>
+                <span id="loan-size-average">200000 to 600000</span>
+                </label>
+                <label>
+                <span><b>Big: </b></span>
+                <input type="text" id="loan-size-big" value="600000" disabled="true">
+                </label>
+            
+            <h2>LVR Band</h2> 
+                <label>
+                <span><b>Low: </b></span>
+                <input type="text" id="lvr-band-low" value="60" disabled="true">
+                </label>
+                <label>
+                <span><b>Medium: </b></span>
+                <span id="lvr-band-medium">60% - 80%</span>
+                </label>
+                <label>
+                <span><b>High: </b></span>
+                <input type="text" id="lvr-band-high" value="80" disabled="true">
+                </label>        
+        </div>
+
+        <script id="pricing-template" type="text/x-handlebars-template">
+
+        <div id="price-points" class="tab-content" style="display: none;">
+            {{> homeloan-price-points-template}}
+        </div>
+
+        <div id="customers" class="tab-content" style="display: none;">
+            {{> customer-pricing-template}}
+        </div>
+    
+          
+    </script>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tab-button");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Set default active tab
+        document.addEventListener("DOMContentLoaded", async function() {
+            await loadPartial('homeloan-price-points-template', 'hbs/homeloan-price-points.hbs');
+            await loadPartial('customer-pricing-template', 'hbs/customer-pricing.hbs');
+            const tabsContainer = document.getElementById('tabs-container');
+            if (tabsContainer) {
+                document.querySelector(".tab-button").click();
+            }
+        });
+    </script>
+
+    <script>
+
+    let productArray = []; // Global variable to store product data
+    let customerArray = []; // Global variable to store customer data
+
+      async function loadPartial(name, path) {
+          return fetch(path)
+            .then(response => response.text())
+            .then(templateContent => {
+              Handlebars.registerPartial(name, templateContent);
+            })
+            .catch(error => console.error(`Error loading partial ${name}: ${error}`));
+      }
+
+      async function getProducts() {
+          const productJsonUrl = 'datasets/homeloan-price-points.json';
+          try {
+              const productResponse = await fetch(productJsonUrl);
+              const productData = await productResponse.json();
+              productArray = productData.products; // Assign to global variable
+              return productArray;
+          } catch (err) {
+              console.error(`Error getting product pricing data: ${err}`);
+              return { products: [] };
+          }
+      }
+      async function getCustomers() {
+
+          const customerJsonUrl = 'datasets/customer-pricing.json';
+          try {
+              const customerResponse = await fetch(customerJsonUrl);
+            //   console.log('customerResponse:', customerResponse);
+              const customerData = await customerResponse.json();
+              customerArray = customerData.customers; // Assign to global variable
+              return customerArray;
+          } catch (err) {
+              console.error(`Error getting customer pricing data: ${err}`);
+              return { customers: [] };
+          }
+      }
+
+      function renderPricingDetails(context) {
+        console.log('renderPricingDetails', context);
+          const templateSource = document.getElementById('pricing-template').innerHTML;
+          const template = Handlebars.compile(templateSource);
+          const html = template(context);
+          document.getElementById('product-details').innerHTML = html;        
+      }
+
+      function addToggleEventListener() {
+          document.querySelectorAll('.toggle-header').forEach(heading => {
+              heading.addEventListener('click', () => {
+                  const content = heading.nextElementSibling;
+                  if (content && content.classList.contains('content')) {
+                      content.style.display = content.style.display === 'none' ? 'block' : 'none';
+                  }
+              });
+          });
+      }
+
+    window.onload = async function () {
+
+        Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
+        // If options.fn exists, it's being used as a block helper
+        if (options && typeof options.fn === 'function') {
+            return arg1 === arg2 ? options.fn(this) : options.inverse(this);
+        }
+        // If options.fn doesn't exist, it's being used as a subexpression
+        return arg1 === arg2;
+        });
+
+
+        Handlebars.registerHelper('formatValue', function(val, format) {
+            let formattedVal;
+
+            // Ensure 'val' is a number where needed
+            const isNumber = typeof val === 'number' && !isNaN(val);
+
+            switch (format) {
+                case 'AMOUNT':
+                    if (isNumber) {
+                        formattedVal = `$${val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}`;
+                    } else if (val !== null) {
+                        formattedVal = `$${val}`;
+                    } else {
+                        formattedVal = 'Invalid amount (datatype: ' + (typeof val) + ')';
+                    }
+                    break;
+                case 'PERCENTAGE':
+                    if (isNumber) {
+                        formattedVal = (val ).toFixed(2) + '%';
+                    } else if (val !== undefined && val !== null) {
+                        formattedVal = val + '%';
+                    } else {
+                        formattedVal = 'Invalid percentage';
+                    }
+                    break;
+                default:
+                    formattedVal = val !== undefined && val !== null ? val : 'N/A';
+            }
+            return formattedVal;
+        });
+
+        let tableIndex = 0; // Global counter for table IDs
+        Handlebars.registerHelper('uniqueTableId', function() {
+        return `table-${tableIndex++}`;
+        });
+
+        // Register a Handlebars helper to execute JavaScript code after rendering
+        Handlebars.registerHelper('initializeTable', function() {
+        // After the DOM is updated, initialize each table separately
+        setTimeout(() => {
+            $('[id^=table-]').each(function() {
+            const tableId = $(this).attr('id');
+            $('#' + tableId).bootstrapTable(); // Initialize the Bootstrap Table
+            });
+        }, 100);
+        });
+
+        await loadPartial('homeloan-price-points-template', 'hbs/homeloan-price-points.hbs');
+        await loadPartial('customer-pricing-template', 'hbs/customer-pricing.hbs');
+
+        const productData = await getProducts();
+
+        let customerData = await getCustomers();
+
+        const customerSelect = document.getElementById('customer-select');
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'Select a customer';
+        option.disabled = true;
+        option.selected = true;
+        customerSelect.appendChild(option); // Append the option to the select element
+
+        customerArray.forEach(customer => {
+            const option = document.createElement('option');
+            option.value = customer.customerId; // Use customerId for value
+            option.textContent = customer.name; // Use customer name for textContent
+            customerSelect.appendChild(option); // Append the option to the select element
+        });
+
+
+        // Update customer attributes on selection change
+        customerSelect.addEventListener('change', function() {
+            const selectedCustomerId = this.value;
+            const selectedCustomer = customerArray.find(c => c.customerId === selectedCustomerId);
+            const customerAttributesDiv = document.getElementById('customer-attributes');
+            customerAttributesDiv.innerHTML = `
+            <p>Customer ID: ${selectedCustomer.customerId}</p>
+            <p>Is Staff: ${selectedCustomer.isStaff}</p>
+            <p>Is In Hardship: ${selectedCustomer.isInHardship}</p>
+            <p>Years With Bank: ${selectedCustomer.yearsWithBank}</p>
+            `;
+        });
+
+        // Update loan to value display
+        const loanToValueSlider = document.getElementById('loan-to-value');
+        const loanToValueDisplay = document.getElementById('loan-to-value-display');
+        loanToValueSlider.addEventListener('input', function() {
+            loanToValueDisplay.textContent = `${this.value}%`;
+        });
+
+        // Calculate personalised price
+        document.getElementById('calculate-price').addEventListener('click', function() {
+            const selectedCustomerId = customerSelect.value;
+            const selectedCustomer = customerArray.find(c => c.customerId === selectedCustomerId);
+            const totalMortgageLending = parseFloat(document.getElementById('total-mortgage-lending').value);
+            const loanToValue = parseFloat(loanToValueSlider.value);
+
+            const context = {
+            customerId: selectedCustomerId,
+            productId: 'HLVAR01', // Example value
+            loanAmt: totalMortgageLending,
+            lvr: loanToValue,
+            purpose: 'Owner', // Example value
+            repayment: 'P&I', // Example value,
+            staffPricing: selectedCustomer.isStaff,
+            priceTier: 'Advertised' // Example value
+            };
+
+            const pricing = resolvePricing(context);
+            const calculatedFieldsDiv = document.getElementById('calculated-fields');
+            calculatedFieldsDiv.innerHTML = pricing.map(p => `<p><b>${p.name}:</b> ${p.value}</p>`).join('');
+        });
+ 
+ 
+        // // Resolve customer attributes for each account
+        // customerData = customerData.map(customer => {
+        // const count_of_accounts = accountData.filter(account => account.customerId === customer.customerId).length;
+        //     return {
+        //     ...customer,
+        //     };
+        // });
+
+        // Combine the product and customer data into a single object
+        const context = {
+            productData,
+            customerData
+            };
+
+        renderPricingDetails(context);
+        // Add toggle event listener after rendering content
+        // Add event listener to customer button
+        // Use event delegation for dynamically added elements
+        document.getElementById('product-details').addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('customer-button')) {
+        const customerId = e.target.dataset.customerid; // Get customerId from the button
+        // console.log('Customer button clicked for ID:', customerId);
+
+        // Fetch customer and account data for this customer
+        const customer = customerArray.find(c => c.customerId === customerId);
+        // const customerAccounts = accountData.filter(account => account.customerId === customerId);
+
+    }
+});
+        addToggleEventListener();
+    }
+    function updateAverageLoanSize() {
+        let smallValue = parseFloat(document.getElementById('loan-size-small').value) || 0;
+        let bigValue = parseFloat(document.getElementById('loan-size-big').value) || 0;
+        if (bigValue <= smallValue) {
+            bigValue = smallValue + 1; // Ensure bigValue is greater than smallValue
+            document.getElementById('loan-size-big').value = bigValue; // Update the input field
+        }
+        const mediumValueElement = document.getElementById('loan-size-average');
+        mediumValueElement.textContent = `${smallValue} to ${bigValue}`;
+    }
+    function updateMediumLVRBand() {
+        let smallValue = parseFloat(document.getElementById('lvr-band-low').value) || 0;
+        let bigValue = parseFloat(document.getElementById('lvr-band-high').value) || 0;
+        if (bigValue <= smallValue) {
+            bigValue = smallValue + 1; // Ensure bigValue is greater than smallValue
+            document.getElementById('lvr-band-high').value = bigValue; // Update the input field
+        }
+        const mediumValueElement = document.getElementById('lvr-band-medium');
+        mediumValueElement.textContent = `${smallValue}% to ${bigValue}%`;
+    }
+
+
+
+    function resolvePricing(context) {
+
+        console.log(`resolvePricingItem`, context);
+
+    // Validate account attributes
+    // if (!productId) throw new Error(`Product ID is missing in account: ${accountId}`);
+    // if (!priceTier) throw new Error(`Price tier is missing in account: ${accountId}`);
+
+    // Filter all pricingItems in Product based on productCode
+    let pricing = [];
+    const pricingItems = productArray.flatMap(product => {
+        if (product.productId === 'HLVAR01') {
+            return product.priceTier
+                .filter(tier => tier === 'Advertised')
+                .flatMap(tier => product.pricingItems);
+        }
+        return [];
+    });
+
+    console.log(`Pricing Items:`, pricingItems);
+ 
+    // Loop through the pricingItems and call resolvePricingItem for pricingItem.. the result is then added to the pricing array
+    pricingItems.forEach(pricingItem => {
+        const value = resolvePricingItem(pricingItem, account);
+        if (value !== null) pricing.push({ name: pricingItem.pricingItem, valueType: pricingItem.valueType, value });
+    });
+
+    const rate = pricing.find(element => element.name === 'Rate').value || 0;
+    const rateDiscount = pricing.find(element => element.name === 'Rate Discount').value || 0;
+    const lateFee = pricing.find(element => element.name === 'Late Fee').value || 0;
+    const netRate = (parseFloat(rate) + parseFloat(rateDiscount)).toFixed(2);
+    const comparisonRate = resolveComparisonRate(parseFloat(account.attributes.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25);
+    pricing.push({ name: 'Net Rate', valueType: 'PERCENTAGE', value: netRate}); 
+    pricing.push({ name: 'Compare Rate', valueType: 'PERCENTAGE', value: comparisonRate});
+    
+    return pricing;
+}
+
+    function resolvePricingItem(pricingItem, context) {
+
+        const { productId, customerId } = context;
+
+        // Validate account attributes
+        // resolve priceTier
+        if (pricingItem.rule) {
+            // console.log(`Rule "${pricingItem.rule}" evaluated for account ${accountId}`);
+            if (resolveRule(pricingItem.rule, account)) {
+                // console.log(`Rule "${pricingItem.rule}" passed for account ${accountId}`);
+                return pricingItem.value;
+            } else {
+                // console.log(`Rule "${pricingItem.rule}" failed for account ${accountId}`);
+                return null;
+            }
+        } else {
+            // console.log(`No rule for account ${accountId} and product ${pricingItem.productId}`);
+            return pricingItem.value;
+        }
+    }
+
+    function resolveComparisonRate(principal, interestRate, fees, termYears) {
+
+    // console.log(`resolveComparisonRate called with principal: ${principal}, interestRate: ${interestRate}, fees: ${fees}, termYears: ${termYears}`);
+        
+    // Convert annual interest rate to monthly
+    let monthlyInterestRate = interestRate / 12 / 100;
+    let numberOfPayments = termYears * 12;
+
+    // Monthly payment calculation (principal and interest)
+    let monthlyPayment = (principal * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+    
+    // Total fees spread over the life of the loan
+    let totalFees = fees / numberOfPayments;
+    
+    // Comparison rate calculation
+    let monthlyComparisonRate = ((monthlyPayment + totalFees) / principal) * 100;
+    let comparisonRate = monthlyComparisonRate * 12; // Convert to annual rate
+    // console.log(`The comparison rate is ${comparisonRate}.%`);
+    
+    return comparisonRate.toFixed(2);
+}
+
+    function resolveNotes(account) {
+    const notes = [];
+    const customer = customerArray.find(customer => customer.customerId === account.customerId);
+    // console.log("resolveNotes:", account, customer);  
+    if (account.staffPricing && !customer.isStaff) {
+        notes.push("Staff pricing is selected but customer is not a staff member.");
+    }
+    if (!account.staffPricing && customer.isStaff) {
+        notes.push("Staff pricing is not selected but customer is a staff member.");
+    }
+    if (account.priceTier === "Hardship" && !customer.isInHardship) {
+        notes.push("Hardship pricing is selected but customer is not in hardship.");
+    }
+    if (customer.isInHardship && account.priceTier !== "Hardship") {
+        notes.push("Customer is in hardship but hardship pricing is not selected.");
+    }
+    return notes.join("\n"); // Example value
+    }    
+    function resolveRule(rule, account) {
+        // console.log(`resolveRule(${rule},${account})`);
+        // Define rule mapping
+        const ruleMap = {
+            "is Owner & PI": (account) => account.attributes.purpose === "Owner" && account.attributes.repayment === "P&I",
+            "is Owner & IO": (account) => account.attributes.purpose === "Owner" && account.attributes.repayment === "IO",
+            "is Investor & PI": (account) => account.attributes.purpose === "Investor" && account.attributes.repayment === "P&I",
+            "is Investor & IO": (account) => account.attributes.purpose === "Investor" && account.attributes.repayment === "IO",
+            "if Staff Pricing": (account) => account.staffPricing,
+            "if Not Staff Pricing": (account) => account.staffPricing === false,
+            "is Small Loan & Low LVR": (account) => account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-low').value),
+            "is Small Loan & Medium LVR": (account) => account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Small Loan & High LVR": (account) => account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "is Average Loan & Low LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-low').value),
+            "is Average Loan & Medium LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Average Loan & High LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "is Big Loan & Low LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-low').value),
+            "is Big Loan & Medium LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Big Loan & High LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "if Cashback conditions met": (account) => account.attributes.loanAmt >=250000 && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "if Cashback conditions not met": (account) => account.attributes.loanAmt < 250000 || account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Eligible for BT":(account) => account.attributes.eligibleForBT,
+            "if New Card":(account) => account.attributes.balanceTransferTtype ==="New Card",
+            "if Existing Card":(account) => account.attributes.balanceTransferTtype ==="Existing Card"
+        };
+
+        // Check if the rule exists in the map and apply it
+        if (rule in ruleMap) {
+            return ruleMap[rule](account);
+        }
+        return false; // Return false if the rule is not found
+    }
+
+    </script>
+</body>
+</html>
