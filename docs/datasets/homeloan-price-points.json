@@ -6,7 +6,7 @@
         [
             {
             "priceTierName": "Advertised",
-            "appliesTo": ["NEW"],
+            "appliesTo": [],
             "pricingItems": [
                 {
                 "pricingItem": "Rate",

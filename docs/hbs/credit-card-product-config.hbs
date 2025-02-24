@@ -1,4 +1,4 @@
-{{log 'credit card product config partial' this}}
+{{!-- {{log 'credit card product config partial' this}} --}}
 {{#with product.creditCardProductConfiguration}}
 <table>
     <tr>
@@ -44,7 +44,7 @@
     <br>
     {{/with}}
 
-    {{log 'before fincancial parameters' this}}
+    {{!-- {{log 'before fincancial parameters' this}} --}}
     {{#with product.financialParameters}}
     {{> financial-parameters-template}}
     {{/with}}

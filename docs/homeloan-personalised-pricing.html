@@ -39,8 +39,8 @@
     <!-- Main Product Template -->
 
         <div id="homeloan-calculator" class="tab-content" style="display: block;">
-            <label for="channel">Channel:</label>
-            <select id="channel">
+            <label for="submittedBy">Submitted By:</label>
+            <select id="submittedBy">
             <option value="Direct">Direct</option>
             <option value="Broker">Broker</option>
             </select>
@@ -75,18 +75,22 @@
             </select>
             <br>
             <label for="total-mortgage-lending">Total Mortgage Lending:</label>
-            <input type="number" id="total-mortgage-lending">
+            <input type="range" id="total-mortgage-lending" min="500000" max="3000000" step="100000" value="1800000">
+            <span id="total-mortgage-lending-value-display">$1,800,000</span>
             <br>
             <label for="loan-to-value">Loan to Value Ratio:</label>
             <input type="range" id="loan-to-value" min="0" max="100" step="1">
             <span id="loan-to-value-display">50%</span>
             <br>
-            <button id="calculate-price">Calculate Personalised Price</button>
+            <button id="calculate-price" disabled>Calculate Personalised Price</button>
             <br>
-            <div id="calculated-fields">
+            <div id="advertised-price">
             <!-- Calculated fields will be displayed here -->
             </div>
-        </div>
+            <div id="personalised-price">
+                <!-- Calculated fields will be displayed here -->
+                </div>
+            </div>
 
         <div id="pricing-variables" class="tab-content" style="display: none;">
             <h2>Loan Size</h2> 
@@ -305,11 +309,20 @@
             const selectedCustomer = customerArray.find(c => c.customerId === selectedCustomerId);
             const customerAttributesDiv = document.getElementById('customer-attributes');
             customerAttributesDiv.innerHTML = `
-            <p>Customer ID: ${selectedCustomer.customerId}</p>
-            <p>Is Staff: ${selectedCustomer.isStaff}</p>
-            <p>Is In Hardship: ${selectedCustomer.isInHardship}</p>
-            <p>Years With Bank: ${selectedCustomer.yearsWithBank}</p>
-            `;
+            Is Staff: ${selectedCustomer.isStaff}</br>
+            Is In Hardship: ${selectedCustomer.isInHardship}</br>
+            Is Loyal: ${selectedCustomer.isLoyal}</br>
+            Years With Bank: ${selectedCustomer.yearsWithBank}</br>
+            Cohorts: ${selectedCustomer.cohorts}`;
+            // Enable the calculate price button if a customer is selected
+            document.getElementById('calculate-price').disabled = !selectedCustomerId;
+        });
+
+        // Update loan to value display
+        const totalMortgageLendingSlider = document.getElementById('total-mortgage-lending');
+        const totalMortgageLendingDisplay = document.getElementById('total-mortgage-lending-value-display');
+        totalMortgageLendingSlider.addEventListener('input', function() {
+            totalMortgageLendingDisplay.textContent = `$${Number(this.value).toLocaleString()}`;
         });
 
         // Update loan to value display
@@ -319,38 +332,33 @@
             loanToValueDisplay.textContent = `${this.value}%`;
         });
 
-        // Calculate personalised price
+        // Calculate Advertised price
         document.getElementById('calculate-price').addEventListener('click', function() {
             const selectedCustomerId = customerSelect.value;
             const selectedCustomer = customerArray.find(c => c.customerId === selectedCustomerId);
-            const totalMortgageLending = parseFloat(document.getElementById('total-mortgage-lending').value);
+            const submittedBy = document.getElementById('submittedBy').value;
+            const priceType = document.getElementById('price-type').value;
+            const propertyUsage = document.getElementById('property-usage').value;
+            const interestRepayment = document.getElementById('interest-repayment').value;
+            const totalMortgageLending = Number(totalMortgageLendingSlider.value);
             const loanToValue = parseFloat(loanToValueSlider.value);
 
             const context = {
             customerId: selectedCustomerId,
-            productId: 'HLVAR01', // Example value
+            submittedBy: submittedBy, 
+            productId: 'HLVAR01', // default product ID
             loanAmt: totalMortgageLending,
             lvr: loanToValue,
-            purpose: 'Owner', // Example value
-            repayment: 'P&I', // Example value,
-            staffPricing: selectedCustomer.isStaff,
-            priceTier: 'Advertised' // Example value
+            purpose: propertyUsage, // Example value
+            repayment: interestRepayment, // Example value,
+            priceTier: 'Advertised' // default price tier
             };
 
-            const pricing = resolvePricing(context);
-            const calculatedFieldsDiv = document.getElementById('calculated-fields');
-            calculatedFieldsDiv.innerHTML = pricing.map(p => `<p><b>${p.name}:</b> ${p.value}</p>`).join('');
+            const pricing = resolveAdvertisedPricing(context);
+            const advertisedPriceFieldsDiv = document.getElementById('advertised-price');
+            advertisedPriceFieldsDiv.innerHTML = `<h2>Advertised Price</h2>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
         });
  
- 
-        // // Resolve customer attributes for each account
-        // customerData = customerData.map(customer => {
-        // const count_of_accounts = accountData.filter(account => account.customerId === customer.customerId).length;
-        //     return {
-        //     ...customer,
-        //     };
-        // });
-
         // Combine the product and customer data into a single object
         const context = {
             productData,
@@ -397,9 +405,9 @@
 
 
 
-    function resolvePricing(context) {
+    function resolveAdvertisedPricing(context) {
 
-        console.log(`resolvePricingItem`, context);
+    console.log(`resolveAdvertisedPricing`, context);
 
     // Validate account attributes
     // if (!productId) throw new Error(`Product ID is missing in account: ${accountId}`);
@@ -407,43 +415,38 @@
 
     // Filter all pricingItems in Product based on productCode
     let pricing = [];
-    const pricingItems = productArray.flatMap(product => {
-        if (product.productId === 'HLVAR01') {
-            return product.priceTier
-                .filter(tier => tier === 'Advertised')
-                .flatMap(tier => product.pricingItems);
-        }
-        return [];
-    });
+    const pricingItems = productArray[0].priceTier
+        .find(tier => tier.priceTierName === context.priceTier)
+        .pricingItems;
 
     console.log(`Pricing Items:`, pricingItems);
  
     // Loop through the pricingItems and call resolvePricingItem for pricingItem.. the result is then added to the pricing array
     pricingItems.forEach(pricingItem => {
-        const value = resolvePricingItem(pricingItem, account);
+        const value = resolvePricingItem(pricingItem, context);
         if (value !== null) pricing.push({ name: pricingItem.pricingItem, valueType: pricingItem.valueType, value });
     });
 
     const rate = pricing.find(element => element.name === 'Rate').value || 0;
     const rateDiscount = pricing.find(element => element.name === 'Rate Discount').value || 0;
     const lateFee = pricing.find(element => element.name === 'Late Fee').value || 0;
-    const netRate = (parseFloat(rate) + parseFloat(rateDiscount)).toFixed(2);
-    const comparisonRate = resolveComparisonRate(parseFloat(account.attributes.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25);
-    pricing.push({ name: 'Net Rate', valueType: 'PERCENTAGE', value: netRate}); 
-    pricing.push({ name: 'Compare Rate', valueType: 'PERCENTAGE', value: comparisonRate});
+    // const netRate = (parseFloat(rate) + parseFloat(rateDiscount)).toFixed(2);
+    // const comparisonRate = resolveComparisonRate(parseFloat(account.attributes.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25);
+    // pricing.push({ name: 'Net Rate', valueType: 'PERCENTAGE', value: netRate}); 
+    // pricing.push({ name: 'Compare Rate', valueType: 'PERCENTAGE', value: comparisonRate});
     
     return pricing;
 }
 
     function resolvePricingItem(pricingItem, context) {
 
-        const { productId, customerId } = context;
+        // const { productId, customerId } = context;
 
         // Validate account attributes
         // resolve priceTier
         if (pricingItem.rule) {
             // console.log(`Rule "${pricingItem.rule}" evaluated for account ${accountId}`);
-            if (resolveRule(pricingItem.rule, account)) {
+            if (resolveRule(pricingItem.rule, context)) {
                 // console.log(`Rule "${pricingItem.rule}" passed for account ${accountId}`);
                 return pricingItem.value;
             } else {
@@ -478,7 +481,7 @@
     return comparisonRate.toFixed(2);
 }
 
-    function resolveNotes(account) {
+    function resolveNotes(context) {
     const notes = [];
     const customer = customerArray.find(customer => customer.customerId === account.customerId);
     // console.log("resolveNotes:", account, customer);  
@@ -496,35 +499,30 @@
     }
     return notes.join("\n"); // Example value
     }    
-    function resolveRule(rule, account) {
+    function resolveRule(rule, context) {
         // console.log(`resolveRule(${rule},${account})`);
         // Define rule mapping
         const ruleMap = {
-            "is Owner & PI": (account) => account.attributes.purpose === "Owner" && account.attributes.repayment === "P&I",
-            "is Owner & IO": (account) => account.attributes.purpose === "Owner" && account.attributes.repayment === "IO",
-            "is Investor & PI": (account) => account.attributes.purpose === "Investor" && account.attributes.repayment === "P&I",
-            "is Investor & IO": (account) => account.attributes.purpose === "Investor" && account.attributes.repayment === "IO",
-            "if Staff Pricing": (account) => account.staffPricing,
-            "if Not Staff Pricing": (account) => account.staffPricing === false,
-            "is Small Loan & Low LVR": (account) => account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-low').value),
-            "is Small Loan & Medium LVR": (account) => account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
-            "is Small Loan & High LVR": (account) => account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
-            "is Average Loan & Low LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-low').value),
-            "is Average Loan & Medium LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
-            "is Average Loan & High LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && account.attributes.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
-            "is Big Loan & Low LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-low').value),
-            "is Big Loan & Medium LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
-            "is Big Loan & High LVR": (account) => account.attributes.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
-            "if Cashback conditions met": (account) => account.attributes.loanAmt >=250000 && account.attributes.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
-            "if Cashback conditions not met": (account) => account.attributes.loanAmt < 250000 || account.attributes.lvr < parseFloat(document.getElementById('lvr-band-high').value),
-            "is Eligible for BT":(account) => account.attributes.eligibleForBT,
-            "if New Card":(account) => account.attributes.balanceTransferTtype ==="New Card",
-            "if Existing Card":(account) => account.attributes.balanceTransferTtype ==="Existing Card"
+            "is Owner & PI": (context) => context.purpose === "Owner" && context.repayment === "P&I",
+            "is Owner & IO": (context) => context.purpose === "Owner" && context.repayment === "IO",
+            "is Investor & PI": (context) => context.purpose === "Investor" && context.repayment === "P&I",
+            "is Investor & IO": (context) => context.purpose === "Investor" && context.repayment === "IO",
+            "is Small Loan & Low LVR": (context) => context.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && context.lvr < parseFloat(document.getElementById('lvr-band-low').value),
+            "is Small Loan & Medium LVR": (context) => context.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && context.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && context.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Small Loan & High LVR": (context) => context.loanAmt < parseFloat(document.getElementById('loan-size-small').value) && context.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "is Average Loan & Low LVR": (context) => context.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && context.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && context.lvr < parseFloat(document.getElementById('lvr-band-low').value),
+            "is Average Loan & Medium LVR": (context) => context.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && context.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && context.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && context.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Average Loan & High LVR": (context) => context.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && context.loanAmt < parseFloat(document.getElementById('loan-size-big').value) && context.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "is Big Loan & Low LVR": (context) => context.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && context.lvr < parseFloat(document.getElementById('lvr-band-low').value),
+            "is Big Loan & Medium LVR": (context) => context.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && context.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && context.lvr < parseFloat(document.getElementById('lvr-band-high').value),
+            "is Big Loan & High LVR": (context) => context.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && context.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "if Cashback conditions met": (context) => context.loanAmt >=250000 && context.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
+            "if Cashback conditions not met": (context) => context.loanAmt < 250000 || context.lvr < parseFloat(document.getElementById('lvr-band-high').value)
         };
 
         // Check if the rule exists in the map and apply it
         if (rule in ruleMap) {
-            return ruleMap[rule](account);
+            return ruleMap[rule](context);
         }
         return false; // Return false if the rule is not found
     }

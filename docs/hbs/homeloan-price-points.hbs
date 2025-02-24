@@ -15,8 +15,8 @@ style="table-layout: fixed; width: 100%;">
     <tr>
     <th data-field="productId" data-sortable="true" data-filter-control="select" title="Product">Product</th>
     <th data-field="priceTierName" data-sortable="true" data-filter-control="select" title="Tier">Pricing Tier Name </th>
-    <th data-field="appliesTo" data-sortable="true" data-filter-control="select" title="Aplies">Applicabale Cohorts </th>
     <th data-field="priceTier" data-sortable="true" data-filter-control="select" title="Tier">Pricing Tier</th>
+    <th data-field="appliesTo" data-sortable="true" title="Aplies">Applicabale Cohorts </th>
     <th data-field="rule"  title="Rule">Rule</th>
     <th data-field="valueType"  title="Pricing Item Value Type">Value Type</th>
     <th data-field="value"  title="Value">Value</th>
@@ -29,12 +29,12 @@ style="table-layout: fixed; width: 100%;">
             <tr>
             <td>{{../../productId}}</td>
             <td>{{../priceTierName}}</td>  
+            <td>{{pricingItem}}</td>
             <td>
             {{#each ../appliesTo}}      
-                <li>{{this}}</li>        
+                {{this}}</br>        
             {{/each}}
             </td>
-            <td>{{pricingItem}}</td>
             <td>{{rule}}</td>
             <td>{{valueType}}</td>
             <td>{{value}}</td>
