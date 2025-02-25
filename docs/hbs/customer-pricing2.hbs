@@ -1,0 +1,36 @@
+{{!log 'customer pricing' this}}
+<div class="table-responsive table_wrapper" style="overflow-x: auto;">
+<table id="{{uniqueTableId}}" class="table table-sm table-bordered"
+data-toggle="table"
+data-filter-control="flase"
+data-search="false"
+data-show-columns="false"
+data-pagination="true"
+data-page-size="25"
+data-page-length="25"
+data-sortable="true"
+data-show-loading="true"
+style="table-layout: fixed; width: 70%; overflow-x: scroll; white-space: nowrap;"> 
+<thead class="thead-dark">
+    <tr>
+    <th data-field="customerId" data-sortable="true" title="Customer">ID</th>
+    <th data-field="name" data-sortable="true" title="Name">Name</th>
+    <th data-field="cohort" data-sortable="true" title="Cohorts">Cohort Membership</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each customerData}}
+        <tr>    
+        <td>{{customerId}}</td>
+        <td>{{name}}</td>
+        <td>
+        {{#each cohorts}}
+            <button class="button green-button" disabled="true">{{this}}</button> &nbsp
+        {{/each}}
+        </td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+</div>
+{{initializeTable}} <!-- Call the helper here -->

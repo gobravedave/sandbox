@@ -7,7 +7,7 @@
         "isLoyal": false,
         "isInHardship": false,
         "yearsWithBank": 0,
-        "cohorts": ["New", "Staff"]
+        "cohorts": ["Staff","Retention"]
         },
         {            
         "customerId": "c200",
@@ -27,6 +27,12 @@
         "isInHardship": true,        
         "yearsWithBank": 5,
         "cohorts": ["Hardship"]
+        },
+        {        
+        "customerId": "c400",
+        "name": "Alice Smith",
+        "cohorts": []
         }
+
     ]
 }

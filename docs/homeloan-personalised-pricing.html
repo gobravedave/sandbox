@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Loan Personalised Pricing Demonstration</title>
+    <title>Home Loan Personalised Pricing Demo</title>
 
     <!-- jQuery (required for Bootstrap) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -26,12 +26,12 @@
     
 </head>
 <body>
-    <h1>Home Loan Personalised Pricing Demonstration</h1>
+    <h1>Home Loan Personalised Pricing Demo</h1>
     <div class="tabs" id="tabs-container">
         <button class="tab-button" onclick="openTab(event, 'homeloan-calculator')">Home Loan Calculator</button>
         <button class="tab-button" onclick="openTab(event, 'pricing-variables')">Pricing Variables</button>
-        <button class="tab-button" onclick="openTab(event, 'price-points')">Price Point</button>
-        <button class="tab-button" onclick="openTab(event, 'customers')">Customers</button>
+        <button class="tab-button" onclick="openTab(event, 'price-point')">Price Points</button>
+        <button class="tab-button" onclick="openTab(event, 'customer')">Customers</button>
     </div>
 
 
@@ -76,11 +76,11 @@
             <br>
             <label for="total-mortgage-lending">Total Mortgage Lending:</label>
             <input type="range" id="total-mortgage-lending" min="100000" max="1000000" step="100000" value="300000">
-            <span id="total-mortgage-lending-value-display">$300,000</span>
+            <span id="total-mortgage-lending-value-display">$300,000 (Average)</span>
             <br>
             <label for="loan-to-value">Loan to Value Ratio:</label>
             <input type="range" id="loan-to-value" min="0" max="100" step="1">
-            <span id="loan-to-value-display">50%</span>
+            <span id="loan-to-value-display">50% (Low)</span>
             <br>
             <button id="calculate-price" disabled>Calculate Personalised Price</button>
             <br>
@@ -124,45 +124,45 @@
 
         <script id="pricing-template" type="text/x-handlebars-template">
 
-        <div id="price-points" class="tab-content" style="display: none;">
+        <div id="price-point" class="tab-content" style="display: none;">
             {{> homeloan-price-points-template}}
         </div>
 
-        <div id="customers" class="tab-content" style="display: none;">
+        <div id="customer" class="tab-content" style="display: none;">
             {{> customer-pricing-template}}
         </div>
     
-          
-    </script>
+        </script>
 
     <script>
-        function openTab(evt, tabName) {
+function openTab(evt, tabName) {
+            console.log(`openTab called with tabName: ${tabName}`);
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab-content");
             for (i = 0; i < tabcontent.length; i++) {
+                console.log(`Hiding tabcontent element ${i}: ${tabcontent[i].id}`);
                 tabcontent[i].style.display = "none";
             }
             tablinks = document.getElementsByClassName("tab-button");
             for (i = 0; i < tablinks.length; i++) {
+                console.log(`Removing active class from tablink element ${i}: ${tablinks[i].id}`);
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
+            console.log(`Showing tabcontent element: ${tabName}`);
             document.getElementById(tabName).style.display = "block";
+            console.log(`Adding active class to tablink element: ${evt.currentTarget.id}`);
             evt.currentTarget.className += " active";
         }
 
         // Set default active tab
         document.addEventListener("DOMContentLoaded", async function() {
             await loadPartial('homeloan-price-points-template', 'hbs/homeloan-price-points.hbs');
-            await loadPartial('customer-pricing-template', 'hbs/customer-pricing.hbs');
+            await loadPartial('customer-pricing-template', 'hbs/customer-pricing2.hbs');
             const tabsContainer = document.getElementById('tabs-container');
             if (tabsContainer) {
                 document.querySelector(".tab-button").click();
             }
         });
-    </script>
-
-    <script>
-
     let productArray = []; // Global variable to store product data
     let customerArray = []; // Global variable to store customer data
 
@@ -208,17 +208,6 @@
           const template = Handlebars.compile(templateSource);
           const html = template(context);
           document.getElementById('product-details').innerHTML = html;        
-      }
-
-      function addToggleEventListener() {
-          document.querySelectorAll('.toggle-header').forEach(heading => {
-              heading.addEventListener('click', () => {
-                  const content = heading.nextElementSibling;
-                  if (content && content.classList.contains('content')) {
-                      content.style.display = content.style.display === 'none' ? 'block' : 'none';
-                  }
-              });
-          });
       }
 
     window.onload = async function () {
@@ -281,7 +270,7 @@
         });
 
         await loadPartial('homeloan-price-points-template', 'hbs/homeloan-price-points.hbs');
-        await loadPartial('customer-pricing-template', 'hbs/customer-pricing.hbs');
+        await loadPartial('customer-pricing-template', 'hbs/customer-pricing2.hbs');
 
         const productData = await getProducts();
 
@@ -309,34 +298,45 @@
             const selectedCustomer = customerArray.find(c => c.customerId === selectedCustomerId);
             const customerAttributesDiv = document.getElementById('customer-attributes');
             customerAttributesDiv.innerHTML = `
-            Is Staff: ${selectedCustomer.isStaff}</br>
-            Is In Hardship: ${selectedCustomer.isInHardship}</br>
-            Is Loyal: ${selectedCustomer.isLoyal}</br>
-            Years With Bank: ${selectedCustomer.yearsWithBank}</br>
-            Cohorts: ${selectedCustomer.cohorts}`;
+            ${selectedCustomer.cohorts.map(cohort => `<button class="button green-button" disabled="true">${cohort}</button>`).join(' ')}`;
             // Enable the calculate price button if a customer is selected
             document.getElementById('calculate-price').disabled = !selectedCustomerId;
         });
 
         // Update loan to value display
+        const smallLoan = parseFloat(document.getElementById('loan-size-small').value);
+        const bigLoan = parseFloat(document.getElementById('loan-size-big').value);
         const totalMortgageLendingSlider = document.getElementById('total-mortgage-lending');
         const totalMortgageLendingDisplay = document.getElementById('total-mortgage-lending-value-display');
         totalMortgageLendingSlider.addEventListener('input', function() {
-            totalMortgageLendingDisplay.textContent = `$${Number(this.value).toLocaleString()}`;
+            if (this.value < smallLoan  ) {
+                totalMortgageLendingDisplay.textContent = `$${Number(this.value).toLocaleString()} (Small)`;
+            } else if (this.value >= bigLoan) {
+                totalMortgageLendingDisplay.textContent = `$${Number(this.value).toLocaleString()} (Big)`;
+            } else {
+                totalMortgageLendingDisplay.textContent = `$${Number(this.value).toLocaleString()} (Average)`;
+            }
         });
 
         // Update loan to value display
+        const lowLVR = parseFloat(document.getElementById('lvr-band-low').value);
+        const highLVR = parseFloat(document.getElementById('lvr-band-high').value);
         const loanToValueSlider = document.getElementById('loan-to-value');
         const loanToValueDisplay = document.getElementById('loan-to-value-display');
         loanToValueSlider.addEventListener('input', function() {
-            loanToValueDisplay.textContent = `${this.value}%`;
+            if (this.value < lowLVR) {
+                loanToValueDisplay.textContent = `${this.value}% (Low)`;
+            } else if (this.value >= highLVR) {
+                loanToValueDisplay.textContent = `${this.value}% (High)`;
+            } else {
+                loanToValueDisplay.textContent = `${this.value}% (Medium)`;
+            }
         });
 
         // Calculate Advertised price
         document.getElementById('calculate-price').addEventListener('click', function() {
             const selectedCustomerId = customerSelect.value;
             const selectedCustomer = customerArray.find(c => c.customerId === selectedCustomerId);
-            const submittedBy = document.getElementById('submittedBy').value;
             const priceType = document.getElementById('price-type').value;
             const propertyUsage = document.getElementById('property-usage').value;
             const interestRepayment = document.getElementById('interest-repayment').value;
@@ -345,105 +345,110 @@
 
             const context = {
             customerId: selectedCustomerId,
-            submittedBy: submittedBy, 
             productId: 'HLVAR01', // default product ID
             loanAmt: totalMortgageLending,
             lvr: loanToValue,
-            purpose: propertyUsage, // Example value
-            repayment: interestRepayment, // Example value,
+            purpose: propertyUsage, 
+            repayment: interestRepayment, 
             priceTier: 'Advertised' // default price tier
             };
 
-            const pricing = resolveAdvertisedPricing(context);
+            const pricing = resolvePricing(context);
             const advertisedPriceFieldsDiv = document.getElementById('advertised-price');
             advertisedPriceFieldsDiv.innerHTML = `<h2>Advertised Price</h2>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
-        });
+
+            //loop thru each customer cohort and display the pricing details
+            let personalisedPriceFieldsDivHtml = '';
+            selectedCustomer.cohorts.forEach(cohort => {
+                const context = {
+                customerId: selectedCustomerId,
+                productId: 'HLVAR01', // default product ID
+                loanAmt: totalMortgageLendingSlider.value,
+                lvr: loanToValueSlider.value,
+                purpose: propertyUsage, 
+                repayment: interestRepayment, 
+                priceTier: cohort // cohort vsalue
+                };
+
+                const pricing = resolvePricing(context);
+                personalisedPriceFieldsDivHtml += `<h2>Personalised Price - ${cohort}</h2>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+                });
+
+                // if submittedby===broker, then resolvePricing using Broker price tier
+                const submittedBy = document.getElementById('submittedBy').value;
+                if (submittedBy === 'Broker') {
+                const context = {
+                customerId: selectedCustomerId,
+                productId: 'HLVAR01', // default product ID
+                loanAmt: totalMortgageLendingSlider.value,
+                lvr: loanToValueSlider.value,
+                purpose: propertyUsage, 
+                repayment: interestRepayment, 
+                priceTier: "Broker" // Broker price tier
+                };
+
+                const pricing = resolvePricing(context);
+                personalisedPriceFieldsDivHtml += `<h2>Personalised Price - Broker</h2>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+                };
+
+            const personalisedPriceFieldsDiv = document.getElementById('personalised-price');
+            personalisedPriceFieldsDiv.innerHTML = personalisedPriceFieldsDivHtml;
+
+        }); 
+    }
  
-        // Combine the product and customer data into a single object
-        const context = {
-            productData,
-            customerData
-            };
+    // function updateAverageLoanSize() {
+    //     let smallValue = parseFloat(document.getElementById('loan-size-small').value) || 0;
+    //     let bigValue = parseFloat(document.getElementById('loan-size-big').value) || 0;
+    //     if (bigValue <= smallValue) {
+    //         bigValue = smallValue + 1; // Ensure bigValue is greater than smallValue
+    //         document.getElementById('loan-size-big').value = bigValue; // Update the input field
+    //     }
+    //     const mediumValueElement = document.getElementById('loan-size-average');
+    //     mediumValueElement.textContent = `${smallValue} to ${bigValue}`;
+    // }
+    // function updateMediumLVRBand() {
+    //     let smallValue = parseFloat(document.getElementById('lvr-band-low').value) || 0;
+    //     let bigValue = parseFloat(document.getElementById('lvr-band-high').value) || 0;
+    //     if (bigValue <= smallValue) {
+    //         bigValue = smallValue + 1; // Ensure bigValue is greater than smallValue
+    //         document.getElementById('lvr-band-high').value = bigValue; // Update the input field
+    //     }
+    //     const mediumValueElement = document.getElementById('lvr-band-medium');
+    //     mediumValueElement.textContent = `${smallValue}% to ${bigValue}%`;
+    // }
 
-        renderPricingDetails(context);
-        // Add toggle event listener after rendering content
-        // Add event listener to customer button
-        // Use event delegation for dynamically added elements
-        document.getElementById('product-details').addEventListener('click', function (e) {
-        if (e.target && e.target.classList.contains('customer-button')) {
-        const customerId = e.target.dataset.customerid; // Get customerId from the button
-        // console.log('Customer button clicked for ID:', customerId);
-
-        // Fetch customer and account data for this customer
-        const customer = customerArray.find(c => c.customerId === customerId);
-        // const customerAccounts = accountData.filter(account => account.customerId === customerId);
-
-    }
-});
-        addToggleEventListener();
-    }
-    function updateAverageLoanSize() {
-        let smallValue = parseFloat(document.getElementById('loan-size-small').value) || 0;
-        let bigValue = parseFloat(document.getElementById('loan-size-big').value) || 0;
-        if (bigValue <= smallValue) {
-            bigValue = smallValue + 1; // Ensure bigValue is greater than smallValue
-            document.getElementById('loan-size-big').value = bigValue; // Update the input field
-        }
-        const mediumValueElement = document.getElementById('loan-size-average');
-        mediumValueElement.textContent = `${smallValue} to ${bigValue}`;
-    }
-    function updateMediumLVRBand() {
-        let smallValue = parseFloat(document.getElementById('lvr-band-low').value) || 0;
-        let bigValue = parseFloat(document.getElementById('lvr-band-high').value) || 0;
-        if (bigValue <= smallValue) {
-            bigValue = smallValue + 1; // Ensure bigValue is greater than smallValue
-            document.getElementById('lvr-band-high').value = bigValue; // Update the input field
-        }
-        const mediumValueElement = document.getElementById('lvr-band-medium');
-        mediumValueElement.textContent = `${smallValue}% to ${bigValue}%`;
-    }
-
-
-
-    function resolveAdvertisedPricing(context) {
-
-    console.log(`resolveAdvertisedPricing`, context);
-
-    // Validate account attributes
-    // if (!productId) throw new Error(`Product ID is missing in account: ${accountId}`);
-    // if (!priceTier) throw new Error(`Price tier is missing in account: ${accountId}`);
+    function resolvePricing(context) {
 
     // Filter all pricingItems in Product based on productCode
     let pricing = [];
     const pricingItems = productArray[0].priceTier
         .find(tier => tier.priceTierName === context.priceTier)
         .pricingItems;
-
-    console.log(`Pricing Items:`, pricingItems);
  
     // Loop through the pricingItems and call resolvePricingItem for pricingItem.. the result is then added to the pricing array
     pricingItems.forEach(pricingItem => {
         const value = resolvePricingItem(pricingItem, context);
-        if (value !== null) pricing.push({ name: pricingItem.pricingItem, valueType: pricingItem.valueType, value });
+        if (value !== null) pricing.push({ name: pricingItem.pricingItem, valueType: pricingItem.valueType, value: value.toString() });
     });
 
-    const rate = pricing.find(element => element.name === 'Rate').value || 0;
-    const rateDiscount = pricing.find(element => element.name === 'Rate Discount').value || 0;
-    const lateFee = pricing.find(element => element.name === 'Late Fee').value || 0;
-    // const netRate = (parseFloat(rate) + parseFloat(rateDiscount)).toFixed(2);
-    // const comparisonRate = resolveComparisonRate(parseFloat(account.attributes.loanAmt), parseFloat(netRate), parseFloat(lateFee)*12*25, 25);
+    const rateElement = pricing.find(element => element.name === 'Rate');
+    const rate = rateElement ? parseFloat(rateElement.value) : 0;
+    const rateDiscountElement = pricing.find(element => element.name === 'Rate Discount');    
+    const rateDiscount = rateDiscountElement ? parseFloat(rateDiscountElement.value) : 0;
+    const lateFeeElement = pricing.find(element => element.name === 'Late Fee');
+    const lateFee = lateFeeElement ? parseFloat(lateFeeElement.value) : 0;
+
+    // const netRate = (rate + rateDiscount).toFixed(2);
+    // const comparisonRate = resolveComparisonRate(parseFloat(context.loanAmt), parseFloat(netRate), lateFee*12*25, 25);
     // pricing.push({ name: 'Net Rate', valueType: 'PERCENTAGE', value: netRate}); 
-    // pricing.push({ name: 'Compare Rate', valueType: 'PERCENTAGE', value: comparisonRate});
+    // pricing.push({ name: 'Compare Rate', valueType: 'PERCENTAGE', value: comparisonRate.toString()});
     
     return pricing;
-}
+    }
 
     function resolvePricingItem(pricingItem, context) {
 
-        // const { productId, customerId } = context;
-
-        // Validate account attributes
-        // resolve priceTier
         if (pricingItem.rule) {
             // console.log(`Rule "${pricingItem.rule}" evaluated for account ${accountId}`);
             if (resolveRule(pricingItem.rule, context)) {
@@ -459,46 +464,28 @@
         }
     }
 
-    function resolveComparisonRate(principal, interestRate, fees, termYears) {
+//     function resolveComparisonRate(principal, interestRate, fees, termYears) {
 
-    // console.log(`resolveComparisonRate called with principal: ${principal}, interestRate: ${interestRate}, fees: ${fees}, termYears: ${termYears}`);
+//     // console.log(`resolveComparisonRate called with principal: ${principal}, interestRate: ${interestRate}, fees: ${fees}, termYears: ${termYears}`);
         
-    // Convert annual interest rate to monthly
-    let monthlyInterestRate = interestRate / 12 / 100;
-    let numberOfPayments = termYears * 12;
+//     // Convert annual interest rate to monthly
+//     let monthlyInterestRate = interestRate / 12 / 100;
+//     let numberOfPayments = termYears * 12;
 
-    // Monthly payment calculation (principal and interest)
-    let monthlyPayment = (principal * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
+//     // Monthly payment calculation (principal and interest)
+//     let monthlyPayment = (principal * monthlyInterestRate) / (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
     
-    // Total fees spread over the life of the loan
-    let totalFees = fees / numberOfPayments;
+//     // Total fees spread over the life of the loan
+//     let totalFees = fees / numberOfPayments;
     
-    // Comparison rate calculation
-    let monthlyComparisonRate = ((monthlyPayment + totalFees) / principal) * 100;
-    let comparisonRate = monthlyComparisonRate * 12; // Convert to annual rate
-    // console.log(`The comparison rate is ${comparisonRate}.%`);
+//     // Comparison rate calculation
+//     let monthlyComparisonRate = ((monthlyPayment + totalFees) / principal) * 100;
+//     let comparisonRate = monthlyComparisonRate * 12; // Convert to annual rate
+//     // console.log(`The comparison rate is ${comparisonRate}.%`);
     
-    return comparisonRate.toFixed(2);
-}
-
-    function resolveNotes(context) {
-    const notes = [];
-    const customer = customerArray.find(customer => customer.customerId === account.customerId);
-    // console.log("resolveNotes:", account, customer);  
-    if (account.staffPricing && !customer.isStaff) {
-        notes.push("Staff pricing is selected but customer is not a staff member.");
-    }
-    if (!account.staffPricing && customer.isStaff) {
-        notes.push("Staff pricing is not selected but customer is a staff member.");
-    }
-    if (account.priceTier === "Hardship" && !customer.isInHardship) {
-        notes.push("Hardship pricing is selected but customer is not in hardship.");
-    }
-    if (customer.isInHardship && account.priceTier !== "Hardship") {
-        notes.push("Customer is in hardship but hardship pricing is not selected.");
-    }
-    return notes.join("\n"); // Example value
-    }    
+//     return comparisonRate.toFixed(2);
+// }
+    
     function resolveRule(rule, context) {
         // console.log(`resolveRule(${rule},${account})`);
         // Define rule mapping
@@ -530,3 +517,4 @@
     </script>
 </body>
 </html>
+
