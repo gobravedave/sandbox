@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Loan Personalised Pricing Demo</title>
     <script src="https://unpkg.com/renderjson@1.3.0/renderjson.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/pricing.css">
+    <link rel="stylesheet" type="text/css" href="css/personalised-pricing.css">
     
 </head>
 <body>
@@ -29,17 +29,10 @@
             <select id="customer-select">
             <!-- Options will be populated dynamically -->
             </select>
-            <br>
             <div id="customer-attributes">
             <!-- Customer attributes will be displayed here -->
             </div>
-            <br>
-            <label for="price-type">Price Type:</label>
-            <select id="price-type">
-            <option value="Acquisition">Acquisition</option>
-            <option value="Retention">Retention</option>
-            </select>
-            <br>
+           <br>
             <!-- add property usage select box with Owner and Investor as options -->
             <label for="property-usage">Property Usage:</label>
             <select id="property-usage">
@@ -62,11 +55,15 @@
             <input type="range" id="loan-to-value" min="0" max="100" step="1">
             <span id="loan-to-value-display">50% (Low)</span>
             <br>
+
+            <br>
             <button id="calculate-price" disabled>Calculate Personalised Price</button>
             <br>
+
             <div id="advertised-price">
             <!-- Calculated fields will be displayed here -->
             </div>
+            
             <div id="personalised-price">
                 <!-- Calculated fields will be displayed here -->
                 </div>
@@ -113,21 +110,21 @@
 <script>
 
 function openTab(evt, tabName) {
-    console.log(`openTab called with tabName: ${tabName}`);
+    // console.log(`openTab called with tabName: ${tabName}`);
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tab-content");
     for (i = 0; i < tabcontent.length; i++) {
-        console.log(`Hiding tabcontent element ${i}: ${tabcontent[i].id}`);
+        // console.log(`Hiding tabcontent element ${i}: ${tabcontent[i].id}`);
         tabcontent[i].style.display = "none";
     }
     tablinks = document.getElementsByClassName("tab-button");
     for (i = 0; i < tablinks.length; i++) {
-        console.log(`Removing active class from tablink element ${i}: ${tablinks[i].id}`);
+        // console.log(`Removing active class from tablink element ${i}: ${tablinks[i].id}`);
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-    console.log(`Showing tabcontent element: ${tabName}`);
+    // console.log(`Showing tabcontent element: ${tabName}`);
     document.getElementById(tabName).style.display = "block";
-    console.log(`Adding active class to tablink element: ${evt.currentTarget.id}`);
+    // console.log(`Adding active class to tablink element: ${evt.currentTarget.id}`);
     evt.currentTarget.className += " active";
 }
 
@@ -244,7 +241,7 @@ async function getCustomers() {
         document.getElementById('calculate-price').addEventListener('click', function() {
             const selectedCustomerId = customerSelect.value;
             const selectedCustomer = customerArray.find(c => c.customerId === selectedCustomerId);
-            const priceType = document.getElementById('price-type').value;
+            // const priceType = document.getElementById('price-type').value;
             const propertyUsage = document.getElementById('property-usage').value;
             const interestRepayment = document.getElementById('interest-repayment').value;
             const totalMortgageLending = Number(totalMortgageLendingSlider.value);
@@ -262,7 +259,7 @@ async function getCustomers() {
 
             const pricing = resolvePricing(context);
             const advertisedPriceFieldsDiv = document.getElementById('advertised-price');
-            advertisedPriceFieldsDiv.innerHTML = `<h2>Advertised Price</h2>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+            advertisedPriceFieldsDiv.innerHTML = `<h3>Advertised Price</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
 
             //loop thru each customer cohort and display the pricing details
             let personalisedPriceFieldsDivHtml = '';
@@ -274,11 +271,11 @@ async function getCustomers() {
                 lvr: loanToValueSlider.value,
                 purpose: propertyUsage, 
                 repayment: interestRepayment, 
-                priceTier: cohort // cohort vsalue
+                priceTier: cohort // cohort value
                 };
 
                 const pricing = resolvePricing(context);
-                personalisedPriceFieldsDivHtml += `<h2>Personalised Price - ${cohort}</h2>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+                personalisedPriceFieldsDivHtml += `<h3>Personalised Price - ${cohort}</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
                 });
 
                 // if submittedby===broker, then resolvePricing using Broker price tier
@@ -295,7 +292,7 @@ async function getCustomers() {
                 };
 
                 const pricing = resolvePricing(context);
-                personalisedPriceFieldsDivHtml += `<h2>Personalised Price - Broker</h2>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+                personalisedPriceFieldsDivHtml += `<h3>Personalised Price - Broker</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
                 };
 
             const personalisedPriceFieldsDiv = document.getElementById('personalised-price');
