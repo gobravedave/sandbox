@@ -1,0 +1,137 @@
+body {
+  font-family: Arial;
+}
+
+h1, h2, h3, h4{
+  padding-top: 12px;
+  color: #371282;
+}
+.content {
+    display: block;
+    margin-left: 20px;
+}
+
+.table_wrapper{
+display: block;
+overflow-x: auto;
+white-space: nowrap;
+}
+
+
+/* Optional tooltip styling */
+.table th[title]:hover, 
+.table td[title]:hover {
+position: relative;
+cursor: pointer; /* Optional: add cursor pointer on hover */
+}
+
+.table th[title]:hover:after, 
+.table td[title]:hover:after {
+content: attr(title);
+position: absolute;
+background-color: #333;
+color: #fff;
+padding: 5px 5px;
+border-radius: 5px;
+white-space: nowrap;
+top: -30px; /* Position above the element */
+left: 50%; /* Center tooltip */
+transform: translateX(-50%);
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.3s ease;
+z-index: 1;
+}
+
+.table th[title]:hover:after, 
+.table td[title]:hover:after {
+opacity: 1;
+}
+
+.table th, .table td {
+  word-wrap: break-word;
+  white-space: normal !important; /* Allow text to wrap */;
+  width: auto;
+  min-width: fit-content;
+  max-width: 100px;
+  overflow: hidden;
+  vertical-align: top;
+  text-overflow: ellipsis; /* Add ellipsis for overflow text */
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  background: #eee;
+}
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  width: 0;
+  min-width: fit-content;
+    /* text-align: center; */
+  text-align: top;
+  vertical-align: top;
+  font-size: 14px;
+}
+
+
+.green-button {
+  background-color: #71f063; /* Green */
+  color: black;
+  margin: 4px 2px;
+  cursor: auto;
+}
+
+.tab {
+  display: flex;
+  cursor: pointer;
+  padding: 10px;
+  background-color: #f1f1f1;
+  border: 1px solid #ccc;
+  margin-right: 5px;
+}
+
+.tab.active {
+  background-color: #2805b4;
+  font-weight: bold;
+}
+
+.tab-content {
+  display: none;
+  border: 1px solid #cccccc;
+  padding: 10px;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Additional styles for better presentation */
+h2 {
+  margin-top: 0;
+}
+
+.content {
+  margin-top: 10px;
+}
+
+label {
+  width:200px;
+  display: inline-block;
+}
+
+select {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  padding: 10px 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f7f7f7;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
