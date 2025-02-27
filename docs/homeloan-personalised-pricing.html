@@ -97,6 +97,14 @@
                 <span><b>High: </b></span>
                 <input type="text" id="lvr-band-high" value="80" disabled="true">
                 </label>        
+            <h2>Cashback</h2> 
+            <label for="cashback-min-loan-amount"><b>Min Loan Amount:</b></label>
+            <input type="range" id="cashback-min-loan-amount" min="100000" max="1000000" step="10000" value="250000">
+            <span id="cashback-min-loan-amount-display">$250,000</span>
+            <br>
+            <label for="cashback-max-lvr"><b>Max LVR:</b></label>
+            <input type="range" id="cashback-max-lvr" min="10" max="100" step="05" value="80">
+            <span id="cashback-max-lvr-display">80%</span>
         </div>
 
         <div id="price-point-json" class="tab-content" style="display: none;">
@@ -236,6 +244,18 @@ async function getCustomers() {
             } else {
                 loanToValueDisplay.textContent = `${this.value}% (Medium)`;
             }
+        });
+
+        const cashbackMinLoanAmountSlider = document.getElementById('cashback-min-loan-amount');
+        const cashbackMinLoanAmountDisplay = document.getElementById('cashback-min-loan-amount-display');
+        cashbackMinLoanAmountSlider.addEventListener('input', function() {
+            cashbackMinLoanAmountDisplay.textContent = `$${Number(this.value).toLocaleString()}`;
+        });
+
+        const cashbackMaxLVRSlider = document.getElementById('cashback-max-lvr');
+        const cashbackMaxLVRDisplay = document.getElementById('cashback-max-lvr-display');
+        cashbackMaxLVRSlider.addEventListener('input', function() {
+            cashbackMaxLVRDisplay.textContent = `${this.value}%`;
         });
 
         // Calculate Advertised price
@@ -433,8 +453,8 @@ function formatValue(value, valueType) {
             "is Big Loan & Low LVR": (context) => context.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && context.lvr < parseFloat(document.getElementById('lvr-band-low').value),
             "is Big Loan & Medium LVR": (context) => context.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && context.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && context.lvr < parseFloat(document.getElementById('lvr-band-high').value),
             "is Big Loan & High LVR": (context) => context.loanAmt >= parseFloat(document.getElementById('loan-size-big').value) && context.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
-            "if Cashback conditions met": (context) => context.loanAmt >=250000 && context.lvr >= parseFloat(document.getElementById('lvr-band-high').value),
-            "if Cashback conditions not met": (context) => context.loanAmt < 250000 || context.lvr < parseFloat(document.getElementById('lvr-band-high').value)
+            "if Cashback conditions met": (context) => context.loanAmt >= parseFloat(document.getElementById('cashback-min-loan-amount').value) && context.lvr <= parseFloat(document.getElementById('cashback-max-lvr').value),
+            "if Cashback conditions not met": (context) => context.loanAmt < parseFloat(document.getElementById('cashback-min-loan-amount').value) || context.lvr > parseFloat(document.getElementById('cashback-max-lvr').value)
         };
 
         // Check if the rule exists in the map and apply it
