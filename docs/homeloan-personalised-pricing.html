@@ -108,6 +108,7 @@
         </div>
 
 <script>
+let totalRateDiscount = 0;
 
 function openTab(evt, tabName) {
     // console.log(`openTab called with tabName: ${tabName}`);
@@ -239,6 +240,7 @@ async function getCustomers() {
 
         // Calculate Advertised price
         document.getElementById('calculate-price').addEventListener('click', function() {
+            totalRateDiscount = 0; // Reset total rate discount
             const selectedCustomerId = customerSelect.value;
             const selectedCustomer = customerArray.find(c => c.customerId === selectedCustomerId);
             // const priceType = document.getElementById('price-type').value;
@@ -246,7 +248,6 @@ async function getCustomers() {
             const interestRepayment = document.getElementById('interest-repayment').value;
             const totalMortgageLending = Number(totalMortgageLendingSlider.value);
             const loanToValue = parseFloat(loanToValueSlider.value);
-
             const context = {
             customerId: selectedCustomerId,
             productId: 'HLVAR01', // default product ID
@@ -259,6 +260,9 @@ async function getCustomers() {
 
             const pricing = resolvePricing(context);
             const advertisedPriceFieldsDiv = document.getElementById('advertised-price');
+            const advertisedRate = pricing.find(p => p.name === 'Rate').value;
+            const advertisedRateDiscount = pricing.find(p => p.name === 'Rate Discount')?.value;
+            // console.debug('Advertised price:', { advertisedRate, advertisedRateDiscount });
             advertisedPriceFieldsDiv.innerHTML = `<h3>Advertised Price</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
 
             //loop thru each customer cohort and display the pricing details
@@ -294,11 +298,15 @@ async function getCustomers() {
                 const pricing = resolvePricing(context);
                 personalisedPriceFieldsDivHtml += `<h3>Personalised Price - Broker</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
                 };
+                
+            personalisedPriceFieldsDivHtml += `<h3>Net Price</h3><b>Total Discount:</b> ${totalRateDiscount.toFixed(2)}%</br><b>Net Rate:</b> ${(parseFloat(advertisedRate) + totalRateDiscount).toFixed(2)}%</br>`;
 
             const personalisedPriceFieldsDiv = document.getElementById('personalised-price');
             personalisedPriceFieldsDiv.innerHTML = personalisedPriceFieldsDivHtml;
 
         }); 
+
+
     }
  
     // function updateAverageLoanSize() {
@@ -333,19 +341,17 @@ async function getCustomers() {
     // Loop through the pricingItems and call resolvePricingItem for pricingItem.. the result is then added to the pricing array
     pricingItems.forEach(pricingItem => {
         const value = resolvePricingItem(pricingItem, context);
-        if (value !== null) pricing.push({ 
-            name: pricingItem.pricingItem, 
-            valueType: pricingItem.valueType, 
-            value: formatValue(value, pricingItem.valueType)
-        });
+        if (value !== null) {
+            pricing.push({ 
+                name: pricingItem.pricingItem, 
+                valueType: pricingItem.valueType, 
+                value: formatValue(value, pricingItem.valueType)
+            });
+            if (pricingItem.pricingItem === 'Rate Discount') {
+                totalRateDiscount += value;
+            }
+        }
     });
-
-    // const rateElement = pricing.find(element => element.name === 'Rate');
-    // const rate = rateElement ? parseFloat(rateElement.value) : 0;
-    // const rateDiscountElement = pricing.find(element => element.name === 'Rate Discount');    
-    // const rateDiscount = rateDiscountElement ? parseFloat(rateDiscountElement.value) : 0;
-    // const lateFeeElement = pricing.find(element => element.name === 'Late Fee');
-    // const lateFee = lateFeeElement ? parseFloat(lateFeeElement.value) : 0;
 
     // const netRate = (rate + rateDiscount).toFixed(2);
     // const comparisonRate = resolveComparisonRate(parseFloat(context.loanAmt), parseFloat(netRate), lateFee*12*25, 25);
