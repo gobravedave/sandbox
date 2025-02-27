@@ -35,55 +35,55 @@
                 {
                 "pricingItem": "Rate Discount",
                 "rule": "is Small Loan & Low LVR",
-                "valueType": "DISCOUNT MARGIN",
+                "valueType": "PERCENTAGE MARGIN",
                 "value": -1
                 },
                 {
                 "pricingItem": "Rate Discount",
                 "rule": "is Small Loan & Medium LVR",
-                "valueType": "DISCOUNT MARGIN",
+                "valueType": "PERCENTAGE MARGIN",
                 "value": -2
                 },
                 {
                 "pricingItem": "Rate Discount",
                 "rule": "is Small Loan & High LVR",
-                "valueType": "DISCOUNT MARGIN",
+                "valueType": "PERCENTAGE MARGIN",
                 "value": -3
                 },
                 {
                 "pricingItem": "Rate Discount",
                 "rule": "is Average Loan & Low LVR",
-                "valueType": "DISCOUNT MARGIN",
+                "valueType": "PERCENTAGE MARGIN",
                 "value": -1.5            
                 },
                 {
                 "pricingItem": "Rate Discount",
                 "rule": "is Average Loan & Medium LVR",
-                "valueType": "DISCOUNT MARGIN",
+                "valueType": "PERCENTAGE MARGIN",
                 "value": -2.5
                 },
                 {
                 "pricingItem": "Rate Discount",
                 "rule": "is Average Loan & High LVR",
-                "valueType": "DISCOUNT MARGIN",
+                "valueType": "PERCENTAGE MARGIN",
                 "value": -3.5
                 },
                 {
                 "pricingItem": "Rate Discount",
                 "rule": "is Big Loan & Low LVR",
-                "valueType": "DISCOUNT MARGIN",
+                "valueType": "PERCENTAGE MARGIN",
                 "value": -1.9            
                 },
                 {
                 "pricingItem": "Rate Discount",
                 "rule": "is Big Loan & Medium LVR",
-                "valueType": "DISCOUNT MARGIN",
+                "valueType": "PERCENTAGE MARGIN",
                 "value": -2.9
                 },
                 {
                 "pricingItem": "Rate Discount",
                 "rule": "is Big Loan & High LVR",
-                "valueType": "DISCOUNT MARGIN",
+                "valueType": "PERCENTAGE MARGIN",
                 "value": -3.9
                 },
                 {
@@ -113,7 +113,7 @@
                 {
                 "pricingItem": "Rate Discount",
                 "rule": "",
-                "valueType": "DISCOUNT MARGIN",
+                "valueType": "PERCENTAGE MARGIN",
                 "value": -1
                 },    
                 {
@@ -143,7 +143,7 @@
                 {
                 "pricingItem": "Rate Discount",
                 "rule": "",
-                "valueType": "DISCOUNT MARGIN",
+                "valueType": "PERCENTAGE MARGIN",
                 "value": 0.5
                 }
                 ]
@@ -161,7 +161,7 @@
                 {
                 "pricingItem": "Rate Discount",
                 "rule": "",
-                "valueType": "DISCOUNT MARGIN",
+                "valueType": "PERCENTAGE MARGIN",
                 "value": 0            
                 },
                 {

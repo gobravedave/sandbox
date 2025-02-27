@@ -333,15 +333,19 @@ async function getCustomers() {
     // Loop through the pricingItems and call resolvePricingItem for pricingItem.. the result is then added to the pricing array
     pricingItems.forEach(pricingItem => {
         const value = resolvePricingItem(pricingItem, context);
-        if (value !== null) pricing.push({ name: pricingItem.pricingItem, valueType: pricingItem.valueType, value: value.toString() });
+        if (value !== null) pricing.push({ 
+            name: pricingItem.pricingItem, 
+            valueType: pricingItem.valueType, 
+            value: formatValue(value, pricingItem.valueType)
+        });
     });
 
-    const rateElement = pricing.find(element => element.name === 'Rate');
-    const rate = rateElement ? parseFloat(rateElement.value) : 0;
-    const rateDiscountElement = pricing.find(element => element.name === 'Rate Discount');    
-    const rateDiscount = rateDiscountElement ? parseFloat(rateDiscountElement.value) : 0;
-    const lateFeeElement = pricing.find(element => element.name === 'Late Fee');
-    const lateFee = lateFeeElement ? parseFloat(lateFeeElement.value) : 0;
+    // const rateElement = pricing.find(element => element.name === 'Rate');
+    // const rate = rateElement ? parseFloat(rateElement.value) : 0;
+    // const rateDiscountElement = pricing.find(element => element.name === 'Rate Discount');    
+    // const rateDiscount = rateDiscountElement ? parseFloat(rateDiscountElement.value) : 0;
+    // const lateFeeElement = pricing.find(element => element.name === 'Late Fee');
+    // const lateFee = lateFeeElement ? parseFloat(lateFeeElement.value) : 0;
 
     // const netRate = (rate + rateDiscount).toFixed(2);
     // const comparisonRate = resolveComparisonRate(parseFloat(context.loanAmt), parseFloat(netRate), lateFee*12*25, 25);
@@ -350,6 +354,22 @@ async function getCustomers() {
     
     return pricing;
     }
+
+function formatValue(value, valueType) {
+    switch (valueType) {
+        case 'PERCENTAGE':
+            return `${value.toFixed(2)}%`;
+        case 'PERCENTAGE MARGIN':
+            return `${value.toFixed(2)}%`;
+        case 'AMOUNT':
+            return `$${value.toFixed(2)}`;
+        case 'NUMBER':
+            return value.toString();
+        default:
+            return value;
+    }
+}
+
 
     function resolvePricingItem(pricingItem, context) {
 
