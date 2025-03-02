@@ -71,32 +71,23 @@
 
         <div id="pricing-variables" class="tab-content" style="display: none;">
             <h2>Loan Size</h2> 
-                <label>
-                <span><b>Small: </b></span>
-                <input type="text" id="loan-size-small" value="200000" disabled="true">
-                </label>
-                <label>
-                <span><b>Average: </b></span>
-                <span id="loan-size-average">200000 to 600000</span>
-                </label>
-                <label>
-                <span><b>Big: </b></span>
-                <input type="text" id="loan-size-big" value="600000" disabled="true">
-                </label>
+                <label for="loan-size-small"><b>Small Loan:</b></label>
+                <input type="range" id="loan-size-small" min="100000" max="1000000" step="100000" value="200000" disabled>
+                <span id="loan-size-small-display">$200,000</span>
+                <br>
+                <label for="loan-size-big"><b>Big Loan: </b></label>
+                <input type="range" id="loan-size-big" min="100000" max="1000000" step="100000" value="600000" disabled>
+                <span id="loan-size-big-display">$600,000</span>
             
             <h2>LVR Band</h2> 
-                <label>
-                <span><b>Low: </b></span>
-                <input type="text" id="lvr-band-low" value="60" disabled="true">
-                </label>
-                <label>
-                <span><b>Medium: </b></span>
-                <span id="lvr-band-medium">60% - 80%</span>
-                </label>
-                <label>
-                <span><b>High: </b></span>
-                <input type="text" id="lvr-band-high" value="80" disabled="true">
-                </label>        
+                <label for="lvr-band-low"><b>Low LVR:</b></label>
+                <input type="range" id="lvr-band-low" min="0" max="100" step="1" value="60" disabled>
+                <span id="lvr-band-low-display">60%</span>
+                <br>
+                <label for="lvr-band-high"><b>High LVR:</b></label>
+                <input type="range" id="lvr-band-high" min="0" max="100" step="1" value="80" disabled>
+                <span id="lvr-band-high-display">80%</span>
+            <br>
             <h2>Cashback</h2> 
             <label for="cashback-min-loan-amount"><b>Min Loan Amount:</b></label>
             <input type="range" id="cashback-min-loan-amount" min="100000" max="1000000" step="10000" value="250000">
@@ -246,16 +237,54 @@ async function getCustomers() {
             }
         });
 
+        const loanAmountSmallSlider = document.getElementById('loan-size-small');
+        const loanAmountSmallDisplay = document.getElementById('loan-size-small-display');
+        const loanAmountBigSlider = document.getElementById('loan-size-big');
+        loanAmountSmallSlider.addEventListener('input', function() {
+            const value = Number(this.value);
+            if (value >= loanAmountBigSlider.value) {
+                this.value = loanAmountBigSlider.value - 1;
+            }
+            loanAmountSmallDisplay.textContent = `$${Number(this.value).toLocaleString()}`;
+        });
+
+        const loanAmountBigDisplay = document.getElementById('loan-size-big-display');
+        loanAmountBigSlider.addEventListener('input', function() {
+            if (this.value <= loanAmountSmallSlider.value) {
+                this.value = loanAmountSmallSlider.value + 1;
+            }
+            loanAmountBigDisplay.textContent = `$${Number(this.value).toLocaleString()}`;
+        });
+
+        const lvrLowSlider = document.getElementById('lvr-band-low');
+        const lvrLowDisplay = document.getElementById('lvr-band-low-display');
+        const lvrHighSlider = document.getElementById('lvr-band-high');
+        lvrLowSlider.addEventListener('input', function() {
+            const value = Number(this.value);
+            if (value >= lvrHighSlider.value) {
+                this.value = lvrHighSlider.value - 1;
+            }
+            lvrLowDisplay.textContent = `${this.value}%`;
+        });
+
+        const lvrHighDisplay = document.getElementById('lvr-band-high-display');
+        lvrHighSlider.addEventListener('input', function() {
+            if (this.value <= lvrLowSlider.value) {
+                this.value = lvrLowSlider.value + 1;
+            }
+            lvrHighDisplay.textContent = `${this.value}%`;
+        });
+
         const cashbackMinLoanAmountSlider = document.getElementById('cashback-min-loan-amount');
         const cashbackMinLoanAmountDisplay = document.getElementById('cashback-min-loan-amount-display');
         cashbackMinLoanAmountSlider.addEventListener('input', function() {
             cashbackMinLoanAmountDisplay.textContent = `$${Number(this.value).toLocaleString()}`;
         });
 
-        const cashbackMaxLVRSlider = document.getElementById('cashback-max-lvr');
-        const cashbackMaxLVRDisplay = document.getElementById('cashback-max-lvr-display');
-        cashbackMaxLVRSlider.addEventListener('input', function() {
-            cashbackMaxLVRDisplay.textContent = `${this.value}%`;
+        const cashbackMaxLvrSlider = document.getElementById('cashback-max-lvr');
+        const cashbackMaxLvrDisplay = document.getElementById('cashback-max-lvr-display');
+        cashbackMaxLvrSlider.addEventListener('input', function() {
+            cashbackMaxLvrDisplay.textContent = `${this.value}%`;
         });
 
         // Calculate Advertised price
@@ -302,21 +331,20 @@ async function getCustomers() {
                 personalisedPriceFieldsDivHtml += `<h3>Personalised Price - ${cohort}</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
                 });
 
-                // if submittedby===broker, then resolvePricing using Broker price tier
                 const submittedBy = document.getElementById('submittedBy').value;
                 if (submittedBy === 'Broker') {
-                const context = {
-                customerId: selectedCustomerId,
-                productId: 'HLVAR01', // default product ID
-                loanAmt: totalMortgageLendingSlider.value,
-                lvr: loanToValueSlider.value,
-                purpose: propertyUsage, 
-                repayment: interestRepayment, 
-                priceTier: "Broker" // Broker price tier
-                };
+                    const context = {
+                    customerId: selectedCustomerId,
+                    productId: 'HLVAR01', // default product ID
+                    loanAmt: totalMortgageLendingSlider.value,
+                    lvr: loanToValueSlider.value,
+                    purpose: propertyUsage, 
+                    repayment: interestRepayment, 
+                    priceTier: "Broker" // Broker price tier
+                    };
 
-                const pricing = resolvePricing(context);
-                personalisedPriceFieldsDivHtml += `<h3>Personalised Price - Broker</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+                    const pricing = resolvePricing(context);
+                    personalisedPriceFieldsDivHtml += `<h3>Personalised Price - Broker</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
                 };
                 
             personalisedPriceFieldsDivHtml += `<h3>Net Price</h3><b>Total Discount:</b> ${totalRateDiscount.toFixed(2)}%</br><b>Net Rate:</b> ${(parseFloat(advertisedRate) + totalRateDiscount).toFixed(2)}%</br>`;
@@ -326,30 +354,8 @@ async function getCustomers() {
 
         }); 
 
-
     }
  
-    // function updateAverageLoanSize() {
-    //     let smallValue = parseFloat(document.getElementById('loan-size-small').value) || 0;
-    //     let bigValue = parseFloat(document.getElementById('loan-size-big').value) || 0;
-    //     if (bigValue <= smallValue) {
-    //         bigValue = smallValue + 1; // Ensure bigValue is greater than smallValue
-    //         document.getElementById('loan-size-big').value = bigValue; // Update the input field
-    //     }
-    //     const mediumValueElement = document.getElementById('loan-size-average');
-    //     mediumValueElement.textContent = `${smallValue} to ${bigValue}`;
-    // }
-    // function updateMediumLVRBand() {
-    //     let smallValue = parseFloat(document.getElementById('lvr-band-low').value) || 0;
-    //     let bigValue = parseFloat(document.getElementById('lvr-band-high').value) || 0;
-    //     if (bigValue <= smallValue) {
-    //         bigValue = smallValue + 1; // Ensure bigValue is greater than smallValue
-    //         document.getElementById('lvr-band-high').value = bigValue; // Update the input field
-    //     }
-    //     const mediumValueElement = document.getElementById('lvr-band-medium');
-    //     mediumValueElement.textContent = `${smallValue}% to ${bigValue}%`;
-    // }
-
     function resolvePricing(context) {
 
     // Filter all pricingItems in Product based on productCode
