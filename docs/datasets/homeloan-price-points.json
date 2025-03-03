@@ -10,97 +10,97 @@
             "pricingItems": [
                 {
                 "pricingItem": "Rate",
-                "rule": "is Owner & PI",
+                "rule": ["is Owner","is PI"],
                 "valueType": "PERCENTAGE",
                 "value": 8.64
                 },
                 {
                 "pricingItem": "Rate",
-                "rule": "is Owner & IO",
+                "rule": ["is Owner","is IO"],
                 "valueType": "PERCENTAGE",
                 "value": 8.74
                 },
                 {
                 "pricingItem": "Rate",
-                "rule": "is Investor & PI",
+                "rule": ["is Investor", "is PI"],
                 "valueType": "PERCENTAGE",
                 "value": 8.84           
                 },
                 {
                 "pricingItem": "Rate",
-                "rule": "is Investor & IO",
+                "rule": ["is Investor", "is IO"],
                 "valueType": "PERCENTAGE",
                 "value": 8.94
                 },
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "is Small Loan & Low LVR",
+                "rule": ["is Small Loan","is Low LVR"],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": -1
                 },
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "is Small Loan & Medium LVR",
+                "rule": ["is Small Loan", "is Medium LVR"],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": -2
                 },
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "is Small Loan & High LVR",
+                "rule": ["is Small Loan","is High LVR"],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": -3
                 },
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "is Average Loan & Low LVR",
+                "rule": ["is Average Loan","is Low LVR"],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": -1.5            
                 },
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "is Average Loan & Medium LVR",
+                "rule": ["is Average Loan", "is Medium LVR"],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": -2.5
                 },
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "is Average Loan & High LVR",
+                "rule": ["is Average Loan","is High LVR"],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": -3.5
                 },
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "is Big Loan & Low LVR",
+                "rule": ["is Big Loan","is Low LVR"],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": -1.9            
                 },
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "is Big Loan & Medium LVR",
+                "rule": ["is Big Loan","is Medium LVR"],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": -2.9
                 },
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "is Big Loan & High LVR",
+                "rule": ["is Big Loan","is High LVR"],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": -3.9
                 },
                 {
                 "pricingItem": "Late Fee",
-                "rule": "",
+                "rule": [],
                 "valueType": "AMOUNT",
                 "value": 20
                 },
                 {
                 "pricingItem": "Cashback",
-                "rule": "if Cashback conditions met",
+                "rule": ["if Cashback conditions met"],
                 "valueType": "AMOUNT",
                 "value": 2000
                 },
                 {
                 "pricingItem": "Cashback",
-                "rule": "if Cashback conditions not met",
+                "rule": ["if Cashback conditions not met"],
                 "valueType": "AMOUNT",
                 "value": 0
                 }         
@@ -112,13 +112,13 @@
             "pricingItems": [
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "",
+                "rule": [],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": -1
                 },    
                 {
                 "pricingItem": "Late Fee",
-                "rule": "",
+                "rule": [],
                 "valueType": "AMOUNT",
                 "value": 10
                 }
@@ -130,7 +130,7 @@
             "pricingItems": [
                 {
                 "pricingItem": "Late Fee",
-                "rule": "",
+                "rule": [],
                 "valueType": "AMOUNT",
                 "value": 10
                 }
@@ -142,7 +142,7 @@
             "pricingItems": [
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "",
+                "rule": [],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": 0.5
                 }
@@ -154,7 +154,7 @@
             "pricingItems": [
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "",
+                "rule": [],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": -0.5
                 }
@@ -166,25 +166,25 @@
             "pricingItems": [
                 {
                 "pricingItem": "Rate",
-                "rule": "is Owner",
+                "rule": ["is Owner"],
                 "valueType": "PERCENTAGE",
                 "value": 6.64
                 }, 
                 {
                 "pricingItem": "Rate Discount",
-                "rule": "",
+                "rule": [],
                 "valueType": "PERCENTAGE MARGIN",
                 "value": 0            
                 },
                 {
                 "pricingItem": "Late Fee",
-                "rule": "",
+                "rule": [],
                 "valueType": "AMOUNT",
                 "value": 10
                 },
                 {
                 "pricingItem": "Cashback",
-                "rule": "",
+                "rule": [],
                 "valueType": "AMOUNT",
                 "value": 0
                 }
