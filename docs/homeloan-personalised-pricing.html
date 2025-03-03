@@ -68,7 +68,14 @@
             <div id="personalised-price">
                 <!-- Calculated fields will be displayed here -->
                 </div>
+            <br>
+            <button id="price-desk-review" disabled>Price Desk Review</button>
+            <br>
+            <div id="negotiated-price">
+                <!-- Calculated fields will be displayed here -->
+                </div>
             </div>
+        </div>
 
         <div id="pricing-variables" class="tab-content" style="display: none;">
             <h2>Loan Size</h2> 
@@ -111,21 +118,16 @@
 let totalRateDiscount = 0;
 
 function openTab(evt, tabName) {
-    // console.log(`openTab called with tabName: ${tabName}`);
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tab-content");
     for (i = 0; i < tabcontent.length; i++) {
-        // console.log(`Hiding tabcontent element ${i}: ${tabcontent[i].id}`);
         tabcontent[i].style.display = "none";
     }
     tablinks = document.getElementsByClassName("tab-button");
     for (i = 0; i < tablinks.length; i++) {
-        // console.log(`Removing active class from tablink element ${i}: ${tablinks[i].id}`);
         tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-    // console.log(`Showing tabcontent element: ${tabName}`);
     document.getElementById(tabName).style.display = "block";
-    // console.log(`Adding active class to tablink element: ${evt.currentTarget.id}`);
     evt.currentTarget.className += " active";
 }
 
@@ -358,8 +360,21 @@ async function getCustomers() {
 
             const personalisedPriceFieldsDiv = document.getElementById('personalised-price');
             personalisedPriceFieldsDiv.innerHTML = personalisedPriceFieldsDivHtml;
-
+            document.getElementById('price-desk-review').disabled = false;
         }); 
+
+document.getElementById('price-desk-review').addEventListener('click', function() {
+    const negotiatedPriceDiv = document.getElementById('negotiated-price');
+    negotiatedPriceDiv.innerHTML = '<p>Price Desk Review initiated. Await further instructions. <img src="img/ball.gif" width="20" height="20"/></p>';
+    
+    setTimeout(() => {
+        const result = Math.random() > 0.5 ? 
+            `How does a ${(totalRateDiscount - 0.2).toFixed(2)}% discount off our advertised rate sound?` : 
+            'You have already got our best rate.';
+        negotiatedPriceDiv.innerHTML = `<p>${result}</p>`;
+    }, 2000);
+});
+
 
     }
  
