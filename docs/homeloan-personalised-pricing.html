@@ -23,6 +23,7 @@
             <select id="submittedBy">
             <option value="Direct">Direct</option>
             <option value="Broker">Broker</option>
+            <option value="Mobile">Mobile Lender</option>
             </select>
             <br>
             <label for="customer">Customer:</label>
@@ -332,7 +333,14 @@ async function getCustomers() {
                 });
 
                 const submittedBy = document.getElementById('submittedBy').value;
-                if (submittedBy === 'Broker') {
+
+                if (submittedBy === 'Broker' || submittedBy === 'Mobile') {
+                    let priceTier = '';
+                    if (submittedBy === 'Broker') {
+                        priceTier = 'Broker';
+                    } else if (submittedBy === 'Mobile') {
+                        priceTier = 'Mobile';
+                    }
                     const context = {
                     customerId: selectedCustomerId,
                     productId: 'HLVAR01', // default product ID
@@ -340,13 +348,12 @@ async function getCustomers() {
                     lvr: loanToValueSlider.value,
                     purpose: propertyUsage, 
                     repayment: interestRepayment, 
-                    priceTier: "Broker" // Broker price tier
+                    priceTier: priceTier
                     };
 
                     const pricing = resolvePricing(context);
-                    personalisedPriceFieldsDivHtml += `<h3>Personalised Price - Broker</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+                    personalisedPriceFieldsDivHtml += `<h3>Personalised Price - ${priceTier}</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
                 };
-                
             personalisedPriceFieldsDivHtml += `<h3>Net Price</h3><b>Total Discount:</b> ${totalRateDiscount.toFixed(2)}%</br><b>Net Rate:</b> ${(parseFloat(advertisedRate) + totalRateDiscount).toFixed(2)}%</br>`;
 
             const personalisedPriceFieldsDiv = document.getElementById('personalised-price');

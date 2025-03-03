@@ -149,6 +149,18 @@
                 ]
             },    
             {
+            "priceTierName": "Mobile",
+            "appliesTo": ["Mobile"],
+            "pricingItems": [
+                {
+                "pricingItem": "Rate Discount",
+                "rule": "",
+                "valueType": "PERCENTAGE MARGIN",
+                "value": -0.5
+                }
+                ]
+            },    
+            {
             "priceTierName": "Hardship",
             "appliesTo": ["Hardship"],
             "pricingItems": [
