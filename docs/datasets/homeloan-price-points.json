@@ -93,6 +93,18 @@
                 "value": 20
                 },
                 {
+                "pricingItem": "Offset Fee",
+                "rule": ["is Single Offset"],
+                "valueType": "AMOUNT",
+                "value": 10
+                },
+                {
+                "pricingItem": "Offset Fee",
+                "rule": ["is Multi Offset"],
+                "valueType": "AMOUNT",
+                "value": 15
+                },
+                {
                 "pricingItem": "Cashback",
                 "rule": ["if Cashback conditions met"],
                 "valueType": "AMOUNT",
@@ -133,6 +145,18 @@
                 "rule": [],
                 "valueType": "AMOUNT",
                 "value": 10
+                },
+                {
+                "pricingItem": "Offset Fee",
+                "rule": ["is Single Offset"],
+                "valueType": "AMOUNT",
+                "value": 0
+                },
+                {
+                "pricingItem": "Offset Fee",
+                "rule": ["is Multi Offset"],
+                "valueType": "AMOUNT",
+                "value": 0
                 }
                 ]
             },
