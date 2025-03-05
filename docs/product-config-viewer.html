@@ -45,6 +45,7 @@
       loadPartial('product-fees-template', 'hbs/product-fees.hbs'),
       loadPartial('deposit-product-rateplan-template', 'hbs/deposit-product-rateplan.hbs'),
       loadPartial('lending-product-rateplan-template', 'hbs/lending-product-rateplan.hbs'),
+      loadPartial('credit-card-product-rateplan-template', 'hbs/credit-card-product-rateplan.hbs'),
       loadPartial('ratebased-offer-template', 'hbs/ratebased-offer.hbs'),
       loadPartial('ruleset-template', 'hbs/ruleset.hbs'),
       loadPartial('offer-template', 'hbs/offer.hbs'),
@@ -633,6 +634,13 @@
     <h2>Lending Rate Plan</h2>
     <div class="content">
     {{> lending-product-rateplan-template}}
+    </div>
+    {{/if}}
+
+    {{#if product.ratePlans.data.[0].product}}
+    <h2>Credit Card Rate Plan</h2>
+    <div class="content">
+    {{> credit-card-product-rateplan-template}}
     </div>
     {{/if}}
 
