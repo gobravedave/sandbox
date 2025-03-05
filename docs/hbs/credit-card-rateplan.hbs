@@ -1,0 +1,64 @@
+{{#with product.ratePlans}}
+{{#each this.data}}
+    {{#with this.product}}
+    {{#each this.ratePlanAssociations}}
+<h3>Plan Mapping</h3>
+
+    {{#with this.planMapping.association}}
+<table>
+    <tr>
+        <th>Pricing Definition</th>
+        <th>Rate Plans</th>
+    </tr>
+    {{#each this.row}}
+        {{#each this.columns}}
+        <tr>
+        <td>{{operator}} {{value}}</td>
+        <td>
+            {{#with ../standardRatePlan}}
+            <table> 
+                <tr>
+                    <th>Cohort Rate Plan</th>
+                    <th>Rates</th>
+                </tr>
+                <tr>
+                    <td>
+                    <table> 
+                        <tr>
+                        <th>Cohort Rate Plan</th>
+                        <td>{{name}} ({{code}})</td>
+                        </tr>
+                        <tr>
+                        <th>Rate Plan Type</th>
+                        <td>{{ratePlanType}}</td>
+                        </tr>
+                        <tr>
+                        <th>Rate Type</th>
+                        <td>{{rateType}}</td>
+                        </tr>
+                        <tr>
+                        <th>Interest Calculation Method</th>
+                        <td>{{interestCalculationMethod}}</td>
+                        </tr>
+                        <tr>
+                    </table>
+                    </td>
+                    <td>
+                    {{#with rates.rateGrid}}
+                    {{> rategrid-template}}
+                    {{/with}}
+                    </td>
+                    </tr>
+                    </table>
+            {{/with}}
+        </td>
+        </tr>
+        {{/each}}
+    {{/each}}
+</table>
+    {{/with}}
+
+    {{/each}}
+    {{/with}}
+{{/each}}
+{{/with}}
