@@ -1,0 +1,37 @@
+    {{!log "offerDefinitionDetails" this}}
+    
+    <table>
+    <tr><th>Name</th><td>{{offerDefinitionDetails.name}} ({{offerDefinitionDetails.code}})</td></tr>
+    <tr><th>Description</th><td>{{offerDefinitionDetails.description}}</td></tr>
+    <tr><th>Start Date</th><td>{{formatDate offerDefinitionDetails.offerStartDate}}</td></tr>
+    <tr><th>End Date</th><td>{{#if offerDefinitionDetails.offerEndDate}} {{formatDate offerDefinitionDetails.offerEndDate}}{{else}}For eva{{/if}}</td></tr>
+    <tr><th>Category</th><td>{{offerDefinitionDetails.offerCategory.name}} ({{offerDefinitionDetails.offerCategory.code}})</td></tr>
+    {{#if offerDefinitionDetails.offerInstance}}
+    <tr><th>Instance</th><td>{{offerDefinitionDetails.offerInstance}} </td></tr>
+    {{/if}}
+    {{#if offerDefinitionDetails.offerCount}}
+    <tr><th>Count</th><td>{{offerDefinitionDetails.offerCount}} </td></tr>
+    {{/if}}
+    {{#if offerDefinitionDetails.enrollmentOption}}
+    <tr><th>Enrollment Option</th><td>{{offerDefinitionDetails.enrollmentOption}}</td></tr>
+    {{/if}}
+
+    <tr><th>Offer Account</th>
+      <td><b> Open Date: </b>{{offerDefinitionDetails.offerAccounts.selectionCriteriaBasedOnOpenDate}}<br>
+      <b>Selection Criterion: </b>{{offerDefinitionDetails.offerAccounts.sameDateSelectionCriteria}}<br>
+      <b>Products In Scope:</b>
+      {{#each offerDefinitionDetails.offerAccounts.productsInScope}}
+      <li>{{name}} ({{code}})</li>
+      {{/each}}
+    <tr><th>Account Filters</th>
+      <td>
+        <b>Open on or after: </b>{{offerDefinitionDetails.offerAccounts.accountFilters.accountsOpenedOnOrAfter}}<br>
+        <b>Include Joint: </b>{{offerDefinitionDetails.offerAccounts.accountFilters.includeJointAccounts}}<br>
+        <b>Terminate Ownership: </b>{{offerDefinitionDetails.offerAccounts.accountFilters.terminateOnOwnershipChange}}<br>
+      </td></tr>  
+    <tr><th>General Ledger</th>
+      <td>
+        <b>Name: </b>{{offerConfiguration.financialParameters.generalLedger.name}} ({{offerConfiguration.financialParameters.generalLedger.code}})<br>
+        <b>Description: </b>{{offerConfiguration.financialParameters.generalLedger.description}}<br>
+      </td></tr>  
+    </table>

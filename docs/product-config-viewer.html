@@ -49,6 +49,9 @@
       loadPartial('ratebased-offer-template', 'hbs/ratebased-offer.hbs'),
       loadPartial('ruleset-template', 'hbs/ruleset.hbs'),
       loadPartial('offer-template', 'hbs/offer.hbs'),
+      loadPartial('offer-definition-template', 'hbs/offer-definition.hbs'),
+      loadPartial('reward-template', 'hbs/reward.hbs'),
+      loadPartial('reward-payout-template', 'hbs/reward-payout.hbs'),
       loadPartial('services-template', 'hbs/services.hbs'),
       loadPartial('rategrid-template', 'hbs/rategrid.hbs'),
       loadPartial('entitlements-template', 'hbs/entitlements.hbs'),
@@ -480,7 +483,7 @@
           })
 
           let offerDetails = BANKS[bankId].offersRaw.find(offer => offer.offerCode === offerCode);
-          console.log({offerDetails})
+          // console.log({offerDetails})
 
           // Compile the main offer template
 

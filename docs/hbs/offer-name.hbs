@@ -15,6 +15,7 @@
     <td>{{offer.offerCategoryCode}}</td>
 </tr>
 </table>
+{{#if offer.listOfProducts}}
 <h3>List of Products</h3>
 <div class="content">
     <table>
@@ -32,6 +33,7 @@
     <td>{{productDescription}}</td>    
     </tr>
     {{/each}}
-</table>
+    </table>
 </div>
+{{/if}}
 </div>

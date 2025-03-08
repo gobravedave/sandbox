@@ -1,0 +1,86 @@
+  <tr>
+    <td>
+      <table>
+      <tr><th colspan="2">Details</th></tr>
+      <tr><th>Name</th><td>{{name}} ({{code}})</td></tr>
+      <tr><th>Description</th><td>{{description}}</td></tr>
+      <tr><th>Assessed At</th><td>{{assessedAt}}</td></tr>
+      <tr><th>Condition To Be Met</th><td>{{conditionToBeMet}}</td></tr>
+      <tr><th>Reward Condition Type</th><td>{{rewardConditionType}}</td></tr>
+      {{#if calculation.cashBonus}}<tr><th>Cash Bonus</th><td>{{calculation.cashBonus}}</td></tr>{{/if}}
+      </table>
+    </td>
+    <td>
+      {{#each rewardConditions}}
+      <table>
+      <tr><th colspan="2">Monitoring</th></tr>
+      <tr><th>Name</th><td>{{name}} ({{code}})</td></tr>
+      <tr><th>Description</th><td>{{description}}</td></tr>
+      <tr><th>Start</th><td>
+        {{#if monitoringStart.name}}Name: {{monitoringStart.name}} ({{monitoringStart.code}})</br>{{/if}}
+        {{#if monitoringStart.type}}Type: {{monitoringStart.type}}<br>{{/if}}
+        {{#if monitoringStart.additionalDays}}Additional Days: {{monitoringStart.additionalDays}}</br>{{/if}}
+        </td></tr>
+      <tr><th>End</th>
+      <td>
+        {{#if monitoringEnd.name}}Name: {{monitoringEnd.name}} ({{monitoringEnd.code}})</br>{{/if}}
+        {{#if monitoringEnd.type}}Type: {{monitoringEnd.type}}</br>{{/if}}
+        {{#if monitoringEnd.daysAfterMonitoringStart}}Days After Monitoring Start: {{monitoringEnd.daysAfterMonitoringStart}}</br>{{/if}}
+        </td>
+    </tr>
+      {{#if daysAfterMonitoringStart}}<tr><th>Days After Monoitoring Start</th><td>{{daysAfterMonitoringStart}}</td></tr>{{/if}}
+      {{#if period}}<tr><th>Period</th><td>{{period}}</td></tr>{{/if}}
+      <tr><th>Logical Operator</th><td>{{logicalOperator}}</td></tr>
+      {{#if calculation.cashBonus}}<tr><th>Cash Bonus</th><td>{{calculation.cashBonus}}</td></tr>{{/if}}
+      </table>
+      <br>
+      <table>
+        {{#each monitoringActivities}}
+        <table>
+        <tr><th colspan="6">Activities</th></tr>
+        <tr><th>Name</th><td colspan="5">{{name}} ({{code}})</td></tr>
+        <tr><th>Description</th><td colspan="5">{{description}}</td></tr>
+        <tr><th>Logical Operator</th><td colspan="5">{{logicalOperator}}</td></tr>
+        <tr><th colspan="6">Rule Configuration</th></tr>
+        <tr><th>Account Selection</th><td colspan="5">{{ruleConfiguration.accountSelection}}</td></tr>
+        <tr><th colspan="6">Rule Model</th></tr>
+        <tr>
+          <th>Rule</th>
+          <th>Attribute</th>
+          <th>Value</th>
+          <th>Logical Operator</th>
+        </tr>
+        <tr>
+          {{#each ruleConfiguration.ruleModels}}
+            <td>{{name}} ({{code}})</td>
+            <td>
+                {{#if attributeName}}{{attributeName}}{{/if}}
+                {{#if accountSelection}}Account Selection: {{accountSelection}}</br>{{/if}}
+                {{#if transactionCodes}}Transaction Codes: {{#each transactionCodes}}{{this}} {{/each}}{{/if}}
+                {{#if products}}Products: {{#each products}}{{this}}{{/each}}{{/if}}
+            </td>
+            <td>
+            {{#if operator}}{{operator}}{{/if}}
+            {{#if Value}}{{Value}}{{/if}}
+            {{#if CR/DR}}CR/DR: {{CR/DR}}{{/if}}
+            {{#each value}}
+            {{relationalOperator}} {{dataValue}} ({{dataType}})<br>
+            {{/each}}
+            </td>
+            <td>
+            {{#if logicalOperator}}{{logicalOperator}}{{/if}}
+            </td>
+            </tr>
+          {{/each}}
+      </table>
+      </td>
+      <td>
+        {{/each}}
+      {{#with payout}}
+      {{> reward-payout-template}}
+      {{/with}}
+      {{#with ../payout}}
+      {{> reward-payout-template}}
+      {{/with}}
+      {{/each}}
+      </table>

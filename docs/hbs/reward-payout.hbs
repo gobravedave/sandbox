@@ -1,0 +1,30 @@
+          <table>          
+          {{!-- {{log 'reward payout' this}} --}}
+          <tr><th colspan="2">Payout</th></tr>
+          <tr><th>Payout To</th><td>{{payoutTo}}</td></tr>
+          <tr><th>Account Status Filter</th><td>{{accountStatusFilter}}</td></tr>
+          <tr><th>Account Selection</th><td>{{accountSelection}}</td></tr>
+          <tr><th>Include All Joint Accounts</th><td>{{includeAllJointAccounts}}</td></tr>
+          <tr><th>Determine Payout Account At Enrollement Time</th><td>{{determinePayoutAccountAtEnrollementTime}}</td></tr>
+          <tr>
+          {{#if applicableProductCode}}
+          <th>Applicable Product Code</th>
+          <td>
+          {{#each applicableProductCode}}
+          {{code}}<br>
+          {{/each}}
+          </td>
+          </tr>
+          {{/if}}
+          <tr><th>Payout Type</th><td>{{payoutType}}</td></tr>
+          {{#if accountSelectionRules}}
+          <th>Account Selection Rules</th>
+          <td>
+          {{#each accountSelectionRules}}
+          <b>Account Age Based: </b>{{accountAgeBased}}<br>
+          {{/each}}
+          </td>          
+          </tr>
+          {{/if}}
+          <tr><th>Period Based</th><td>{{periodBased}}</td></tr>
+          </table>
