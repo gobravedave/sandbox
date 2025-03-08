@@ -1,169 +1,186 @@
-{
-    "requestDate": "2025-02-18T07:28:39Z",
-    "durationMs": 918,
-    "dataType": "zrpe.eventresults.OfferDetailResult",
+  {
+    "requestDate": "2025-03-10T06:08:36Z",
+    "durationMs": 52,
+    "dataType": "anz.eventresults.GetEligibleOffersResult",
     "dataCount": 1,
     "data": [
       {
-        "modelType": "com.zafin.zplatform.anz.eventresults.GetAccountOfferDetailsResult",
+        "modelType": "com.zafin.zplatform.anz.eventresults.GetEligibleOffersResult",
         "eventStatus": "SUCCESS",
-        "accountOffers": [
+        "listOfOffers": [
           {
-            "modelType": "com.zafin.zplatform.anz.models.AccountOfferTran",
-            "offerDefinitionDetails": {
-              "modelType": "com.zafin.zplatform.anz.models.OfferDefinitionTran",
-              "name": "Test Account Offer 01",
-              "code": "TEST_AC_OFFER_01",
-              "description": "Test Account Offer 01",
-              "offerStartDate": "2023-01-01",
-              "offerCurrency": {
-                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
-                "name": "Australian Dollar",
-                "description": "Australian Dollar",
-                "code": "AUD"
-              },
-              "offerCategory": {
-                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
-                "name": "Campaign Offer",
-                "code": "CAM"
-              },
-              "offerInstance": "SINGLE_INSTANCE",
-              "offerCount": "ONE_ONLY",
-              "enrollmentOption": "AUTO_ENROLLMENT",
-              "offerAccounts": {
-                "modelType": "string",
-                "selectionCriteriaBasedOnOpenDate": "OLDEST_ACCOUNT",
-                "sameDateSelectionCriteria": "FIRST_ACCOUNT_NUMBER",
-                "productsInScope": [
-                  {
-                    "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
-                    "name": "ANZx Saving Goal",
-                    "description": "Saving01 is a simple Deposit account that earns interest and supports savings goals. Customers must hold Access01 Transact account to have Saving01 Savings account.",
-                    "code": "Saving01"
-                  }
-                ],
-                "accountFilters": {
-                  "modelType": "com.zafin.zplatform.anz.models.AccountFilterTran",
-                  "accountsOpenedOnOrAfter": "2023-01-01",
-                  "includeJointAccounts": false,
-                  "terminateOnOwnershipChange": false
-                }
-              },
-              "rewardDefinition": {
-                "modelType": "com.zafin.zplatform.anz.models.RewardDefinitionTran",
-                "fromDate": "2022-01-01",
-                "toDate": "9999-01-01",
-                "rewards": [
-                  {
-                    "modelType": "com.zafin.zplatform.anz.models.RewardsTran",
-                    "name": "TEST_AC_OFFER_01",
-                    "description": "TEST_AC_OFFER_01",
+            "modelType": "com.zafin.zplatform.anz.models.OfferDetailsTran",
+            "offerCode": "MOCK-ACCOUNT-OFFER",
+            "offerName": "Mock Account Offer",
+            "offerDescription": "Sample campaign to help understand how it may be used to model a balance transfer promotion",
+            "offerCurrencyCode": "AUD",
+            "offerCategoryCode": "PROMOTION",
+            "offerType": "ACCOUNT_OFFER",
+            "accountOffer": {
+              "modelType": "com.zafin.zplatform.anz.eventresults.GetMarketingReferralOfferDetailsResult",
+              "eventStatus": "SUCCESS",
+              "accountOffers": [
+                {
+                  "modelType": "com.zafin.zplatform.anz.models.AccountOfferTran",
+                  "offerDefinitionDetails": {
+                    "modelType": "com.zafin.zplatform.anz.models.OfferDefinitionTran",
+                    "name": "Test Account Offer 01",
                     "code": "TEST_AC_OFFER_01",
-                    "assessedAt": "PERIOD_END",
-                    "conditionToBeMet": "ALL",
-                    "rewardConditionType": "ONE_TIME_REWARD_CONDITION",
-                    "rewardConditions": [
-                      {
-                        "modelType": "com.zafin.zplatform.anz.models.OneTimeRewardConditionTran",
-                        "name": "TEST_AC_OFFER_01",
-                        "description": "TEST_AC_OFFER_01",
-                        "code": "TEST_AC_OFFER_01",
-                        "monitoringStart": {
+                    "description": "Test Account Offer 01",
+                    "offerStartDate": "2023-01-01",
+                    "offerCurrency": {
+                      "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                      "name": "Australian Dollar",
+                      "description": "Australian Dollar",
+                      "code": "AUD"
+                    },
+                    "offerCategory": {
+                      "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                      "name": "Campaign Offer",
+                      "code": "CAM"
+                    },
+                    "offerInstance": "SINGLE_INSTANCE",
+                    "offerCount": "ONE_ONLY",
+                    "enrollmentOption": "AUTO_ENROLLMENT",
+                    "offerAccounts": {
+                      "modelType": "string",
+                      "selectionCriteriaBasedOnOpenDate": "OLDEST_ACCOUNT",
+                      "sameDateSelectionCriteria": "FIRST_ACCOUNT_NUMBER",
+                      "productsInScope": [
+                        {
                           "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
-                          "type": "REWARD_INSTANCE_DATE",
-                          "additionalDays": 0
-                        },
-                        "monitoringEnd": {
-                          "modelType": "string",
-                          "type": "DAYS_AFTER_MONITORING_START",
-                          "daysAfterMonitoringStart": 31
-                        },
-                        "logicalOperator": "AND",
-                        "monitoringActivities": [
-                          {
-                            "modelType": "com.zafin.zplatform.anz.models.MonitoringActivitiesTran",
-                            "name": "TEST_AC_OFFER_01",
-                            "description": "TEST_AC_OFFER_01",
-                            "code": "string",
-                            "logicalOperator": "OR",
-                            "ruleConfiguration": {
-                              "modelType": "com.zafin.zplatform.anz.models.RuleConfigurationTran",
-                              "accountSelection": "ENROLLED_ACCOUNTS",
-                              "ruleModels": [
-                                {
-                                  "modelType": "com.zafin.zplatform.anz.models.RuleModelTran",
-                                  "name": "Transaction Count",
-                                  "code": "Rule-01",
-                                  "logicalOperator": "AND",
-                                  "attributeName": "CountCardTransaction",
-                                  "value": [
-                                    {
-                                      "modelType": "com.zafin.zplatform.anz.models.ValueModelTran",
-                                      "dataType": "Number",
-                                      "dataValue": "4",
-                                      "relationalOperator": "GREATERTHAN_EQUAL"
-                                    }
-                                  ]
-                                },
-                                {
-                                  "modelType": "com.zafin.zplatform.zrpe.models.TransactionVolumeBasedMinValueSingleRuleTemplate",
-                                  "name": "Deposit 2000$",
-                                  "code": "Rule-02",
-                                  "accountSelection": "ENROLLED_ACCOUNTS",
-                                  "transactionCodes": [
-                                    "TEST1",
-                                    "TEST2",
-                                    "TEST3"
-                                  ],
-                                  "products": [
-                                    "Saving01"
-                                  ],
-                                  "operator": "GREATERTHAN_EQUAL",
-                                  "Value": "2000",
-                                  "CR/DR": "CR"
-                                }
-                              ]
-                            }
-                          }
-                        ],
-                        "calculation": {
-                          "modelType": "com.zafin.zplatform.anz.models.SimpleCalculationTran",
-                          "fromDate": "2023-01-01",
-                          "toDate": "9999-01-01",
-                          "cashBonus": "30.0000"
-                        },
-                        "payout": {
-                          "modelType": "com.zafin.zplatform.anz.models.PayoutTran",
-                          "payoutTo": "SAME_ACCOUNT",
-                          "accountStatusFilter": false,
-                          "accountSelection": "ENROLLED_ACCOUNTS",
-                          "includeAllJointAccounts": false,
-                          "determinePayoutAccountAtEnrollementTime": false,
-                          "payoutType": "IMMEDIATE",
-                          "periodBased": "CALENDAR"
+                          "name": "ANZx Saving Goal",
+                          "description": "Saving01 is a simple Deposit account that earns interest and supports savings goals. Customers must hold Access01 Transact account to have Saving01 Savings account.",
+                          "code": "Saving01"
                         }
+                      ],
+                      "accountFilters": {
+                        "modelType": "com.zafin.zplatform.anz.models.AccountFilterTran",
+                        "accountsOpenedOnOrAfter": "2023-01-01",
+                        "includeJointAccounts": false,
+                        "terminateOnOwnershipChange": false
                       }
-                    ]
+                    },
+                    "rewardDefinition": {
+                      "modelType": "com.zafin.zplatform.anz.models.RewardDefinitionTran",
+                      "fromDate": "2022-01-01",
+                      "toDate": "9999-01-01",
+                      "rewards": [
+                        {
+                          "modelType": "com.zafin.zplatform.anz.models.RewardsTran",
+                          "name": "TEST_AC_OFFER_01",
+                          "description": "TEST_AC_OFFER_01",
+                          "code": "TEST_AC_OFFER_01",
+                          "assessedAt": "PERIOD_END",
+                          "conditionToBeMet": "ALL",
+                          "rewardConditionType": "ONE_TIME_REWARD_CONDITION",
+                          "rewardConditions": [
+                            {
+                              "modelType": "com.zafin.zplatform.anz.models.OneTimeRewardConditionTran",
+                              "name": "TEST_AC_OFFER_01",
+                              "description": "TEST_AC_OFFER_01",
+                              "code": "TEST_AC_OFFER_01",
+                              "monitoringStart": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "type": "REWARD_INSTANCE_DATE",
+                                "additionalDays": 0
+                              },
+                              "monitoringEnd": {
+                                "modelType": "string",
+                                "type": "DAYS_AFTER_MONITORING_START",
+                                "daysAfterMonitoringStart": 31
+                              },
+                              "logicalOperator": "AND",
+                              "monitoringActivities": [
+                                {
+                                  "modelType": "com.zafin.zplatform.anz.models.MonitoringActivitiesTran",
+                                  "name": "TEST_AC_OFFER_01",
+                                  "description": "TEST_AC_OFFER_01",
+                                  "code": "string",
+                                  "logicalOperator": "OR",
+                                  "ruleConfiguration": {
+                                    "modelType": "com.zafin.zplatform.anz.models.RuleConfigurationTran",
+                                    "accountSelection": "ENROLLED_ACCOUNTS",
+                                    "ruleModels": [
+                                      {
+                                        "modelType": "com.zafin.zplatform.anz.models.RuleModelTran",
+                                        "name": "Transaction Count",
+                                        "code": "Rule-01",
+                                        "logicalOperator": "AND",
+                                        "attributeName": "CountCardTransaction",
+                                        "value": [
+                                          {
+                                            "modelType": "com.zafin.zplatform.anz.models.ValueModelTran",
+                                            "dataType": "Number",
+                                            "dataValue": "4",
+                                            "relationalOperator": "GREATERTHAN_EQUAL"
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "modelType": "com.zafin.zplatform.zrpe.models.TransactionVolumeBasedMinValueSingleRuleTemplate",
+                                        "name": "Deposit 2000$",
+                                        "code": "Rule-02",
+                                        "accountSelection": "ENROLLED_ACCOUNTS",
+                                        "transactionCodes": [
+                                          "TEST1",
+                                          "TEST2",
+                                          "TEST3"
+                                        ],
+                                        "products": [
+                                          "Saving01"
+                                        ],
+                                        "operator": "GREATERTHAN_EQUAL",
+                                        "Value": "2000",
+                                        "CR/DR": "CR"
+                                      }
+                                    ]
+                                  }
+                                }
+                              ],
+                              "calculation": {
+                                "modelType": "com.zafin.zplatform.anz.models.SimpleCalculationTran",
+                                "fromDate": "2023-01-01",
+                                "toDate": "9999-01-01",
+                                "cashBonus": "30.0000"
+                              },
+                              "payout": {
+                                "modelType": "com.zafin.zplatform.anz.models.PayoutTran",
+                                "payoutTo": "SAME_ACCOUNT",
+                                "accountStatusFilter": false,
+                                "accountSelection": "ENROLLED_ACCOUNTS",
+                                "includeAllJointAccounts": false,
+                                "determinePayoutAccountAtEnrollementTime": false,
+                                "payoutType": "IMMEDIATE",
+                                "periodBased": "CALENDAR"
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "offerConfiguration": {
+                    "modelType": "com.zafin.zplatform.anz.models.OfferConfigurationTran",
+                    "fromDate": "2022-01-01",
+                    "toDate": "9999-01-01",
+                    "financialParameters": {
+                      "modelType": "com.zafin.zplatform.anz.models.FinancialParameterTran",
+                      "generalLedger": {
+                        "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                        "name": "General Ledger Code 5",
+                        "description": "General Ledger Code 5",
+                        "code": "G5"
+                      }
+                    }
                   }
-                ]
-              }
-            },
-            "offerConfiguration": {
-              "modelType": "com.zafin.zplatform.anz.models.OfferConfigurationTran",
-              "fromDate": "2022-01-01",
-              "toDate": "9999-01-01",
-              "financialParameters": {
-                "modelType": "com.zafin.zplatform.anz.models.FinancialParameterTran",
-                "generalLedger": {
-                  "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
-                  "name": "General Ledger Code 5",
-                  "description": "General Ledger Code 5",
-                  "code": "G5"
                 }
-              }
+              ],
+              "errorCode": 0
             }
           }
         ]
       }
     ]
   }
+  
