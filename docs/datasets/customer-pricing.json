@@ -24,6 +24,11 @@
         "customerId": "c500",
         "name": "Julia Gillard",
         "cohorts": ["LVR","TML"]
+        },
+        {        
+        "customerId": "c600",
+        "name": "Kevin Rudd",
+        "cohorts": ["New To Bank","Settlement Gift Offer"]
         }
     ]
 }

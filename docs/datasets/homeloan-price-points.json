@@ -160,6 +160,30 @@
                     ]
                 },
                 {
+                    "priceTierName": "New To Bank",
+                    "appliesTo": [],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": [],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.05
+                        }
+                    ]
+                },
+                {
+                    "priceTierName": "Settlement Gift Offer",
+                    "appliesTo": [],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Settlement Offer Reward",
+                            "rule": [],
+                            "valueType": "Reward",
+                            "value": "Champagne & Flowers on date of settlement"
+                        }
+                    ]
+                },
+                {
                     "priceTierName": "Broker Standard",
                     "appliesTo": [],
                     "pricingItems": [
@@ -331,6 +355,30 @@
                             "value": -0.20
                         }
                     ]
+                },
+                {
+                "priceTierName": "New To Bank",
+                "appliesTo": [],
+                "pricingItems": [
+                    {
+                        "pricingItem": "Rate Discount",
+                        "rule": [],
+                        "valueType": "PERCENTAGE MARGIN",
+                        "value": -0.05
+                    }
+                ]
+                },
+                {
+                "priceTierName": "Settlement Gift Offer",
+                "appliesTo": [],
+                "pricingItems": [
+                    {
+                        "pricingItem": "Settlement Offer Reward",
+                        "rule": [],
+                        "valueType": "Reward",
+                        "value": "Champagne & Flowers on date of settlement"
+                    }
+                ]
                 },
                 {
                 "priceTierName": "Broker Standard",

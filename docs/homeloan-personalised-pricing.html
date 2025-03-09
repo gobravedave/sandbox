@@ -377,7 +377,7 @@ async function getCustomers() {
                 const pricing = resolvePricing(context);
                 console.debug(`Pricing for cohort ${cohort}:`, pricing);
                 if (pricing.length > 0) {
-                    personalisedPriceFieldsDivHtml += `<h3>Personalised Price - ${cohort}</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+                    personalisedPriceFieldsDivHtml += `<h3>${cohort}</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
                 }
                 });
 
@@ -396,7 +396,7 @@ async function getCustomers() {
 
                 const channelPricing = resolvePricing(channelContext);
                 if (channelPricing.length > 0) {
-                    personalisedPriceFieldsDivHtml += `<h3>Personalised Price - ${submittedBy}</h3>${channelPricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+                    personalisedPriceFieldsDivHtml += `<h3>${submittedBy}</h3>${channelPricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
                 }
             personalisedPriceFieldsDivHtml += `<h3>Net Price</h3><b>Total Discount:</b> ${totalRateDiscount.toFixed(2)}%</br><b>Net Rate:</b> ${(parseFloat(advertisedRate) + totalRateDiscount).toFixed(2)}%</br>`;
 
