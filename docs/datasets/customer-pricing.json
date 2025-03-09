@@ -2,25 +2,29 @@
     "customers": [
         {            
         "customerId": "c100",
-        "name": "John Doe",
-        "cohorts": ["Staff","Retention"]
+        "name": "Anthony Albanese",
+        "cohorts": []
         },
         {            
         "customerId": "c200",
-        "name": "Jane Doe",
+        "name": "Scott Morrison",
         "cohorts": ["Retention"]
 
         },
         {            
         "customerId": "c300",
-        "name": "Jill Doe",
+        "name": "Malcolm Turnbull",
         "cohorts": ["Hardship"]
         },
         {        
         "customerId": "c400",
-        "name": "Alice Smith",
-        "cohorts": []
+        "name": "Tony Abbott",
+        "cohorts": ["Staff","Retention"]
+        },
+        {        
+        "customerId": "c500",
+        "name": "Julia Gillard",
+        "cohorts": ["LVR","TML"]
         }
-
     ]
 }

@@ -22,8 +22,11 @@
             <label for="submittedBy">Submitted By:</label>
             <select id="submittedBy">
             <option value="Direct">Direct</option>
-            <option value="Broker">Broker</option>
+            <option value="Broker Standard">Broker (Standard)</option>
+            <option value="Broker Premium">Broker (Premium)</option>
+            <option value="Coach">Coach</option>
             <option value="Mobile">Mobile Lender</option>
+            <option value="General Manager">General Manager</option>
             </select>
             <br>
             <label for="customer">Customer:</label>
@@ -34,6 +37,14 @@
             <!-- Customer attributes will be displayed here -->
             </div>
            <br>
+
+            <label for="product">Product:</label>
+            <select id="product">
+                <option value="HLVAR01">HLVAR01</option>
+                <option value="HLVAR02">HLVAR02</option>
+            </select>
+            <br>
+
             <!-- add property usage select box with Owner and Investor as options -->
             <label for="property-usage">Property Usage:</label>
             <select id="property-usage">
@@ -55,11 +66,11 @@
             </select>
             <br>
             <label for="total-mortgage-lending">Total Mortgage Lending:</label>
-            <input type="range" id="total-mortgage-lending" min="100000" max="1000000" step="100000" value="300000">
-            <span id="total-mortgage-lending-value-display">$300,000 (Average)</span>
+            <input type="range" id="total-mortgage-lending" min="100000" max="1000000" step="100000" value="600000">
+            <span id="total-mortgage-lending-value-display">$600,000 (Average)</span>
             <br>
             <label for="loan-to-value">Loan to Value Ratio:</label>
-            <input type="range" id="loan-to-value" min="0" max="100" step="1">
+            <input type="range" id="loan-to-value" min="0" max="100" step="1" value="50">
             <span id="loan-to-value-display">50% (Low)</span>
             <br>
 
@@ -84,19 +95,19 @@
         </div>
 
         <div id="pricing-variables" class="tab-content" style="display: none;">
-            <h2>Loan Size</h2> 
-                <label for="loan-size-small"><b>Small Loan:</b></label>
-                <input type="range" id="loan-size-small" min="100000" max="1000000" step="100000" value="200000" disabled>
-                <span id="loan-size-small-display">$200,000</span>
+            <h2>Total Mortgage Lending Size</h2> 
+                <label for="TML-small"><b>Small TML:</b></label>
+                <input type="range" id="TML-small" min="100000" max="1000000" step="100000" value="500000" disabled>
+                <span id="TML-small-display">$500,000</span>
                 <br>
-                <label for="loan-size-big"><b>Big Loan: </b></label>
-                <input type="range" id="loan-size-big" min="100000" max="1000000" step="100000" value="600000" disabled>
-                <span id="loan-size-big-display">$600,000</span>
+                <label for="TML-big"><b>Big TML: </b></label>
+                <input type="range" id="TML-big" min="100000" max="1000000" step="100000" value="700000" disabled>
+                <span id="TML-big-display">$700,000</span>
             
             <h2>LVR Band</h2> 
                 <label for="lvr-band-low"><b>Low LVR:</b></label>
-                <input type="range" id="lvr-band-low" min="0" max="100" step="1" value="60" disabled>
-                <span id="lvr-band-low-display">60%</span>
+                <input type="range" id="lvr-band-low" min="0" max="100" step="1" value="70" disabled>
+                <span id="lvr-band-low-display">70%</span>
                 <br>
                 <label for="lvr-band-high"><b>High LVR:</b></label>
                 <input type="range" id="lvr-band-high" min="0" max="100" step="1" value="80" disabled>
@@ -156,7 +167,7 @@ async function getProducts() {
             productArray = productData.products; // Assign to global variable
             const pricePoint = document.getElementById("price-point-json");
             renderjson.set_icons('+', '-');
-            renderjson.set_show_to_level(99);
+            renderjson.set_show_to_level(5);
             pricePoint.appendChild(renderjson(productData));
             return productArray;
         } catch (err) {
@@ -214,17 +225,41 @@ async function getCustomers() {
             ${selectedCustomer.cohorts.map(cohort => `<button class="button green-button" disabled="true">${cohort}</button>`).join(' ')}`;
             // Enable the calculate price button if a customer is selected
             document.getElementById('calculate-price').disabled = !selectedCustomerId;
+
+        });
+
+        function clearPricingFields() {
+            // Clear personalisedPriceFieldsDivHtml and negotiated price
+            document.getElementById('advertised-price').innerHTML = '';
+            document.getElementById('personalised-price').innerHTML = '';
+            document.getElementById('negotiated-price').innerHTML = '';
+            // Disable the negotiation review button
+            document.getElementById('price-desk-review').disabled = true;
+        }
+
+        // Disable negotiation review button on form field update
+        document.querySelectorAll('#homeloan-calculator input, #homeloan-calculator select').forEach(element => {
+            element.addEventListener('input', function() {
+                clearPricingFields();
+            });
+        });
+
+        // Disable negotiation review button on form field update
+        document.querySelectorAll('#homeloan-calculator input, #homeloan-calculator select').forEach(element => {
+            element.addEventListener('input', function() {
+                document.getElementById('price-desk-review').disabled = true;
+            });
         });
 
         // Update loan to value display
-        const smallLoan = parseFloat(document.getElementById('loan-size-small').value);
-        const bigLoan = parseFloat(document.getElementById('loan-size-big').value);
+        const smallTML = parseFloat(document.getElementById('TML-small').value);
+        const bigTML = parseFloat(document.getElementById('TML-big').value);
         const totalMortgageLendingSlider = document.getElementById('total-mortgage-lending');
         const totalMortgageLendingDisplay = document.getElementById('total-mortgage-lending-value-display');
         totalMortgageLendingSlider.addEventListener('input', function() {
-            if (this.value < smallLoan  ) {
+            if (this.value < smallTML  ) {
                 totalMortgageLendingDisplay.textContent = `$${Number(this.value).toLocaleString()} (Small)`;
-            } else if (this.value >= bigLoan) {
+            } else if (this.value >= bigTML) {
                 totalMortgageLendingDisplay.textContent = `$${Number(this.value).toLocaleString()} (Big)`;
             } else {
                 totalMortgageLendingDisplay.textContent = `$${Number(this.value).toLocaleString()} (Average)`;
@@ -246,23 +281,23 @@ async function getCustomers() {
             }
         });
 
-        const loanAmountSmallSlider = document.getElementById('loan-size-small');
-        const loanAmountSmallDisplay = document.getElementById('loan-size-small-display');
-        const loanAmountBigSlider = document.getElementById('loan-size-big');
-        loanAmountSmallSlider.addEventListener('input', function() {
+        const TMLSmallSlider = document.getElementById('TML-small');
+        const TMLSmallDisplay = document.getElementById('TML-small-display');
+        const TMLBigSlider = document.getElementById('TML-big');
+        TMLSmallSlider.addEventListener('input', function() {
             const value = Number(this.value);
-            if (value >= loanAmountBigSlider.value) {
-                this.value = loanAmountBigSlider.value - 1;
+            if (value >= TMLBigSlider.value) {
+                this.value = TMLBigSlider.value - 1;
             }
-            loanAmountSmallDisplay.textContent = `$${Number(this.value).toLocaleString()}`;
+            TMLSmallDisplay.textContent = `$${Number(this.value).toLocaleString()}`;
         });
 
-        const loanAmountBigDisplay = document.getElementById('loan-size-big-display');
-        loanAmountBigSlider.addEventListener('input', function() {
-            if (this.value <= loanAmountSmallSlider.value) {
-                this.value = loanAmountSmallSlider.value + 1;
+        const TMLBigDisplay = document.getElementById('TML-big-display');
+        TMLBigSlider.addEventListener('input', function() {
+            if (this.value <= TMLSmallSlider.value) {
+                this.value = TMLSmallSlider.value + 1;
             }
-            loanAmountBigDisplay.textContent = `$${Number(this.value).toLocaleString()}`;
+            TMLBigDisplay.textContent = `$${Number(this.value).toLocaleString()}`;
         });
 
         const lvrLowSlider = document.getElementById('lvr-band-low');
@@ -309,7 +344,7 @@ async function getCustomers() {
             const loanToValue = parseFloat(loanToValueSlider.value);
             const context = {
             customerId: selectedCustomerId,
-            productId: 'HLVAR01', // default product ID
+            productId: document.getElementById('product').value, // selected product ID
             loanAmt: totalMortgageLending,
             lvr: loanToValue,
             purpose: propertyUsage, 
@@ -330,7 +365,7 @@ async function getCustomers() {
             selectedCustomer.cohorts.forEach(cohort => {
                 const context = {
                 customerId: selectedCustomerId,
-                productId: 'HLVAR01', // default product ID
+                productId: document.getElementById('product').value, // selected product ID
                 loanAmt: totalMortgageLendingSlider.value,
                 lvr: loanToValueSlider.value,
                 purpose: propertyUsage, 
@@ -340,32 +375,29 @@ async function getCustomers() {
                 };
 
                 const pricing = resolvePricing(context);
-                personalisedPriceFieldsDivHtml += `<h3>Personalised Price - ${cohort}</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+                console.debug(`Pricing for cohort ${cohort}:`, pricing);
+                if (pricing.length > 0) {
+                    personalisedPriceFieldsDivHtml += `<h3>Personalised Price - ${cohort}</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+                }
                 });
 
                 const submittedBy = document.getElementById('submittedBy').value;
 
-                if (submittedBy === 'Broker' || submittedBy === 'Mobile') {
-                    let priceTier = '';
-                    if (submittedBy === 'Broker') {
-                        priceTier = 'Broker';
-                    } else if (submittedBy === 'Mobile') {
-                        priceTier = 'Mobile';
-                    }
-                    const context = {
-                    customerId: selectedCustomerId,
-                    productId: 'HLVAR01', // default product ID
-                    loanAmt: totalMortgageLendingSlider.value,
-                    lvr: loanToValueSlider.value,
-                    purpose: propertyUsage, 
-                    repayment: interestRepayment, 
-                    offsetType: offsetType, 
-                    priceTier: priceTier
-                    };
-
-                    const pricing = resolvePricing(context);
-                    personalisedPriceFieldsDivHtml += `<h3>Personalised Price - ${priceTier}</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+                const channelContext = {
+                customerId: selectedCustomerId,
+                productId: document.getElementById('product').value, // selected product ID
+                loanAmt: totalMortgageLendingSlider.value,
+                lvr: loanToValueSlider.value,
+                purpose: propertyUsage, 
+                repayment: interestRepayment, 
+                offsetType: offsetType, 
+                priceTier: submittedBy
                 };
+
+                const channelPricing = resolvePricing(channelContext);
+                if (channelPricing.length > 0) {
+                    personalisedPriceFieldsDivHtml += `<h3>Personalised Price - ${submittedBy}</h3>${channelPricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
+                }
             personalisedPriceFieldsDivHtml += `<h3>Net Price</h3><b>Total Discount:</b> ${totalRateDiscount.toFixed(2)}%</br><b>Net Rate:</b> ${(parseFloat(advertisedRate) + totalRateDiscount).toFixed(2)}%</br>`;
 
             const personalisedPriceFieldsDiv = document.getElementById('personalised-price');
@@ -389,13 +421,23 @@ document.getElementById('price-desk-review').addEventListener('click', function(
     }
  
     function resolvePricing(context) {
-
+    // console.log('resolvePricing:', context);
     // Filter all pricingItems in Product based on productCode
     let pricing = [];
-    const pricingItems = productArray[0].priceTier
-        .find(tier => tier.priceTierName === context.priceTier)
-        .pricingItems;
- 
+    const product = productArray.find(product => product.productId === context.productId);
+    if (!product) {
+        console.error(`Product with ID ${context.productId} not found.`);
+        return [];
+    }
+
+    const pricingTier = product.priceTier.find(tier => tier.priceTierName === context.priceTier);
+    if (!pricingTier) {
+        console.error(`Pricing tier ${context.priceTier} not found for product ID ${context.productId}.`);
+        return [];
+    }
+
+    // console.log('pricingTier:', pricingTier);
+    const pricingItems = pricingTier.pricingItems;
     // Loop through the pricingItems and call resolvePricingItem for pricingItem.. the result is then added to the pricing array
     pricingItems.forEach(pricingItem => {
         const value = resolvePricingItem(pricingItem, context);
@@ -488,9 +530,9 @@ function formatValue(value, valueType) {
             "is Investor": (context) => context.purpose === "Investor",
             "is PI": (context) => context.repayment === "P&I",
             "is IO": (context) => context.repayment === "IO",
-            "is Small Loan": (context) => context.loanAmt < parseFloat(document.getElementById('loan-size-small').value),
-            "is Average Loan": (context) => context.loanAmt >= parseFloat(document.getElementById('loan-size-small').value) && context.loanAmt < parseFloat(document.getElementById('loan-size-big').value),
-            "is Big Loan": (context) => context.loanAmt >= parseFloat(document.getElementById('loan-size-big').value),
+            "is Small TML": (context) => context.loanAmt < parseFloat(document.getElementById('TML-small').value),
+            "is Average TML": (context) => context.loanAmt >= parseFloat(document.getElementById('TML-small').value) && context.loanAmt < parseFloat(document.getElementById('TML-big').value),
+            "is Big TML": (context) => context.loanAmt >= parseFloat(document.getElementById('TML-big').value),
             "is Low LVR": (context) => context.lvr < parseFloat(document.getElementById('lvr-band-low').value),
             "is Medium LVR": (context) => context.lvr >= parseFloat(document.getElementById('lvr-band-low').value) && context.lvr < parseFloat(document.getElementById('lvr-band-high').value),
             "is High LVR": (context) => context.lvr >= parseFloat(document.getElementById('lvr-band-high').value),

@@ -1,220 +1,399 @@
 {
     "products": [
-    {
-        "productId": "HLVAR01",
-        "priceTier": 
-        [
-            {
-            "priceTierName": "Advertised",
-            "appliesTo": [],
-            "pricingItems": [
+        {
+            "productId": "HLVAR01",
+            "priceTier": [
                 {
-                "pricingItem": "Rate",
-                "rule": ["is Owner","is PI"],
-                "valueType": "PERCENTAGE",
-                "value": 8.64
+                    "priceTierName": "Advertised",
+                    "appliesTo": [],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Rate",
+                            "rule": ["is Owner", "is PI"],
+                            "valueType": "PERCENTAGE",
+                            "value": 8.64
+                        },
+                        {
+                            "pricingItem": "Rate",
+                            "rule": ["is Owner", "is IO"],
+                            "valueType": "PERCENTAGE",
+                            "value": 8.74
+                        },
+                        {
+                            "pricingItem": "Rate",
+                            "rule": ["is Investor", "is PI"],
+                            "valueType": "PERCENTAGE",
+                            "value": 8.84           
+                        },
+                        {
+                            "pricingItem": "Rate",
+                            "rule": ["is Investor", "is IO"],
+                            "valueType": "PERCENTAGE",
+                            "value": 8.94
+                        },
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Small Loan", "is Low LVR"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.4
+                        },
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Small TML", "is Medium LVR"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.37
+                        },
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Small TML", "is High LVR"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.34
+                        },
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Average TML", "is Low LVR"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.42            
+                        },
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Average TML", "is Medium LVR"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.39
+                        },
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Average TML", "is High LVR"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.36
+                        },
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Big TML", "is Low LVR"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.45           
+                        },
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Big TML", "is Medium LVR"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.42
+                        },
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Big TML", "is High LVR"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.39
+                        },
+                        {
+                            "pricingItem": "Late Fee",
+                            "rule": [],
+                            "valueType": "AMOUNT",
+                            "value": 20
+                        },
+                        {
+                            "pricingItem": "Offset Fee",
+                            "rule": ["is Single Offset"],
+                            "valueType": "AMOUNT",
+                            "value": 10
+                        },
+                        {
+                            "pricingItem": "Offset Fee",
+                            "rule": ["is Multi Offset"],
+                            "valueType": "AMOUNT",
+                            "value": 15
+                        },
+                        {
+                            "pricingItem": "Cashback",
+                            "rule": ["if Cashback conditions met"],
+                            "valueType": "AMOUNT",
+                            "value": 2000
+                        },
+                        {
+                            "pricingItem": "Cashback",
+                            "rule": ["if Cashback conditions not met"],
+                            "valueType": "AMOUNT",
+                            "value": 0
+                        }         
+                    ]
                 },
                 {
-                "pricingItem": "Rate",
-                "rule": ["is Owner","is IO"],
-                "valueType": "PERCENTAGE",
-                "value": 8.74
-                },
-                {
-                "pricingItem": "Rate",
-                "rule": ["is Investor", "is PI"],
-                "valueType": "PERCENTAGE",
-                "value": 8.84           
-                },
-                {
-                "pricingItem": "Rate",
-                "rule": ["is Investor", "is IO"],
-                "valueType": "PERCENTAGE",
-                "value": 8.94
-                },
-                {
-                "pricingItem": "Rate Discount",
-                "rule": ["is Small Loan","is Low LVR"],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": -1
-                },
-                {
-                "pricingItem": "Rate Discount",
-                "rule": ["is Small Loan", "is Medium LVR"],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": -2
-                },
-                {
-                "pricingItem": "Rate Discount",
-                "rule": ["is Small Loan","is High LVR"],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": -3
-                },
-                {
-                "pricingItem": "Rate Discount",
-                "rule": ["is Average Loan","is Low LVR"],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": -1.5            
-                },
-                {
-                "pricingItem": "Rate Discount",
-                "rule": ["is Average Loan", "is Medium LVR"],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": -2.5
-                },
-                {
-                "pricingItem": "Rate Discount",
-                "rule": ["is Average Loan","is High LVR"],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": -3.5
-                },
-                {
-                "pricingItem": "Rate Discount",
-                "rule": ["is Big Loan","is Low LVR"],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": -1.9            
-                },
-                {
-                "pricingItem": "Rate Discount",
-                "rule": ["is Big Loan","is Medium LVR"],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": -2.9
-                },
-                {
-                "pricingItem": "Rate Discount",
-                "rule": ["is Big Loan","is High LVR"],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": -3.9
-                },
-                {
-                "pricingItem": "Late Fee",
-                "rule": [],
-                "valueType": "AMOUNT",
-                "value": 20
-                },
-                {
-                "pricingItem": "Offset Fee",
-                "rule": ["is Single Offset"],
-                "valueType": "AMOUNT",
-                "value": 10
-                },
-                {
-                "pricingItem": "Offset Fee",
-                "rule": ["is Multi Offset"],
-                "valueType": "AMOUNT",
-                "value": 15
-                },
-                {
-                "pricingItem": "Cashback",
-                "rule": ["if Cashback conditions met"],
-                "valueType": "AMOUNT",
-                "value": 2000
-                },
-                {
-                "pricingItem": "Cashback",
-                "rule": ["if Cashback conditions not met"],
-                "valueType": "AMOUNT",
-                "value": 0
-                }         
-                ]
-            },
-            {
-            "priceTierName": "Retention",
-            "appliesTo": ["Retention"],
-            "pricingItems": [
-                {
-                "pricingItem": "Rate Discount",
-                "rule": [],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": -1
+                    "priceTierName": "Retention",
+                    "appliesTo": ["Retention"],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": [],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -1
+                        },    
+                        {
+                            "pricingItem": "Late Fee",
+                            "rule": [],
+                            "valueType": "AMOUNT",
+                            "value": 10
+                        }
+                    ]
                 },    
                 {
-                "pricingItem": "Late Fee",
-                "rule": [],
-                "valueType": "AMOUNT",
-                "value": 10
-                }
-                ]
-            },    
-            {
-            "priceTierName": "Staff",
-            "appliesTo": ["Staff"],
-            "pricingItems": [
-                {
-                "pricingItem": "Late Fee",
-                "rule": [],
-                "valueType": "AMOUNT",
-                "value": 10
+                    "priceTierName": "Staff",
+                    "appliesTo": ["Staff"],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Late Fee",
+                            "rule": [],
+                            "valueType": "AMOUNT",
+                            "value": 10
+                        },
+                        {
+                            "pricingItem": "Offset Fee",
+                            "rule": ["is Single Offset"],
+                            "valueType": "AMOUNT",
+                            "value": 0
+                        },
+                        {
+                            "pricingItem": "Offset Fee",
+                            "rule": ["is Multi Offset"],
+                            "valueType": "AMOUNT",
+                            "value": 0
+                        }
+                    ]
                 },
                 {
-                "pricingItem": "Offset Fee",
-                "rule": ["is Single Offset"],
-                "valueType": "AMOUNT",
-                "value": 0
+                    "priceTierName": "Broker Standard",
+                    "appliesTo": [],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": [],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.04
+                        }
+                    ]
+                },    
+                {
+                    "priceTierName": "Broker Premium",
+                    "appliesTo": [],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": [],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.05
+                        }
+                    ]
                 },
                 {
-                "pricingItem": "Offset Fee",
-                "rule": ["is Multi Offset"],
-                "valueType": "AMOUNT",
-                "value": 0
-                }
+                "priceTierName": "Coach",
+                "appliesTo": [],
+                "pricingItems": [
+                    {
+                        "pricingItem": "Rate Discount",
+                        "rule": [],
+                        "valueType": "PERCENTAGE MARGIN",
+                        "value": -0.06
+                    }
                 ]
-            },
-            {
-            "priceTierName": "Broker",
-            "appliesTo": ["Broker"],
-            "pricingItems": [
+                },    
                 {
-                "pricingItem": "Rate Discount",
-                "rule": [],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": 0.5
-                }
+                "priceTierName": "Mobile",
+                "appliesTo": [],
+                "pricingItems": [
+                    {
+                        "pricingItem": "Rate Discount",
+                        "rule": [],
+                        "valueType": "PERCENTAGE MARGIN",
+                        "value": -0.06
+                    }
                 ]
-            },    
-            {
-            "priceTierName": "Mobile",
-            "appliesTo": ["Mobile"],
-            "pricingItems": [
+                },    
                 {
-                "pricingItem": "Rate Discount",
-                "rule": [],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": -0.5
-                }
+                "priceTierName": "General Manager",
+                "appliesTo": [],
+                "pricingItems": [
+                    {
+                        "pricingItem": "Rate Discount",
+                        "rule": [],
+                        "valueType": "PERCENTAGE MARGIN",
+                        "value": -0.07
+                    }
                 ]
-            },    
-            {
-            "priceTierName": "Hardship",
-            "appliesTo": ["Hardship"],
-            "pricingItems": [
-                {
-                "pricingItem": "Rate",
-                "rule": ["is Owner"],
-                "valueType": "PERCENTAGE",
-                "value": 6.64
-                }, 
-                {
-                "pricingItem": "Rate Discount",
-                "rule": [],
-                "valueType": "PERCENTAGE MARGIN",
-                "value": 0            
-                },
-                {
-                "pricingItem": "Late Fee",
-                "rule": [],
-                "valueType": "AMOUNT",
-                "value": 10
-                },
-                {
-                "pricingItem": "Cashback",
-                "rule": [],
-                "valueType": "AMOUNT",
-                "value": 0
+                },    
+                    {
+                    "priceTierName": "Hardship",
+                    "appliesTo": ["Hardship"],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Rate",
+                            "rule": ["is Owner"],
+                            "valueType": "PERCENTAGE",
+                            "value": 6.64
+                        }, 
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": [],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": 0            
+                        },
+                        {
+                            "pricingItem": "Late Fee",
+                            "rule": [],
+                            "valueType": "AMOUNT",
+                            "value": 10
+                        },
+                        {
+                            "pricingItem": "Cashback",
+                            "rule": [],
+                            "valueType": "AMOUNT",
+                            "value": 0
+                        }
+                    ]
                 }
             ]
-            }
-        ]
-    }
+        },
+        {
+            "productId": "HLVAR02",
+            "priceTier": [
+                {
+                    "priceTierName": "Advertised",
+                    "appliesTo": [],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Rate",
+                            "rule": ["is Owner", "is PI"],
+                            "valueType": "PERCENTAGE",
+                            "value": 8.64
+                        },
+                        {
+                            "pricingItem": "Rate",
+                            "rule": ["is Owner", "is IO"],
+                            "valueType": "PERCENTAGE",
+                            "value": 8.74
+                        },
+                        {
+                            "pricingItem": "Rate",
+                            "rule": ["is Investor", "is PI"],
+                            "valueType": "PERCENTAGE",
+                            "value": 8.84           
+                        },
+                        {
+                            "pricingItem": "Rate",
+                            "rule": ["is Investor", "is IO"],
+                            "valueType": "PERCENTAGE",
+                            "value": 8.94
+                        }
+                    ]
+                },
+                {
+                    "priceTierName": "LVR",
+                    "appliesTo": ["LVR"],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Low LVR"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.25
+                        },
+                        {   
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Medium LVR"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.22
+                        },
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is High LVR"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.19
+                        }
+                    ]
+                },
+                {
+                    "priceTierName": "TML",
+                    "appliesTo": ["TML"],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Small TML"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.15
+                        },
+                        {   
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Average TML"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.17
+                        },
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": ["is Big TML"],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -0.20
+                        }
+                    ]
+                },
+                {
+                "priceTierName": "Broker Standard",
+                "appliesTo": [],
+                "pricingItems": [
+                    {
+                        "pricingItem": "Rate Discount",
+                        "rule": [],
+                        "valueType": "PERCENTAGE MARGIN",
+                        "value": -0.04
+                    }
+                ]
+                },    
+                {
+                "priceTierName": "Broker Premium",
+                "appliesTo": [],
+                "pricingItems": [
+                    {
+                        "pricingItem": "Rate Discount",
+                        "rule": [],
+                        "valueType": "PERCENTAGE MARGIN",
+                        "value": -0.05
+                    }
+                ]
+                },    
+                {
+                "priceTierName": "Mobile",
+                "appliesTo": [],
+                "pricingItems": [
+                    {
+                        "pricingItem": "Rate Discount",
+                        "rule": [],
+                        "valueType": "PERCENTAGE MARGIN",
+                        "value": -0.06
+                    }
+                ]
+                },
+                {
+                "priceTierName": "Coach",
+                "appliesTo": [],
+                "pricingItems": [
+                    {
+                        "pricingItem": "Rate Discount",
+                        "rule": [],
+                        "valueType": "PERCENTAGE MARGIN",
+                        "value": -0.06
+                    }
+                ]
+                },
+                {
+                "priceTierName": "General Manager",
+                "appliesTo": [],
+                "pricingItems": [
+                    {
+                        "pricingItem": "Rate Discount",
+                        "rule": [],
+                        "valueType": "PERCENTAGE MARGIN",
+                        "value": -0.07
+                    }
+                ]
+                }    
+            ]
+        }
     ]
 }
+
