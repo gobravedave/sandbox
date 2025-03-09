@@ -411,7 +411,7 @@ document.getElementById('price-desk-review').addEventListener('click', function(
     
     setTimeout(() => {
         const result = Math.random() > 0.5 ? 
-            `How does a ${(totalRateDiscount - 0.2).toFixed(2)}% discount off our advertised rate sound?` : 
+            `How does a ${(totalRateDiscount - 0.07).toFixed(2)}% discount off our advertised rate sound?` : 
             'You have already got our best rate.';
         negotiatedPriceDiv.innerHTML = `<p>${result}</p>`;
     }, 2000);
