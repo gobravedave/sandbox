@@ -184,68 +184,20 @@
                     ]
                 },
                 {
-                    "priceTierName": "Broker Standard",
+                    "priceTierName": "Suncorp",
                     "appliesTo": [],
                     "pricingItems": [
                         {
-                            "pricingItem": "Rate Discount",
+                            "pricingItem": "Suncorp Migration Incentive",
                             "rule": [],
-                            "valueType": "PERCENTAGE MARGIN",
-                            "value": -0.04
-                        }
-                    ]
-                },    
-                {
-                    "priceTierName": "Broker Premium",
-                    "appliesTo": [],
-                    "pricingItems": [
-                        {
-                            "pricingItem": "Rate Discount",
-                            "rule": [],
-                            "valueType": "PERCENTAGE MARGIN",
-                            "value": -0.05
+                            "valueType": "Reward",
+                            "value": "12 Month Netflix Subscription"
                         }
                     ]
                 },
-                {
-                "priceTierName": "Coach",
-                "appliesTo": [],
-                "pricingItems": [
-                    {
-                        "pricingItem": "Rate Discount",
-                        "rule": [],
-                        "valueType": "PERCENTAGE MARGIN",
-                        "value": -0.06
-                    }
-                ]
-                },    
-                {
-                "priceTierName": "Mobile",
-                "appliesTo": [],
-                "pricingItems": [
-                    {
-                        "pricingItem": "Rate Discount",
-                        "rule": [],
-                        "valueType": "PERCENTAGE MARGIN",
-                        "value": -0.06
-                    }
-                ]
-                },    
-                {
-                "priceTierName": "General Manager",
-                "appliesTo": [],
-                "pricingItems": [
-                    {
-                        "pricingItem": "Rate Discount",
-                        "rule": [],
-                        "valueType": "PERCENTAGE MARGIN",
-                        "value": -0.07
-                    }
-                ]
-                },    
                     {
                     "priceTierName": "Hardship",
-                    "appliesTo": ["Hardship"],
+                    "appliesTo": ["Albert"],
                     "pricingItems": [
                         {
                             "pricingItem": "Rate",
@@ -381,67 +333,59 @@
                 ]
                 },
                 {
-                "priceTierName": "Broker Standard",
+                    "priceTierName": "Suncorp",
+                    "appliesTo": [],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Suncorp Migration Incentive",
+                            "rule": [],
+                            "valueType": "Reward",
+                            "value": "12 Month Netflix Subscription"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "productId": "submittedBy",
+            "priceTier": [
+                {
+                "priceTierName": "submittedBy",
                 "appliesTo": [],
                 "pricingItems": [
                     {
                         "pricingItem": "Rate Discount",
-                        "rule": [],
+                        "rule": ["if BrokerStandard"],
                         "valueType": "PERCENTAGE MARGIN",
                         "value": -0.04
-                    }
-                ]
-                },    
-                {
-                "priceTierName": "Broker Premium",
-                "appliesTo": [],
-                "pricingItems": [
+                    },
                     {
                         "pricingItem": "Rate Discount",
-                        "rule": [],
+                        "rule": ["if BrokerPremium"],
                         "valueType": "PERCENTAGE MARGIN",
                         "value": -0.05
-                    }
-                ]
-                },    
-                {
-                "priceTierName": "Mobile",
-                "appliesTo": [],
-                "pricingItems": [
+                    },
                     {
                         "pricingItem": "Rate Discount",
-                        "rule": [],
+                        "rule": ["if Coach"],
                         "valueType": "PERCENTAGE MARGIN",
                         "value": -0.06
-                    }
-                ]
-                },
-                {
-                "priceTierName": "Coach",
-                "appliesTo": [],
-                "pricingItems": [
+                    },
                     {
                         "pricingItem": "Rate Discount",
-                        "rule": [],
+                        "rule": ["if Mobile"],
                         "valueType": "PERCENTAGE MARGIN",
                         "value": -0.06
-                    }
-                ]
-                },
-                {
-                "priceTierName": "General Manager",
-                "appliesTo": [],
-                "pricingItems": [
+                    },
                     {
                         "pricingItem": "Rate Discount",
-                        "rule": [],
+                        "rule": ["if GeneralManager"],
                         "valueType": "PERCENTAGE MARGIN",
                         "value": -0.07
                     }
                 ]
-                }    
-            ]
+                }
+            ]   
         }
     ]
 }
-

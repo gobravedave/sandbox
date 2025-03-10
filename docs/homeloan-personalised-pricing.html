@@ -342,6 +342,8 @@ async function getCustomers() {
             const offsetType = document.getElementById('offset').value;
             const totalMortgageLending = Number(totalMortgageLendingSlider.value);
             const loanToValue = parseFloat(loanToValueSlider.value);
+            const submittedBy = document.getElementById('submittedBy').value;
+
             const context = {
             customerId: selectedCustomerId,
             productId: document.getElementById('product').value, // selected product ID
@@ -350,7 +352,8 @@ async function getCustomers() {
             purpose: propertyUsage, 
             repayment: interestRepayment,
             offsetType: offsetType, 
-            priceTier: 'Advertised' // default price tier
+            priceTier: 'Advertised', // default price tier
+            submittedBy: submittedBy
             };
 
             const pricing = resolvePricing(context);
@@ -371,7 +374,8 @@ async function getCustomers() {
                 purpose: propertyUsage, 
                 repayment: interestRepayment, 
                 offsetType: offsetType, 
-                priceTier: cohort // cohort value
+                priceTier: cohort, // cohort value
+                submittedBy: submittedBy
                 };
 
                 const pricing = resolvePricing(context);
@@ -381,17 +385,16 @@ async function getCustomers() {
                 }
                 });
 
-                const submittedBy = document.getElementById('submittedBy').value;
-
                 const channelContext = {
                 customerId: selectedCustomerId,
-                productId: document.getElementById('product').value, // selected product ID
+                productId: "submittedBy", // selected product ID
                 loanAmt: totalMortgageLendingSlider.value,
                 lvr: loanToValueSlider.value,
                 purpose: propertyUsage, 
                 repayment: interestRepayment, 
                 offsetType: offsetType, 
-                priceTier: submittedBy
+                priceTier: "submittedBy",
+                submittedBy: submittedBy
                 };
 
                 const channelPricing = resolvePricing(channelContext);
@@ -423,6 +426,7 @@ document.getElementById('price-desk-review').addEventListener('click', function(
     function resolvePricing(context) {
     // console.log('resolvePricing:', context);
     // Filter all pricingItems in Product based on productCode
+    
     let pricing = [];
     const product = productArray.find(product => product.productId === context.productId);
     if (!product) {
@@ -523,7 +527,7 @@ function formatValue(value, valueType) {
 // }
     
     function resolveRule(rule, context) {
-        // console.log(`resolveRule(${rule},${account})`);
+        // console.log(`resolveRule(${rule},${context})`);
         // Define rule mapping
         const ruleMap = {
             "is Owner": (context) => context.purpose === "Owner",
@@ -539,7 +543,13 @@ function formatValue(value, valueType) {
             "is Single Offset": (context) => context.offsetType ==="Single",
             "is Multi Offset": (context) => context.offsetType ==="Multi",
             "if Cashback conditions met": (context) => context.loanAmt >= parseFloat(document.getElementById('cashback-min-loan-amount').value) && context.lvr <= parseFloat(document.getElementById('cashback-max-lvr').value),
-            "if Cashback conditions not met": (context) => context.loanAmt < parseFloat(document.getElementById('cashback-min-loan-amount').value) || context.lvr > parseFloat(document.getElementById('cashback-max-lvr').value)
+            "if Cashback conditions not met": (context) => context.loanAmt < parseFloat(document.getElementById('cashback-min-loan-amount').value) || context.lvr > parseFloat(document.getElementById('cashback-max-lvr').value),
+            // "if Direct": (context) => context.submittedBy === "Direct",
+            "if BrokerStandard": (context) => context.submittedBy === "Broker Standard",
+            "if BrokerPremium": (context) => context.submittedBy === "Broker Premium",
+            "if Coach": (context) => context.submittedBy === "Coach",    
+            "if Mobile": (context) => context.submittedBy === "Mobile",
+            "if GeneralManager": (context) => context.submittedBy === "General Manager"   
         };
 
         // Check if the rule exists in the map and apply it

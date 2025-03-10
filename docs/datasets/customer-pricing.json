@@ -34,7 +34,11 @@
         "customerId": "c700",
         "name": "John Howard",
         "cohorts": ["LVR","TML","New To Bank","Settlement Gift Offer"]
+        },
+        {        
+        "customerId": "c800",
+        "name": "Paul Keating",
+        "cohorts": ["Suncorp"]
         }
-    
     ]
 }
