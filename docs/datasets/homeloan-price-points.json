@@ -373,7 +373,7 @@
                     },
                     {
                         "pricingItem": "Rate Discount",
-                        "rule": ["if Mobile"],
+                        "rule": ["if MobileLender"],
                         "valueType": "PERCENTAGE MARGIN",
                         "value": -0.06
                     },

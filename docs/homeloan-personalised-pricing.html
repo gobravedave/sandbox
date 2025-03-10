@@ -25,7 +25,7 @@
             <option value="Broker Standard">Broker (Standard)</option>
             <option value="Broker Premium">Broker (Premium)</option>
             <option value="Coach">Coach</option>
-            <option value="Mobile">Mobile Lender</option>
+            <option value="Mobile Lender">Mobile Lender</option>
             <option value="General Manager">General Manager</option>
             </select>
             <br>
@@ -548,7 +548,7 @@ function formatValue(value, valueType) {
             "if BrokerStandard": (context) => context.submittedBy === "Broker Standard",
             "if BrokerPremium": (context) => context.submittedBy === "Broker Premium",
             "if Coach": (context) => context.submittedBy === "Coach",    
-            "if Mobile": (context) => context.submittedBy === "Mobile",
+            "if MobileLender": (context) => context.submittedBy === "Mobile Lender",
             "if GeneralManager": (context) => context.submittedBy === "General Manager"   
         };
 
