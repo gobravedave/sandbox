@@ -22,13 +22,19 @@
         },
         {        
         "customerId": "c500",
-        "name": "Julia Gillard",
+        "name": "Kevin Rudd",
         "cohorts": ["LVR","TML"]
         },
         {        
         "customerId": "c600",
-        "name": "Kevin Rudd",
+        "name": "Julia Gillard",
         "cohorts": ["New To Bank","Settlement Gift Offer"]
+        },
+        {        
+        "customerId": "c700",
+        "name": "John Howard",
+        "cohorts": ["LVR","TML","New To Bank","Settlement Gift Offer"]
         }
+    
     ]
 }
