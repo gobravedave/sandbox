@@ -197,7 +197,7 @@
                 },
                 {
                     "priceTierName": "Hardship",
-                    "appliesTo": ["Albert"],
+                    "appliesTo": ["Ex-Cyclone Albert", "Lismore Floods"],
                     "pricingItems": [
                         {
                             "pricingItem": "Rate Discount",
@@ -383,7 +383,7 @@
                 },
                 {
                     "priceTierName": "Hardship",
-                    "appliesTo": ["Albert"],
+                    "appliesTo": ["Ex-Cyclone Albert","Lismore Floods"],
                     "pricingItems": [
                         {
                             "pricingItem": "Rate Discount",

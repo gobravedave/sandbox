@@ -13,7 +13,7 @@
         {            
         "customerId": "c300",
         "name": "Malcolm Turnbull",
-        "cohorts": ["Albert"]
+        "cohorts": ["Ex-Cyclone Albert"]
         },
         {        
         "customerId": "c400",
@@ -23,7 +23,7 @@
         {        
         "customerId": "c500",
         "name": "Kevin Rudd",
-        "cohorts": []
+        "cohorts": ["Lismore Floods"]
         },
         {        
         "customerId": "c600",
