@@ -363,31 +363,40 @@ async function getCustomers() {
             // console.debug('Advertised price:', { advertisedRate, advertisedRateDiscount });
             advertisedPriceFieldsDiv.innerHTML = `<h3>Advertised Price</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
 
-            //loop thru each customer cohort and display the pricing details
+            // Loop through each priceTier and check if it applies to the customer cohort, then display the pricing details
             let personalisedPriceFieldsDivHtml = '';
-            selectedCustomer.cohorts.forEach(cohort => {
-                const context = {
-                customerId: selectedCustomerId,
-                productId: document.getElementById('product').value, // selected product ID
-                loanAmt: totalMortgageLendingSlider.value,
-                lvr: loanToValueSlider.value,
-                purpose: propertyUsage, 
-                repayment: interestRepayment, 
-                offsetType: offsetType, 
-                priceTier: cohort, // cohort value
-                submittedBy: submittedBy
-                };
+            const product = productArray.find(p => p.productId === document.getElementById('product').value);
+            // console.debug('Product:', product, 'PriceTier:', product.priceTier);
+            if (product && product.priceTier) {
+                product.priceTier.forEach(pt => {
+                    // console.debug(`Checking price tier: ${pt?.priceTierName}, appliesTo: ${pt?.appliesTo}`);
+                    // console.debug(`against customer cohorts: ${selectedCustomer.cohorts}`);
+                    if (pt?.priceTierName !== 'Advertised' && (pt?.appliesTo.length === 0 || pt?.appliesTo.some(cohort => selectedCustomer.cohorts.includes(cohort)))) {
+                        // console.debug(`Got a match for price tier: ${pt?.priceTierName}, appliesTo: ${pt?.appliesTo}`);
+                        const context = {
+                            customerId: selectedCustomerId,
+                            productId: document.getElementById('product').value, // selected product ID
+                            loanAmt: totalMortgageLendingSlider.value,
+                            lvr: loanToValueSlider.value,
+                            purpose: propertyUsage, 
+                            repayment: interestRepayment, 
+                            offsetType: offsetType, 
+                            priceTier: pt?.priceTierName, 
+                            submittedBy: submittedBy
+                        };
 
-                const pricing = resolvePricing(context);
-                console.debug(`Pricing for cohort ${cohort}:`, pricing);
-                if (pricing.length > 0) {
-                    personalisedPriceFieldsDivHtml += `<h3>${cohort}</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
-                }
+                        const pricing = resolvePricing(context);
+                        // console.debug(`Pricing for cohort ${pt.priceTierName}:`, pricing);
+                        if (pricing.length > 0) {
+                            personalisedPriceFieldsDivHtml += `<h3>${pt.priceTierName}</h3>${pricing.map(p => `<b>${p.name}:</b> ${p.value}<br>`).join('')}`;
+                        };
+                    }
                 });
+            }
 
-                const channelContext = {
+            const channelContext = {
                 customerId: selectedCustomerId,
-                productId: "submittedBy", // selected product ID
+                productId: "submittedBy", // special product ID to apply for all products
                 loanAmt: totalMortgageLendingSlider.value,
                 lvr: loanToValueSlider.value,
                 purpose: propertyUsage, 
@@ -395,18 +404,19 @@ async function getCustomers() {
                 offsetType: offsetType, 
                 priceTier: "submittedBy",
                 submittedBy: submittedBy
-                };
+            };
 
-                const channelPricing = resolvePricing(channelContext);
-                if (channelPricing.length > 0) {
-                    personalisedPriceFieldsDivHtml += `<h3>${submittedBy}</h3>${channelPricing.map(p => `<b>${p.name}:</b> ${p.value}</br>`).join('')}`;
-                }
-            personalisedPriceFieldsDivHtml += `<h3>Net Price</h3><b>Total Discount:</b> ${totalRateDiscount.toFixed(2)}%</br><b>Net Rate:</b> ${(parseFloat(advertisedRate) + totalRateDiscount).toFixed(2)}%</br>`;
+            const channelPricing = resolvePricing(channelContext);
+            if (channelPricing.length > 0) {
+                personalisedPriceFieldsDivHtml += `<h3>${submittedBy}</h3>${channelPricing.map(p => `<b>${p.name}:</b> ${p.value}<br>`).join('')}`;
+            }
+
+            personalisedPriceFieldsDivHtml += `<h3>Net Price</h3><b>Total Discount:</b> ${totalRateDiscount.toFixed(2)}%<br><b>Net Rate:</b> ${(parseFloat(advertisedRate) + totalRateDiscount).toFixed(2)}%<br>`;
 
             const personalisedPriceFieldsDiv = document.getElementById('personalised-price');
             personalisedPriceFieldsDiv.innerHTML = personalisedPriceFieldsDivHtml;
             document.getElementById('price-desk-review').disabled = false;
-        }); 
+        });
 
 document.getElementById('price-desk-review').addEventListener('click', function() {
     const negotiatedPriceDiv = document.getElementById('negotiated-price');

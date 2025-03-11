@@ -13,7 +13,7 @@
         {            
         "customerId": "c300",
         "name": "Malcolm Turnbull",
-        "cohorts": ["Hardship"]
+        "cohorts": ["Albert"]
         },
         {        
         "customerId": "c400",
@@ -23,7 +23,7 @@
         {        
         "customerId": "c500",
         "name": "Kevin Rudd",
-        "cohorts": ["LVR","TML"]
+        "cohorts": []
         },
         {        
         "customerId": "c600",
@@ -33,7 +33,7 @@
         {        
         "customerId": "c700",
         "name": "John Howard",
-        "cohorts": ["LVR","TML","New To Bank","Settlement Gift Offer"]
+        "cohorts": ["Staff","New To Bank","Settlement Gift Offer"]
         },
         {        
         "customerId": "c800",

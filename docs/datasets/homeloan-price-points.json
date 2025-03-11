@@ -160,8 +160,8 @@
                     ]
                 },
                 {
-                    "priceTierName": "New To Bank",
-                    "appliesTo": [],
+                    "priceTierName": "Welcome",
+                    "appliesTo": ["New To Bank"],
                     "pricingItems": [
                         {
                             "pricingItem": "Rate Discount",
@@ -173,7 +173,7 @@
                 },
                 {
                     "priceTierName": "Settlement Gift Offer",
-                    "appliesTo": [],
+                    "appliesTo": ["Settlement Gift Offer"],
                     "pricingItems": [
                         {
                             "pricingItem": "Settlement Offer Reward",
@@ -185,7 +185,7 @@
                 },
                 {
                     "priceTierName": "Suncorp",
-                    "appliesTo": [],
+                    "appliesTo": ["Suncorp"],
                     "pricingItems": [
                         {
                             "pricingItem": "Suncorp Migration Incentive",
@@ -195,16 +195,10 @@
                         }
                     ]
                 },
-                    {
+                {
                     "priceTierName": "Hardship",
                     "appliesTo": ["Albert"],
                     "pricingItems": [
-                        {
-                            "pricingItem": "Rate",
-                            "rule": ["is Owner"],
-                            "valueType": "PERCENTAGE",
-                            "value": 6.64
-                        }, 
                         {
                             "pricingItem": "Rate Discount",
                             "rule": [],
@@ -262,7 +256,7 @@
                 },
                 {
                     "priceTierName": "LVR",
-                    "appliesTo": ["LVR"],
+                    "appliesTo": [],
                     "pricingItems": [
                         {
                             "pricingItem": "Rate Discount",
@@ -286,7 +280,7 @@
                 },
                 {
                     "priceTierName": "TML",
-                    "appliesTo": ["TML"],
+                    "appliesTo": [],
                     "pricingItems": [
                         {
                             "pricingItem": "Rate Discount",
@@ -310,7 +304,7 @@
                 },
                 {
                 "priceTierName": "New To Bank",
-                "appliesTo": [],
+                "appliesTo": ["New To Bank"],
                 "pricingItems": [
                     {
                         "pricingItem": "Rate Discount",
@@ -321,8 +315,50 @@
                 ]
                 },
                 {
+                    "priceTierName": "Staff",
+                    "appliesTo": ["Staff"],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Late Fee",
+                            "rule": [],
+                            "valueType": "AMOUNT",
+                            "value": 10
+                        },
+                        {
+                            "pricingItem": "Offset Fee",
+                            "rule": ["is Single Offset"],
+                            "valueType": "AMOUNT",
+                            "value": 0
+                        },
+                        {
+                            "pricingItem": "Offset Fee",
+                            "rule": ["is Multi Offset"],
+                            "valueType": "AMOUNT",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "priceTierName": "Retention",
+                    "appliesTo": ["Retention"],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": [],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -1
+                        },    
+                        {
+                            "pricingItem": "Late Fee",
+                            "rule": [],
+                            "valueType": "AMOUNT",
+                            "value": 10
+                        }
+                    ]
+                },    
+                {
                 "priceTierName": "Settlement Gift Offer",
-                "appliesTo": [],
+                "appliesTo": ["Settlement Gift Offer"],
                 "pricingItems": [
                     {
                         "pricingItem": "Settlement Offer Reward",
@@ -332,9 +368,10 @@
                     }
                 ]
                 },
+                
                 {
                     "priceTierName": "Suncorp",
-                    "appliesTo": [],
+                    "appliesTo": ["Suncorp"],
                     "pricingItems": [
                         {
                             "pricingItem": "Suncorp Migration Incentive",
@@ -343,7 +380,32 @@
                             "value": "12 Month Netflix Subscription"
                         }
                     ]
+                },
+                {
+                    "priceTierName": "Hardship",
+                    "appliesTo": ["Albert"],
+                    "pricingItems": [
+                        {
+                            "pricingItem": "Rate Discount",
+                            "rule": [],
+                            "valueType": "PERCENTAGE MARGIN",
+                            "value": -2            
+                        },
+                        {
+                            "pricingItem": "Late Fee",
+                            "rule": [],
+                            "valueType": "AMOUNT",
+                            "value": 10
+                        },
+                        {
+                            "pricingItem": "Cashback",
+                            "rule": [],
+                            "valueType": "AMOUNT",
+                            "value": 0
+                        }
+                    ]
                 }
+
             ]
         },
         {
