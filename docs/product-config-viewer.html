@@ -289,14 +289,47 @@
         const h2 = document.createElement('h2');
         // h2.style.color = 'blue';
         h2.textContent = 'work has begun, stay tuned';
-        
+        const $compareDropdown = document.getElementById('compare-with');
+        $compareDropdown.addEventListener('change', async function(e) {
+          const envToCompare = e.target.value;
+          if (envToCompare) {
+            const fromProduct = BANKS[savedBankId].productsRaw.find(prod => prod.productCode=== productId);
+            const toProduct = BANKS[envToCompare].productsRaw.find(prod => prod.productCode=== productId);
+            if (fromProduct && toProduct) {
+              const pre = document.getElementById("product-details-compare-results");
+              pre.innerHTML = ""; // Clear previous Compare content
+              const diff = jsonDiff(fromProduct, toProduct);
+              pre.innerHTML=diff;
+            } else {
+              console.error(`Details not found: ${productId} in ${savedBankId} and/or ${envToCompare}`);
+            }
+          }
+        });
         document.getElementById("product-details-compare-content").appendChild(h2);
         compareBtn.textContent = 'Hide Compare';
       } else {
         document.getElementById("product-details-compare-content").innerHTML = "";
         document.getElementById("compare-with").style.display = "none";
+        document.getElementById("product-details-compare-results").innerHTML = "";
         compareBtn.textContent = 'Show Compare';
       }
+    }
+
+    function jsonDiff(fromProduct, toProduct) {
+      // try {
+      //   const delta = window.jsondiffpatch.diff(fromProduct, toProduct);
+
+      //   if (delta) {
+      //     return window.jsondiffpatch.formatters.html.format(delta, fromProduct);
+      //   } else {
+      //     return '<p>No differences found.</p>';
+      //   }
+      // } catch (error) {
+      //   console.error('Error calculating JSON diff:', error);
+      //   return '<p>Error calculating differences.</p>';
+      // }
+        return '<h2>compare underway</h2>';
+
     }
 
     function populateCompareDropdown(code, env) {
@@ -573,6 +606,7 @@
       <select id="compare-with" style="width: 200px; display: none">
         <option value="">Compare with </option>
       </select>
+      <div><pre id="product-details-compare-results"></pre></div>
     </div>
   {{!log 'main template' this}}
   {{#if ruleset}}
