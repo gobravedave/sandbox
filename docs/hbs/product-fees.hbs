@@ -31,6 +31,7 @@
                     <td>
                       {{#if simpleFlatFee}}Simple{{/if}}
                       {{#if simpleTransactionalFeeAmount}}Simple{{/if}}
+                      {{#if simpleTransactionalFeePercentage}}Simple{{/if}}
                       {{#if tieredTransactionalFee}}Tiered{{/if}}
                     </td>
                     <td>
@@ -40,7 +41,20 @@
                         {{/if}}
                         {{#if simpleTransactionalFeeAmount}}
                           <tr><th>Amount Or Percentage</th><td>{{simpleTransactionalFeeAmount.amountOrPercentage}}</td></tr>
+                          {{#if simpleTransactionalFeeAmount.amount}}
+                            <tr><th>Amount</th><td>${{simpleTransactionalFeeAmount.amount}}</td></tr>
+                          {{/if}}
+                          {{#if simpleTransactionalFeeAmount.percentage}}
+                            <tr><th>Percentage</th><td>{{simpleTransactionalFeeAmount.percentage}}%</td></tr>
+                          {{/if}}
                           <tr><th>Amount</th><td>${{simpleTransactionalFeeAmount.amount}}</td></tr>
+                          {{#if simpleTransactionalFeeAmount.percentage}}
+                            <tr><th>Percentage</th><td>{{simpleTransactionalFeeAmount.percentage}}%</td></tr>
+                          {{/if}}
+                        {{/if}}
+                        {{#if simpleTransactionalFeePercentage}}
+                          <tr><th>Amount Or Percentage</th><td>{{simpleTransactionalFeePercentage.amountOrPercentage}}</td></tr>
+                          <tr><th>Percentage</th><td>{{simpleTransactionalFeePercentage.percentage}}%</td></tr>
                         {{/if}}
                         {{#if tieredTransactionalFee}}
                           <tr><th>Whole Or Progressive</th><td>{{tieredTransactionalFee.wholeOrProgressive}}</td></tr>
