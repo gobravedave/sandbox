@@ -284,7 +284,7 @@
         var pre = document.getElementById("product-details-compare-content");
         const compareWithSelect = document.getElementById("compare-with");
         compareWithSelect.style.display = "block";
-        populateCompareDropdown();
+        // populateCompareDropdown(productId, savedBankId);
         pre.innerHTML = ""; // Clear previous Compare content
         const h2 = document.createElement('h2');
         // h2.style.color = 'blue';
@@ -298,20 +298,35 @@
       }
     }
 
-    function populateCompareDropdown() {
+    function populateCompareDropdown(code, env) {
       const $compareDropdown = document.getElementById('compare-with');
+      const $compareBtn = document.getElementById('compare-btn');
       if ($compareDropdown) {
+        console.log('Dropdown element found');
         // Clear previous options first to avoid duplication
         $compareDropdown.innerHTML = '<option value="">Compare with</option>';
 
+        let optionsCount = 0;
         for (const key in BANKS) {
-          if (BANKS.hasOwnProperty(key)) {
+          if (BANKS.hasOwnProperty(key) && key !== env) {
             const option = document.createElement('option');
             option.value = key; // Use the key as the value
             option.textContent = BANKS[key].name; // Use the name property as the display text
-            $compareDropdown.appendChild(option);
+            if (BANKS[key].productsRaw.some(prod => prod.productCode === code)) {
+              $compareDropdown.appendChild(option);
+              optionsCount++;
+            }
           }
         }
+
+        // Disable the button if no options are added
+        $compareBtn.disabled = optionsCount === 0;
+        $compareDropdown.disabled = optionsCount === 0;
+        if (optionsCount > 0) {
+          $compareBtn.disabled = false;
+        }
+      } else {
+        console.warn('Dropdown element not found');
       }
     }
 
@@ -427,6 +442,8 @@
           if (productDetails) {
             document.getElementById('product-details').innerHTML = productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate, place: BANKS[bankId].name, rules: BANKS[bankId].rulesRaw});
             // console.log(productDetailsTpl({ product: productDetails, asofDate: BANKS[bankId].asofDate, place: BANKS[bankId].name }))
+            // prepare the compare dropdown
+            populateCompareDropdown(productCode, savedBankId);
           } else {
             document.getElementById('product-details').innerHTML = `<div id="product-details-content">Product details not found.<span id="product-details-close">&times;</span></div>`;
           }
@@ -545,15 +562,15 @@
     {{else}}
       <button id="json-btn" onclick="toggleJson('ruleset', '{{ruleset.code}}')">Show JSON</button>
     {{/if}}
-    <button id="check-btn" onclick="toggleCheck('{{product.productCode}}')">Show Checker</button>
-    <button id="compare-btn" onclick="toggleCompare( '{{product.productCode}}')">Show Compare</button>
+    <button id="check-btn" onclick="toggleCheck('{{product.productCode}}')" disabled>Show Checker</button>
+    <button id="compare-btn" onclick="toggleCompare( '{{product.productCode}}')" disabled>Show Compare</button>
     <span id="product-details-close">&times;</span>
     <div><pre id="product-details-diagram-content"></pre></div>
     <div><pre id="product-details-json-content"></pre></div>
     <div><pre id="product-details-checker-content"></pre></div>
     <div><pre id="product-details-compare-content"></pre>
       <select id="compare-with" style="width: 200px; display: none">
-        <option value="">Compare with Bank</option>
+        <option value="">Compare with </option>
       </select>
     </div>
   {{!log 'main template' this}}
