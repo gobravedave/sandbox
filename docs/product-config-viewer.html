@@ -15,7 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 
   <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://unpkg.com/renderjson@1.3.0/renderjson.js"></script>
+  <script src="https://unpkg.com/renderjson@1.3.0/renderjson.js"></script>  
 
   <!-- Bootstrap Table and Filter Control CSS -->
   <link rel="stylesheet" href="https://cdn.rawgit.com/toni-heittola/js-datatable/v1.1.0/css.min/bootstrap-table-filter-control.min.css">
@@ -27,6 +27,7 @@
 
 </head>
 <body>
+
   <script>
 
     // Register partials dynamically
@@ -316,27 +317,33 @@
     }
 
     function jsonDiff(fromProduct, toProduct) {
-      // try {
-      //   const delta = window.jsondiffpatch.diff(fromProduct, toProduct);
+      console.log('Comparing products:', fromProduct, toProduct);
 
-      //   if (delta) {
-      //     return window.jsondiffpatch.formatters.html.format(delta, fromProduct);
-      //   } else {
-      //     return '<p>No differences found.</p>';
+      const diff = [];
+
+      // Compare the two products
+      // for (const key in fromProduct) {
+      //   if (fromProduct.hasOwnProperty(key)) {
+      //     if (toProduct[key] === undefined || toProduct[key] !== fromProduct[key]) {
+      //       const diffItem = {
+      //         key,
+      //         from: fromProduct[key],
+      //         to: toProduct[key] !== undefined ? toProduct[key] : 'NOT FOUND',
+      //       };
+      //       diff.push(diffItem);
+      //     }
       //   }
-      // } catch (error) {
-      //   console.error('Error calculating JSON diff:', error);
-      //   return '<p>Error calculating differences.</p>';
       // }
-        return '<h2>compare underway</h2>';
-
+      // const pre = document.createElement('pre');
+      // pre.innerHTML = JSON.stringify(diff, null, 2);
+      // return pre.outerHTML;
+      return 'work in progress';
     }
 
     function populateCompareDropdown(code, env) {
       const $compareDropdown = document.getElementById('compare-with');
       const $compareBtn = document.getElementById('compare-btn');
       if ($compareDropdown) {
-        console.log('Dropdown element found');
         // Clear previous options first to avoid duplication
         $compareDropdown.innerHTML = '<option value="">Compare with</option>';
 
