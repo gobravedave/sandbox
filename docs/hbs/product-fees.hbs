@@ -14,6 +14,7 @@
                   <tr><th>Name</th><td>{{this.feePlanName}} ({{this.code}})</td></tr>
                   <tr><th>From Date</th><td>{{formatDate this.feeItemsStartDate}}</td></tr>
                   <tr><th>To Date</th><td>{{formatDate this.feeItemsEndDate}}</td></tr>
+                  <tr><th>Associated Products</th><td>{{#each associatedProductCode}}{{this}}</br> {{/each}}</td></tr>
                 </table>
                 </td>
             <td>
