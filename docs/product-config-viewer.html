@@ -23,6 +23,8 @@
   <!-- Bootstrap CSS for styling -->
   <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.18.2/dist/bootstrap-table.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  
+  <link rel="stylesheet" href="https://esm.sh/jsondiffpatch@0.6.0/lib/formatters/styles/html.css">
   <link rel="stylesheet" type="text/css" href="css/product.css">
 
 </head>
@@ -285,11 +287,8 @@
         var pre = document.getElementById("product-details-compare-content");
         const compareWithSelect = document.getElementById("compare-with");
         compareWithSelect.style.display = "block";
-        // populateCompareDropdown(productId, savedBankId);
         pre.innerHTML = ""; // Clear previous Compare content
         const h2 = document.createElement('h2');
-        // h2.style.color = 'blue';
-        h2.textContent = 'work has begun, stay tuned';
         const $compareDropdown = document.getElementById('compare-with');
         $compareDropdown.addEventListener('change', async function(e) {
           const envToCompare = e.target.value;
@@ -297,10 +296,12 @@
             const fromProduct = BANKS[savedBankId].productsRaw.find(prod => prod.productCode=== productId);
             const toProduct = BANKS[envToCompare].productsRaw.find(prod => prod.productCode=== productId);
             if (fromProduct && toProduct) {
+                h2.textContent = 'Comparing ' + productId + ' from ' + BANKS[savedBankId].name + ' with ' + BANKS[envToCompare].name;
               const pre = document.getElementById("product-details-compare-results");
               pre.innerHTML = ""; // Clear previous Compare content
-              const diff = jsonDiff(fromProduct, toProduct);
-              pre.innerHTML=diff;
+              const diff = await jsonDiff(fromProduct, toProduct);
+              console.log('Diff result:', diff);
+              pre.innerHTML = diff;
             } else {
               console.error(`Details not found: ${productId} in ${savedBankId} and/or ${envToCompare}`);
             }
@@ -316,28 +317,33 @@
       }
     }
 
-    function jsonDiff(fromProduct, toProduct) {
+    async function jsonDiff(fromProduct, toProduct) {
       console.log('Comparing products:', fromProduct, toProduct);
 
       const diff = [];
 
+      try {
+      // Import jsondiffpatch and htmlFormatter
+      const jsondiffpatch = await import('https://esm.sh/jsondiffpatch@0.6.0');
+      console.log('jsondiffpatch imported successfully');
+      const htmlFormatter = await import('https://esm.sh/jsondiffpatch@0.6.0/formatters/html');
+      console.log('htmlFormatter imported successfully');
+
       // Compare the two products
-      // for (const key in fromProduct) {
-      //   if (fromProduct.hasOwnProperty(key)) {
-      //     if (toProduct[key] === undefined || toProduct[key] !== fromProduct[key]) {
-      //       const diffItem = {
-      //         key,
-      //         from: fromProduct[key],
-      //         to: toProduct[key] !== undefined ? toProduct[key] : 'NOT FOUND',
-      //       };
-      //       diff.push(diffItem);
-      //     }
-      //   }
-      // }
-      // const pre = document.createElement('pre');
-      // pre.innerHTML = JSON.stringify(diff, null, 2);
-      // return pre.outerHTML;
-      return 'work in progress';
+      const delta = jsondiffpatch.diff(fromProduct, toProduct);
+      console.log('Delta generated:', delta);
+
+      // Generate HTML diff
+      if (delta) {
+        const formattedDiff = htmlFormatter.format(delta);
+        console.log('Formatted HTML Diff:', formattedDiff);
+        return formattedDiff;} else {
+        return '<p>No differences found.</p>';
+      }
+      } catch (error) {
+      console.error('Error comparing products:', error);
+      return '<p>Error comparing products.</p>';
+      }
     }
 
     function populateCompareDropdown(code, env) {
@@ -580,8 +586,8 @@
     <ul style="list-style: square; padding-left: 10px;">
       <li>This page is a static view of the product configurations from each Zafin environment. The data will be periodically updated as part of a product configuration relaese or upon request to <a href="mailto:david.anderson@anz.com">david.anderson@anz.com</a></li>
       <li>To use.. Click on a product category to show products in each environment. Click on a product button to show the product details.</li>
-      <li>Known data gaps include multiuse product fees, credit card config etc</li>
-      <li>Backlog items include calling mulesoft to pull product data, compare, config checker, diagram view, NZ Products</li>
+      <li>Known data gaps include multiuse product fees.</li>
+      <li>Backlog items include calling mulesoft to pull product data, config checker, diagram view, NZ Products</li>
     </ul>
     </div>
     </div>
