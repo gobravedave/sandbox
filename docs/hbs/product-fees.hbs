@@ -1,5 +1,36 @@
-{{#with product.feePlans}}
-  {{#each data}}
+  {{#each product.feePlans.data}}
+    {{#each products}}
+      {{#if feePlanAssociation}}
+      <table>
+        <tr>
+        <th>Pricing Definition</th>
+        <th>Cohort Fee Plans</th>
+        </tr>
+        {{#each feePlanAssociation.association.rows}}
+        <tr>
+          {{#each this.columns}}
+          <td>{{operator}} {{value}}</td>
+          {{/each}}
+          <td>
+          {{feePlanCode}} </br>
+          {{log 'feeplans for ' feePlanCode ../feePlans.[feePlanCode].feePlanName}}
+          {{!-- {{../../feePlans.[feePlanCode].feePlanName}} --}}
+          {{!-- {{log 'feeplans???' ../../this}} --}}
+          {{!-- {{#each this.feePlans}} --}}
+          {{!-- {{log 'feeplans??' ../../this}} --}}
+
+            {{!-- {{#ifEquals code feePlanCode}} --}}
+            {{!-- {{feePlanName}} --}}
+            {{!-- {{/ifEquals}} --}}
+          {{!-- {{/each}} --}}
+          </td>
+        </tr>
+        {{/each}}
+          {{!-- {{log 'feeplans???' ../../this}} --}}
+
+        </table>
+      {{/if}}
+    {{/each}}
     {{#if feePlans}}
       <div class="table_wrapper">
         <table>
@@ -14,7 +45,7 @@
                   <tr><th>Name</th><td>{{this.feePlanName}} ({{this.code}})</td></tr>
                   <tr><th>From Date</th><td>{{formatDate this.feeItemsStartDate}}</td></tr>
                   <tr><th>To Date</th><td>{{formatDate this.feeItemsEndDate}}</td></tr>
-                  <tr><th>Associated Products</th><td>{{#each associatedProductCode}}{{this}}</br> {{/each}}</td></tr>
+                  <tr><th>Associated Products</th><td>{{#each this.associatedProductCode}}{{this}}</br> {{/each}}</td></tr>
                 </table>
                 </td>
             <td>
@@ -91,4 +122,3 @@
       <b>No Fee Plans for this product</b>
     {{/if}}
   {{/each}}
-{{/with}}
