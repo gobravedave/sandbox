@@ -6,29 +6,20 @@
         <th>Pricing Definition</th>
         <th>Cohort Fee Plans</th>
         </tr>
-        {{#each feePlanAssociation.association.rows}}
-        <tr>
-          {{#each this.columns}}
-          <td>{{operator}} {{value}}</td>
-          {{/each}}
-          <td>
-          {{feePlanCode}} </br>
-          {{log 'feeplans for ' feePlanCode ../feePlans.[feePlanCode].feePlanName}}
-          {{!-- {{../../feePlans.[feePlanCode].feePlanName}} --}}
-          {{!-- {{log 'feeplans???' ../../this}} --}}
-          {{!-- {{#each this.feePlans}} --}}
-          {{!-- {{log 'feeplans??' ../../this}} --}}
-
-            {{!-- {{#ifEquals code feePlanCode}} --}}
-            {{!-- {{feePlanName}} --}}
-            {{!-- {{/ifEquals}} --}}
-          {{!-- {{/each}} --}}
-          </td>
-        </tr>
-        {{/each}}
-          {{!-- {{log 'feeplans???' ../../this}} --}}
-
-        </table>
+          {{#each feePlanAssociation.association.rows}}
+          <tr>
+            {{#each this.columns}}
+            <td>{{operator}} {{value}}</td>
+            {{/each}}
+            <td>
+            {{#each ../../../../feePlans}}
+              {{#if (eq this.code ../feePlanCode)}}
+                {{this.feePlanName}}
+              {{/if}}
+            {{/each}}
+            </td>
+          </tr>
+          {{/each}}  </table>
       {{/if}}
     {{/each}}
     {{#if feePlans}}
@@ -43,8 +34,10 @@
                 <td>
                 <table> <!-- Fee Plan -->
                   <tr><th>Name</th><td>{{this.feePlanName}} ({{this.code}})</td></tr>
-                  <tr><th>From Date</th><td>{{formatDate this.feeItemsStartDate}}</td></tr>
-                  <tr><th>To Date</th><td>{{formatDate this.feeItemsEndDate}}</td></tr>
+                  {{!-- <tr><th>From Date</th><td>{{formatDate this.feeItemsStartDate}}</td></tr> --}}
+                  {{!-- <tr><th>To Date</th><td>{{formatDate this.feeItemsEndDate}}</td></tr> --}}
+                  {{!-- <tr><th>From Date</th><td>{{this.feeItemsStartDate}}</td></tr> --}}
+                  {{!-- <tr><th>To Date</th><td>{{this.feeItemsEndDate}}</td></tr> --}}
                   <tr><th>Associated Products</th><td>{{#each this.associatedProductCode}}{{this}}</br> {{/each}}</td></tr>
                 </table>
                 </td>
