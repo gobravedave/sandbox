@@ -1,0 +1,105 @@
+ {{!log 'product-cohort-fees.hbs' this}}
+      {{#if feePlanAssociation}}
+      <table>
+        <tr>
+        <th>Pricing Definition</th>
+        <th>Cohort Fee Plans</th>
+        </tr>
+        {{#each feePlanAssociation.association.rows}}
+        <tr>
+          {{#each this.columns}}
+          <td>{{operator}} {{value}}</td>
+          {{/each}}
+          <td>
+          {{!-- Maps to {{feePlanCode}} Fee Plan</br> --}}
+          {{!log 'feeplans for ' feePlanCode ../feePlans}}
+          {{#each ../feePlans}}
+          {{!log 'feeplans for ' this}}
+            {{#ifEquals code ../feePlanCode}}
+          <table>
+          <tr>
+            <th>FeePlan</th>
+            <th>Fee Items</th>
+          </tr>
+          <tr>
+                <td>
+                <table> <!-- Fee Plan -->
+                  <tr><th>Name</th><td>{{this.feePlanName}} ({{this.code}})</td></tr>
+                </table>
+                </td>
+              <td>
+              <table> <!-- Fee Items -->
+                <tr>
+                  <th>Fee Item</th>
+                  <th>Type</th>
+                  <th>Fee Amount Type</th>
+                  <th>Fee Amount</th>
+                </tr>
+                {{#each feeItems}}
+                  <tr>
+                    <td>{{this.feeItemName}} ({{this.code}})</td>
+                    <td>{{this.feeItemType}}</td>
+                    <td>
+                      {{#if simpleFlatFee}}Simple{{/if}}
+                      {{#if simpleTransactionalFeeAmount}}Simple{{/if}}
+                      {{#if simpleTransactionalFeePercentage}}Simple{{/if}}
+                      {{#if tieredTransactionalFee}}Tiered{{/if}}
+                    </td>
+                    <td>
+                      <table> <!-- Fee Amount --> 
+                        {{#if simpleFlatFee}}
+                          <tr><th>Amount</th><td>${{simpleFlatFee.amount}}</td></tr>
+                        {{/if}}
+                        {{#if simpleTransactionalFeeAmount}}
+                          <tr><th>Amount Or Percentage</th><td>{{simpleTransactionalFeeAmount.amountOrPercentage}}</td></tr>
+                          {{#if simpleTransactionalFeeAmount.amount}}
+                            <tr><th>Amount</th><td>${{simpleTransactionalFeeAmount.amount}}</td></tr>
+                          {{/if}}
+                          {{#if simpleTransactionalFeeAmount.percentage}}
+                            <tr><th>Percentage</th><td>{{simpleTransactionalFeeAmount.percentage}}%</td></tr>
+                          {{/if}}
+                        {{/if}}
+                        {{#if simpleTransactionalFeePercentage}}
+                          <tr><th>Amount Or Percentage</th><td>{{simpleTransactionalFeePercentage.amountOrPercentage}}</td></tr>
+                          <tr><th>Percentage</th><td>{{simpleTransactionalFeePercentage.percentage}}%</td></tr>
+                        {{/if}}
+                        {{#if tieredTransactionalFee}}
+                          <tr><th>Whole Or Progressive</th><td>{{tieredTransactionalFee.wholeOrProgressive}}</td></tr>
+                          <tr><th>Volume Or Value</th><td>{{tieredTransactionalFee.volumeOrValue}}</td></tr>
+                          <tr><th>Amount Or Percentage</th><td>{{tieredTransactionalFee.amountOrPercentage}}</td></tr>
+                          <tr><th>Tiers End Points Value</th><td>{{tieredTransactionalFee.tiersEndPointsValue}}</td></tr>
+                          <tr><th>Tiers</th>
+                            <td>
+                              <table> <!-- Tiers --> 
+                                <tr>
+                                  <th>Amount</th>
+                                  <th>From is {{fromOperator}}</th>
+                                  <th>To is {{toOperator}}</th>
+                                </tr>
+                                {{#each tieredTransactionalFee.valueTiers}}
+                                  <tr>
+                                    <td>${{amount.value}}</td>
+                                    <td>{{fromValue}}</td>
+                                    <td>{{toValueNumeric}}</td>
+                                  </tr>
+                                {{/each}}
+                              </table> <!-- End of Tiers -->
+                            </td>
+                          </tr>
+                        {{/if}}
+                      </table> <!-- End of Fee Amount --> 
+                    </td>
+                  </tr>
+                {{/each}}
+              </table> <!-- End of Fee Items --> 
+            </td>
+          </tr>
+        </table> <!-- End of Fee Plan --> 
+
+            {{/ifEquals}}
+          {{/each}}
+          </td>
+        </tr>
+        {{/each}}
+      </table>
+      {{/if}}

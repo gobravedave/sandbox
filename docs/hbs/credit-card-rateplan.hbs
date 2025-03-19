@@ -3,6 +3,7 @@
     {{#with this.product}}
     {{#each this.ratePlanAssociations}}
     {{#with this.planMapping.association}}
+<div class="table_wrapper">
 <table>
     <tr>
         <th>Pricing Definition</th>
@@ -54,6 +55,7 @@
         {{/each}}
     {{/each}}
 </table>
+</div>
     {{/with}}
 
     {{/each}}
