@@ -1,0 +1,1193 @@
+{
+    "requestDate": "2025-03-27T23:20:45Z",
+    "durationMs": 243,
+    "dataType": "anz.eventresults.GetAllFeeItemDetailsResult",
+    "dataCount": 1,
+    "data": [
+        {
+            "modelType": "com.zafin.zplatform.anz.eventresults.GetAllFeeItemDetailsResult",
+            "eventStatus": "SUCCESS",
+            "feeItems": [
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "ATM",
+                    "feeItemName": "ATM Fee",
+                    "feeItemDescription": "Non ANZ ATM Fee",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "ATM",
+                        "feeName": "Non ANZ ATM Fee",
+                        "feeDescription": "Non ANZ ATM Fee",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2023-03-08T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "A",
+                            "feeChargeNarrative": "Non ANZ ATM Fee",
+                            "feeReverseNarrative": "Non ANZ ATM Fee Reversal",
+                            "feeRebateNarrative": "Non ANZ ATM Fee Rebate",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "NAA",
+                                "impactedSystemFeeDescription": "Non ANZ ATM Fee"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "BUSSERVFEE",
+                    "feeItemName": "Account Service Fee",
+                    "feeItemDescription": "Account Service Fee",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "MASF01",
+                        "feeName": "Monthly Account Servicing Fee",
+                        "feeDescription": "Monthly Account Servicing Fee",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2023-08-30T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "Monthly Account Servicing Fee",
+                            "feeReverseNarrative": "Reversal of Monthly Account Service Fee ",
+                            "feeRebateNarrative": "Rebate of Monthly account Service Fee",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "XD",
+                                "impactedSystemFeeDescription": "DDA"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "CVDCFI",
+                    "feeItemName": "CVDC fee Item",
+                    "feeItemDescription": "CVDC fee Item",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "CVDCFC",
+                        "feeName": "CVDC Fee Code",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2020-04-05T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "CVDC FEE",
+                            "feeReverseNarrative": "CVDC FEE",
+                            "feeRebateNarrative": "CVDC FEE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "CAP",
+                                "impactedSystemFeeDescription": "CAp"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FICCACF01",
+                    "feeItemName": "Credit Card PoC - Additional Cardholder Fee",
+                    "feeItemDescription": "Credit Card PoC - Additional Cardholder Fee",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCCCACF",
+                        "feeName": "Credit Card PoC - Additional Cardholder Fee",
+                        "feeDescription": "Credit Card PoC - Additional Cardholder Fee"
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FICCAF01",
+                    "feeItemName": "Credit Card PoC - Annual Fee",
+                    "feeItemDescription": "Credit Card PoC - Annual Fee",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCCCAF",
+                        "feeName": "Credit Card PoC - Annual Fee",
+                        "feeDescription": "Credit Card PoC - Annual Fee"
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FICCLPF",
+                    "feeItemName": "Credit Card PoC - Late Payment Fee",
+                    "feeItemDescription": "Credit Card PoC - Late Payment Fee",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCCCLPF",
+                        "feeName": "Credit Card PoC - Late Payment Fee",
+                        "feeDescription": "Credit Card PoC - Late Payment Fee"
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FICCOF01",
+                    "feeItemName": "Credit Card PoC - Overlimit Fee",
+                    "feeItemDescription": "Credit Card PoC - Overlimit Fee",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCCCOF",
+                        "feeName": "Credit Card PoC - Overlimit Fee",
+                        "feeDescription": "Credit Card PoC - Overlimit Fee"
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FICCRF01",
+                    "feeItemName": "Credit Card PoC - Rewards Fee",
+                    "feeItemDescription": "Credit Card PoC - Rewards Fee",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCCCRF",
+                        "feeName": "Credit Card PoC - Rewards Fee",
+                        "feeDescription": "Credit Card PoC - Rewards Fee"
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FIDISCHMORTG01",
+                    "feeItemName": "DISCHARGE OF MORTGAGE",
+                    "feeItemDescription": "Payable to the government body when discharging an existing mortgage over a property. Refer to the relevant state/territory revenue office for the amount.",
+                    "feeItemType": "EVENT_BASED",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCDISCHMORTG01",
+                        "feeName": "DISCHARGE OF MORTGAGE",
+                        "feeDescription": "Payable to the government body when discharging an existing mortgage over a property. Refer to the relevant state/territory revenue office for the amount."
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FIEARLYREPAYCOST01",
+                    "feeItemName": "EARLY REPAYMENT COST",
+                    "feeItemDescription": "An Early Repayment Cost may have to be paid if a customer pays their loan of in full, make an early or extra repayment, or make certain other changes to  loan, during any fixed rate period.changes to ",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCEARLYREPAYCOST01",
+                        "feeName": "EARLY REPAYMENT COST",
+                        "feeDescription": "An Early Repayment Cost may have to be paid if a customer pays their loan of in full, make an early or extra repayment, or make certain other changes to  loan, during any fixed rate period changes to ",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2019-01-01T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "EARLY REPAYMENT COST",
+                            "feeReverseNarrative": "REVERSAL OF EARLY REPAYMENT COST",
+                            "feeRebateNarrative": "REBATE OF EARLY REPAYMENT COST",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "Late Payment Fee",
+                                "code": "77777"
+                            },
+                            "revenueAccount": {
+                                "modelType": "com.zafin.zplatform.anz.models.RevenueAccountTran",
+                                "accountNumber": "767676767"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "PPP",
+                                "impactedSystemFeeDescription": "EARLY REPAYMENT COST"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FIGSF01",
+                    "feeItemName": "GOVERNMENT SEARCH FEE",
+                    "feeItemDescription": "GOVERNMENT SEARCH FEE",
+                    "feeItemType": "EVENT_BASED",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "GSF",
+                        "feeName": "Government Search fee",
+                        "feeDescription": "Government Search fee",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2023-10-24T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "GOVERNMENT FEE",
+                            "feeReverseNarrative": "REVERSAL OF GOVERNMENT FEE",
+                            "feeRebateNarrative": "REBATE OF GOVERNMENT FEE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            }
+                        }
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FIIIMTFEE01",
+                    "feeItemName": "INTERNATIONAL INWARD MONEY TRANSFER FEE",
+                    "feeItemDescription": "See the ANZ Plus and ANZ Save Accounts T&Cs for details on fees",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCIIMTFEE01",
+                        "feeName": "INTERNATIONAL INWARD MONEY TRANSFER FEE",
+                        "feeDescription": "See the ANZ Plus and ANZ Save Accounts T&Cs for details on fees",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2016-07-17T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "INTERNATIONAL INWARD MONEY TRANSFER FEE",
+                            "feeReverseNarrative": "INTERNATIONAL INWARD MONEY TRANSFER FEE REVERSAL",
+                            "feeRebateNarrative": "INTERNATIONAL INWARD MONEY TRANSFER REBATE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            },
+                            "revenueAccount": {
+                                "modelType": "com.zafin.zplatform.anz.models.RevenueAccountTran",
+                                "accountNumber": "9999999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "IIM",
+                                "impactedSystemFeeDescription": "INTERNATIONAL INWARD MONEY TRANSFER FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FIIOMTFEE01",
+                    "feeItemName": "INTERNATIONAL OUTWARD MONEY TRANSFER FEE",
+                    "feeItemDescription": "See the ANZ Plus and ANZ Save Accounts T&Cs for details on fees",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCIOMTFEE01",
+                        "feeName": "INTERNATIONAL OUTWARD MONEY TRANSFER FEE",
+                        "feeDescription": "See the ANZ Plus and ANZ Save Accounts T&Cs for details on fees",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2025-01-01T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "A",
+                            "feeChargeNarrative": "INTERNATIONAL OUTWARD MONEY TRANSFER FEE",
+                            "feeReverseNarrative": "INTERNATIONAL OUTWARD MONEY TRANSFER FEE REVERSAL",
+                            "feeRebateNarrative": "INTERNATIONAL OUTWARD MONEY TRANSFER FEE REBATE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "International Outward Money Transfer Fee",
+                                "code": "8888"
+                            },
+                            "revenueAccount": {
+                                "modelType": "com.zafin.zplatform.anz.models.RevenueAccountTran",
+                                "accountNumber": "54545454"
+                            }
+                        }
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FILTPYMTFEE01",
+                    "feeItemName": "LATE PAYMENT FEE",
+                    "feeItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCLTPYMTFEE01",
+                        "feeName": "LATE PAYMENT FEE",
+                        "feeDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2016-06-23T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "LATE PAYMENT FEE",
+                            "feeReverseNarrative": "REVERSAL OF LATE PAYMENT FEE",
+                            "feeRebateNarrative": "REBATE OF LATE PAYMENT FEE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "Late Payment Fee",
+                                "code": "6560"
+                            },
+                            "revenueAccount": {
+                                "modelType": "com.zafin.zplatform.anz.models.RevenueAccountTran",
+                                "accountNumber": "656565"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "ARX",
+                                "impactedSystemFeeDescription": "LATE PAYMENT FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FIMORTGDISCFEE01",
+                    "feeItemName": "ANZ LOAN DISCHARGE FEE",
+                    "feeItemDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required. ",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCMORTGDISCFEE01",
+                        "feeName": "ANZ LOAN DISCHARGE FEE",
+                        "feeDescription": "This fee is payable each time ANZ is required to attend a property settlement (in person, electronically or another way) and a discharge of the Mortgage over the Property is required. ",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2023-09-05T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "ANZ LOAN DISCHARGE FEE",
+                            "feeReverseNarrative": "ANZ LOAN DISCHARGE FEE REVERSAL",
+                            "feeRebateNarrative": "ANZ LOAN DISCHARGE FEE REBATE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            },
+                            "revenueAccount": {
+                                "modelType": "com.zafin.zplatform.anz.models.RevenueAccountTran",
+                                "accountNumber": "9999999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "MDF",
+                                "impactedSystemFeeDescription": "ANZ LOAN DISCHARGE FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FIMULETESTINGFEE01",
+                    "feeItemName": "Mulesoft testing fee",
+                    "feeItemDescription": "Mulesoft testing fee",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCMULESOFTTESTFEE01",
+                        "feeName": "Mulesoft fee testing",
+                        "feeDescription": "Mulesoft fee testing",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2023-10-24T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "MULESOFT TESTING FEE",
+                            "feeReverseNarrative": "REVERSAL OF MULESOFT TESTING FEE \t\n",
+                            "feeRebateNarrative": "REBATE OF MULESOFT TESTING FEE ",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            },
+                            "revenueAccount": {
+                                "modelType": "com.zafin.zplatform.anz.models.RevenueAccountTran",
+                                "accountNumber": "9999999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "MUL",
+                                "impactedSystemFeeDescription": "Test Code please ignore"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FIOFFSETFEE01",
+                    "feeItemName": "OFFSET FEE",
+                    "feeItemDescription": "Certain loans allow you to reduce the interest you pay by linking to your deposit account. ANZ Plus charges $10 a month to offset your funds.",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCOFFSETFEE01",
+                        "feeName": "OFFSET FEE",
+                        "feeDescription": "Certain loans allow you to reduce the interest you pay by linking to your deposit account. ANZ Plus charges $10 a month to offset your funds.",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2016-06-23T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "OFFSET FEE",
+                            "feeReverseNarrative": "OFFSET FEE REVERSAL",
+                            "feeRebateNarrative": "OFFSET FEE REBATE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "Offset Fee",
+                                "code": "7777"
+                            },
+                            "revenueAccount": {
+                                "modelType": "com.zafin.zplatform.anz.models.RevenueAccountTran",
+                                "accountNumber": "6565656"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "OFF",
+                                "impactedSystemFeeDescription": "OFFSET FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FIONANZATMFEE01",
+                    "feeItemName": "OVERSEAS NON ANZ ATM FEE",
+                    "feeItemDescription": "See the ANZ Plus and ANZ Save Accounts T&Cs for details on fees",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCONANZATMFEE01",
+                        "feeName": "OVERSEAS NON ANZ ATM Fee",
+                        "feeDescription": "See the ANZ Plus and ANZ Save Accounts T&Cs for details on fees",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2016-07-17T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "OVERSEAS NON ANZ ATM FEE",
+                            "feeReverseNarrative": "OVERSEAS NON ANZ ATM FEE REVERSAL",
+                            "feeRebateNarrative": "OVERSEAS NON ANZ ATM FEE REBATE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            },
+                            "revenueAccount": {
+                                "modelType": "com.zafin.zplatform.anz.models.RevenueAccountTran",
+                                "accountNumber": "9999999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "ONA",
+                                "impactedSystemFeeDescription": "OVERSEAS NON ANZ ATM FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FIOTFEE01",
+                    "feeItemName": "OVERSEAS TRANSACTION FEE",
+                    "feeItemDescription": "See the ANZ Plus and ANZ Save Accounts T&Cs for details on fees",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCOTFEE01",
+                        "feeName": "OVERSEAS TRANSACTION FEE",
+                        "feeDescription": "See the ANZ Plus and ANZ Save Accounts T&Cs for details on fees",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2016-07-17T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "OVERSEAS TRANSACTION FEE",
+                            "feeReverseNarrative": "OVERSEAS TRANSACTION FEE REVERSAL",
+                            "feeRebateNarrative": "OVERSEAS TRANSACTION FEE REBATE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            },
+                            "revenueAccount": {
+                                "modelType": "com.zafin.zplatform.anz.models.RevenueAccountTran",
+                                "accountNumber": "9999999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "OTF",
+                                "impactedSystemFeeDescription": "OVERSEAS TRANSACTION FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FIPRODUCTIONFEE01",
+                    "feeItemName": "PRODUCTION FEE",
+                    "feeItemDescription": "This fee is payable each time ANZ produce title documents for you (in person, electronically or another way) on your request.",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCPRODUCTIONFEE01",
+                        "feeName": "PRODUCTION FEE",
+                        "feeDescription": "This fee is payable each time ANZ produce title documents for you (in person, electronically or another way) on your request.",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2023-09-05T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "PRODUCTION FEE",
+                            "feeReverseNarrative": "PRODUCTION FEE REVERSAL",
+                            "feeRebateNarrative": "PRODUCTION FEE REBATE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            },
+                            "revenueAccount": {
+                                "modelType": "com.zafin.zplatform.anz.models.RevenueAccountTran",
+                                "accountNumber": "9999999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "PRF",
+                                "impactedSystemFeeDescription": "PRODUCTION FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FIREGOFMORTG01",
+                    "feeItemName": "REGISTRATION OF MORTGAGE",
+                    "feeItemDescription": "Payable to the government body when registering a mortgage over a property. Refer to the relevant state/territory revenue office for the amount",
+                    "feeItemType": "EVENT_BASED",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FCREGOFMORTG01",
+                        "feeName": "REGISTRATION OF MORTGAGE",
+                        "feeDescription": "Payable to the government body when registering a mortgage over a property. Refer to the relevant state/territory revenue office for the amount."
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FI_ OFFSETFEE01",
+                    "feeItemName": "OFFSET FEE (DO NOT USE)",
+                    "feeItemDescription": "Certain loans allow you to reduce the interest you pay by linking to your deposit account. ANZ Plus charges $10 a month to offset your funds.",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FC_ OFFSETFEE01",
+                        "feeName": "OFFSET FEE",
+                        "feeDescription": "Certain loans allow you to reduce the interest you pay by linking to your deposit account. ANZ Plus charges $10 a month to offset your funds.",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2023-06-23T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "A",
+                            "feeChargeNarrative": "OFFSET FEE",
+                            "feeReverseNarrative": "REVERSAL OF OFFSET FEE",
+                            "feeRebateNarrative": "REBATE OF OFFSET FEE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "Offset Fee",
+                                "code": "7777"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "OFF",
+                                "impactedSystemFeeDescription": "OFFSET FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FI_BANKCHQFEE01",
+                    "feeItemName": "Bank Cheques Fee Item",
+                    "feeItemDescription": "Bank Cheques Fee Item",
+                    "feeItemType": "EVENT_BASED",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "BANKCHQFEE01",
+                        "feeName": "Bank Cheques Fee",
+                        "feeDescription": "Bank Cheques Fee",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2022-11-21T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "BANK CHEQUES FEE",
+                            "feeReverseNarrative": "REVERSAL OF BANK CHEQUES FEE",
+                            "feeRebateNarrative": "REBATE OF BANK CHEQUES FEE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "Offset Fee",
+                                "code": "7777"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "BCF",
+                                "impactedSystemFeeDescription": "BANK CHEQUES FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FI_CDTFCFEE01",
+                    "feeItemName": "Credit Facility Fee Item",
+                    "feeItemDescription": "Credit Facility Fee Item",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "CDTFCFEE001",
+                        "feeName": "Credit Facility Fee",
+                        "feeDescription": "Advance Annual Tiered Credit Facility Fee ",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2022-11-22T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "CREDIT FACILITY FEE",
+                            "feeReverseNarrative": "REVERSAL OF CREDIT FACILITY FEE",
+                            "feeRebateNarrative": "REBATE OF CREDIT FACILITY FEE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "Offset Fee",
+                                "code": "7777"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "CFF",
+                                "impactedSystemFeeDescription": "CREDIT FACILITY FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FI_IMT",
+                    "feeItemName": "FI_IMT",
+                    "feeItemDescription": "International Money Transfer ",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "IMT",
+                        "feeName": "IMT",
+                        "feeDescription": "International Money Transfer"
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FI_LOCKRATEFEE01",
+                    "feeItemName": "Lock Rate Fee Item",
+                    "feeItemDescription": "Lock Rate Fee Item",
+                    "feeItemType": "EVENT_BASED",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "LOCKRATEFEE01",
+                        "feeName": "Lock Rate Fee",
+                        "feeDescription": "Fee is payable on application to lock in the interest rate current at the time of payment of the Lock Rate Fee for a period of 90 days from when the fee is paid.",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2022-11-22T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "LOCK RATE FEE",
+                            "feeReverseNarrative": "REVERSAL OF LOCK RATE FEE",
+                            "feeRebateNarrative": "REBATE OF LOCK RATE FEE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "Offset Fee",
+                                "code": "7777"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "LRF",
+                                "impactedSystemFeeDescription": "LOCK RATE FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FI_LPF",
+                    "feeItemName": "FI_Late Payment Fee",
+                    "feeItemDescription": "Fee Item for Late Payment Fee",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "LPF",
+                        "feeName": "Late Payment Fee",
+                        "feeDescription": "Late Payment Fee",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2022-10-12T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "A",
+                            "feeChargeNarrative": "Charge - Late Payment Fee",
+                            "feeReverseNarrative": "Reversal - Late Payment Fee",
+                            "feeRebateNarrative": "Rebate - Late Payment Fee",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "Late Payment Fee",
+                                "code": "8888"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "ARX",
+                                "impactedSystemFeeDescription": "ARX Late Payment Fee"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FI_LRFITEM01",
+                    "feeItemName": "Lock Rate Fee Item_01",
+                    "feeItemDescription": "Lock Rate Fee Item_01",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "LRFCODE01",
+                        "feeName": "Lock Rate Fee_01",
+                        "feeDescription": "Fee is payable on application to lock in the interest rate current at the time of payment of the Lock Rate Fee for a period of 90 days from when the fee is paid.",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2022-11-22T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "LOCK RATE FEE",
+                            "feeReverseNarrative": "REVERSAL OF LOCK RATE FEE",
+                            "feeRebateNarrative": "REBATE OF LOCK RATE FEE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "Offset Fee",
+                                "code": "7777"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "LRF",
+                                "impactedSystemFeeDescription": "LOCK RATE FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FI_LTPYMTFEE01",
+                    "feeItemName": "LATE PAYMENT FEE (DO NOT USE)",
+                    "feeItemDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FC_LTPYMTFEE01",
+                        "feeName": "LATE PAYMENT FEE",
+                        "feeDescription": "Charged when a payment remains unpaid for 30 days or more after it is due. A further fee is payable monthly when the loan continues to be in arrears.",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2023-06-23T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "LATE PAYMENT FEE",
+                            "feeReverseNarrative": "REVERSAL OF LATE PAYMENT FEE",
+                            "feeRebateNarrative": "REBATE OF LATE PAYMENT FEE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "Late Payment Fee",
+                                "code": "7777"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "ARX",
+                                "impactedSystemFeeDescription": "LATE PAYMENT FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "FI_OTF",
+                    "feeItemName": "Fee Item for Overseas Transaction Fee",
+                    "feeItemDescription": "Fee Item for Overseas Transaction Fee",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FC_OTF",
+                        "feeName": "Overseas Transaction Fee",
+                        "feeDescription": "Fee Code for Overseas Transaction Fee",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2022-11-22T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "A",
+                            "feeChargeNarrative": "OVERSEAS TRANSACTION FEE",
+                            "feeReverseNarrative": "REVERSAL OF OVERSEAS TRANSACTION FEE",
+                            "feeRebateNarrative": "REBATE OF OVERSEAS TRANSACTION FEE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "Offset Fee",
+                                "code": "7777"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "OTF",
+                                "impactedSystemFeeDescription": "Overseas Transaction Fee"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "IIMT",
+                    "feeItemName": "International Inward Money Transfer",
+                    "feeItemDescription": "If you receive $300 (in Australian dollars) or more in a single transaction in one of your Accounts from outside Australia we may charge you a fee ",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "IIMT",
+                        "feeName": "International Inward Money Transfer",
+                        "feeDescription": "If you receive $300 (in Australian dollars) or more in a single transaction in one of your Accounts from outside Australia we may charge you a fee of $15 or less unless the person making the transfer ",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2023-03-08T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "A",
+                            "feeChargeNarrative": "International Inward Money Transfer Fee",
+                            "feeReverseNarrative": "International Inward Money Transfer Reversal",
+                            "feeRebateNarrative": "International Inward Money Transfer Rebate",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "IMT",
+                                "impactedSystemFeeDescription": "International Inward Money Transfer Fee"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "OATMFD01",
+                    "feeItemName": "Overseas atm fee item",
+                    "feeItemDescription": "Overseas atm fee item",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "FC_OATMF01",
+                        "feeName": "Overseas ATM withdrawal FEE",
+                        "feeDescription": "Overseas ATM withdrawal FEE",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2022-10-04T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "A",
+                            "feeChargeNarrative": "OVERSEAS ATM WITHDRAWAL FEE CHARGE",
+                            "feeReverseNarrative": "OVERSEAS ATM WITHDRAWAL FEE REVERSAL",
+                            "feeRebateNarrative": "OVERSEAS ATM WITHDRAWAL FEE REBATE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "OAF",
+                                "impactedSystemFeeDescription": "Overseas ATM withdrawal Fee"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "OFFSETFEE01",
+                    "feeItemName": "OFFSETFEE01",
+                    "feeItemDescription": "Offset Fee Item",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "OFFSETFEE01",
+                        "feeName": "OFFSETFEE01",
+                        "feeDescription": "Offset Fee",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2022-10-03T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "OFFSET FEE",
+                            "feeReverseNarrative": "REVERSAL OF OFFSET FEE",
+                            "feeRebateNarrative": "REBATE OF OFFSET FEE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "Offset Fee",
+                                "code": "7777"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "OFF",
+                                "impactedSystemFeeDescription": "OFFSET FEE"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "OTF",
+                    "feeItemName": "Overseas Transaction Fee",
+                    "feeItemDescription": "Overseas Transaction Fee",
+                    "feeItemType": "PERIODIC",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "OTF",
+                        "feeName": "Overseas Transaction Fee",
+                        "feeDescription": "Overseas Transaction Fee",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2023-03-08T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": false,
+                            "feeLevelIndicator": "A",
+                            "feeChargeNarrative": "Overseas Transaction Fee",
+                            "feeReverseNarrative": "Overseas Transaction Fee Reversal",
+                            "feeRebateNarrative": "Overseas Transaction Fee Rebate",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "OTF",
+                                "impactedSystemFeeDescription": "Overseas Transaction Fee"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "modelType": "com.zafin.zplatform.anz.models.FeeItemTran",
+                    "code": "TFIOMTFEE01",
+                    "feeItemName": "TEST INTERNATIONAL OUTWARD MONEY TRANSFER FEE",
+                    "feeItemDescription": "See the ANZ Plus and ANZ Save Accounts T&Cs for details on fees. ",
+                    "feeItemType": "TRANSACTIONAL",
+                    "feeCode": {
+                        "modelType": "com.zafin.zplatform.anz.models.FeeCodeTran",
+                        "code": "TFCIOMTFEE01",
+                        "feeName": "TEST INTERNATIONAL OUTWARD MONEY TRANSFER FEE",
+                        "feeDescription": "See the ANZ Plus and ANZ Save Accounts T&Cs for details on fees. ",
+                        "feeConfiguration": {
+                            "modelType": "com.zafin.zplatform.anz.models.FeeConfigurationTrans",
+                            "fromDate": "2024-08-22T00:00:00Z",
+                            "toDate": "9999-01-01T23:59:59Z",
+                            "overlayEnabled": true,
+                            "feeLevelIndicator": "P",
+                            "feeChargeNarrative": "INTERNATIONAL OUTWARD MONEY TRANSFER FEE",
+                            "feeReverseNarrative": "INTERNATIONAL OUTWARD MONEY TRANSFER FEE REVERSAL",
+                            "feeRebateNarrative": "INTERNATIONAL OUTWARD MONEY TRANSFER FEE REBATE",
+                            "generalLedgerInterimAccountKey": {
+                                "modelType": "com.zafin.zplatform.anz.models.DetailsTran",
+                                "name": "9999",
+                                "code": "9999"
+                            },
+                            "revenueAccount": {
+                                "modelType": "com.zafin.zplatform.anz.models.RevenueAccountTran",
+                                "accountNumber": "9999999"
+                            }
+                        },
+                        "impactedSystems": [
+                            {
+                                "modelType": "com.zafin.zplatform.anz.models.FeeItemImpactedSystemTran",
+                                "name": "Customer Account Processing",
+                                "description": "Customer Account Processing",
+                                "code": "CAP",
+                                "systemType": "CORE_BANKING",
+                                "impactedSystemFeeCode": "IOM",
+                                "impactedSystemFeeDescription": "INTERNATIONAL OUTWARD MONEY TRANSFER FEE"
+                            }
+                        ]
+                    }
+                }
+            ],
+            "errorCode": 0
+        }
+    ]
+}
