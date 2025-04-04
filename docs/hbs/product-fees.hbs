@@ -25,19 +25,29 @@
                 <table> <!-- Fee Items -->
                   <tr>
                     <th>Fee Item</th>
-                    <th>Type</th>
-                    <th>Fee Amount Type</th>
+                    <th>Fee Item Configuration</th>
                     <th>Fee Amount</th>
                   </tr>
                   {{#each feeItems}}
                     <tr>
                       <td>{{this.feeItemName}} ({{this.code}})</td>
-                      <td>{{this.feeItemType}}</td>
                       <td>
+                        <table> <!-- Fee Item -->
+                        <tr><th>Type</th><td>{{this.feeItemType}}</td></tr>
+                        <tr><th>Fee Amount Type</th>
+                        <td>
                         {{#if simpleFlatFee}}Simple{{/if}}
                         {{#if simpleTransactionalFeeAmount}}Simple{{/if}}
                         {{#if simpleTransactionalFeePercentage}}Simple{{/if}}
                         {{#if tieredTransactionalFee}}Tiered{{/if}}
+                        </td></tr>
+                                                {{#if chargeType}}
+                        <tr><th>Charge Type</th><td>{{chargeType}}</td></tr>
+                        {{/if}}
+                        {{#if chargingFeefrequency}}
+                        <tr><th>Charge Fee Frequency</th><td>{{chargingFeefrequency}}</td></tr>
+                        {{/if}}
+                        </table>
                       </td>
                       <td>
                         <table> <!-- Fee Amount -->
