@@ -69,6 +69,14 @@
                         {{#if simpleTransactionalFeePercentage}}
                           <tr><th>Amount Or Percentage</th><td>{{simpleTransactionalFeePercentage.amountOrPercentage}}</td></tr>
                           <tr><th>Percentage</th><td>{{simpleTransactionalFeePercentage.percentage}}%</td></tr>
+                          <tr><th>Min Fee Applicable</th><td>{{simpleTransactionalFeePercentage.isMinimumFeeApplicable}}</td></tr>
+                          {{#if simpleTransactionalFeePercentage.minimumValue.amount}}
+                          <tr><th>Min Value</th><td>${{simpleTransactionalFeePercentage.minimumValue.amount}}</td></tr>
+                          {{/if}}
+                          <tr><th>Max Fee Applicable</th><td>{{simpleTransactionalFeePercentage.isMaximumFeeApplicable}}</td></tr>
+                          {{#if simpleTransactionalFeePercentage.maximumValue.amount}}
+                          <tr><th>Max Value</th><td>${{simpleTransactionalFeePercentage.maximumValue.amount}}</td></tr>
+                          {{/if}}
                         {{/if}}
                         {{#if tieredTransactionalFee}}
                           <tr><th>Whole Or Progressive</th><td>{{tieredTransactionalFee.wholeOrProgressive}}</td></tr>
