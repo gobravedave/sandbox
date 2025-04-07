@@ -11,10 +11,31 @@
         <tr><th>Detailed Description</th><td>{{detailedDescription}}</td></tr>
         <tr><th>Card Scheme</th><td>{{cardScheme.name}} ({{cardScheme.code}})</td></tr>
         <tr><th>Card Classification</th><td>{{cardClassificaiton.name}} ({{cardClassificaiton.code}})</td></tr>
-        <tr><th>Card Design</th><td>
+        <tr><th>Card Design</th>
+        <td>
+        <table>
+        <tr><th>Name</th><th>Title</th><th>Image URI</th></tr>
         {{#each cardDesign}}
-            <li>{{name}} ({{code}})</li>
-        {{/each}}
+            <tr>
+                <td>{{name}} ({{code}})</td>
+                <td>{{title}}</td>
+                <td>{{imageUri}}</td>
+            </tr>
+        {{/each}}               
+        </table>    
+        </td></tr>
+        <tr><th>Default Card Design</th>
+        <td>
+        <table>
+        <tr><th>Name</th><th>Title</th><th>Image URI</th></tr>
+        <tr>
+            {{#with defaultCardDesign}}
+            <td>{{name}} ({{code}})</td>
+            <td>{{title}}</td>
+            <td>{{imageUri}}</td>
+            {{/with}}
+        </tr>
+        </table>
         </td></tr>
         <tr><th>Minimum Credit Limit</th><td>${{minimumCreditLimit}}</td></tr>
         <tr><th>Maximum Credit Limit</th><td>${{maximumCreditLimit}}</td></tr>
@@ -59,4 +80,3 @@
     </tr>
 </table>
 {{/with}}
-
