@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pricing Use Cases</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .filter {
+            margin-bottom: 20px;
+        }
+        .kanban-board {
+            display: flex;
+            justify-content: space-between;
+        }
+        .swimlane {
+            flex: 1;
+            margin: 0 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 400px;
+        }
+        .use-case {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f;
+            cursor: move;
+        }
+        .Certain { background-color: #d4edda; }
+        .High { background-color: #fff3cd; }
+        .Moderate { background-color: #ffeeba; }
+        .Low { background-color: #f8d7da; }
+        .TermDeposits { background-color: #d1e7dd; }
+        .Deposits { background-color: #cfe2ff; }
+        .HomeLoan { background-color: #f8d7da; }
+        .CreditCard { background-color: #fff3cd; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+</head>
+<body>
+    <h1>Pricing Use Cases</h1>
+    <div class="filter">
+        <label for="productFilter">Filter by Product:</label>
+        <select id="productFilter" multiple onchange="filterUseCases()">
+            <option value="Term Deposits">Term Deposits</option>
+            <option value="Deposits">Deposits</option>
+            <option value="Home Loan">Home Loan</option>
+            <option value="Credit Card">Credit Card</option>
+        </select>
+    </div>
+    <div class="kanban-board">
+        <div class="swimlane" id="Certain">
+            <h2>Certain</h2>
+        </div>
+        <div class="swimlane" id="High">
+            <h2>High</h2>
+        </div>
+        <div class="swimlane" id="Moderate">
+            <h2>Moderate</h2>
+        </div>
+        <div class="swimlane" id="Low">
+            <h2>Low</h2>
+        </div>
+    </div>
+
+    <script>
+        const useCases = [
+            { product: 'Term Deposits', useCase: 'Personalised Pricing on both account level metrics (eg FUM size) and customer level metrics (eg NTB/ETB)', conviction: 'Certain' },
+            { product: 'Term Deposits', useCase: 'Test & Learn for retail negotiated curves in which TD price optimisation requires a nuanced understanding of underlying customer sensitivities to reduce probability of FUM attrition. This can be implemented based on states (e.g. VIC, NSW) and/or customer segments during a certain period of time. )', conviction: 'Certain' },
+            { product: 'Term Deposits', useCase: 'Ability to negotiate a price with a customer (ie customer seeks a better price than the initial price provided, and we can service this request)', conviction: 'High' },
+            { product: 'Term Deposits', useCase: 'Retention rates can be applied to cohorts of Classic ETB who are rolling off Classic TDs.)', conviction: 'Moderate' },
+            { product: 'Deposits', useCase: 'Welcome Rate (offering an improved margin, on top of the base rate, to a customer for a period of time when the account is opened based on account level metrics (eg S5 account has just been opened) or customer level metrics (eg customer has not opened an S5 or joint S5 in the last 5 years))', conviction: 'High' },
+            { product: 'Deposits', useCase: 'Retention rates can be individually applied to accounts by coaches at a customer request', conviction: 'Moderate' },
+            { product: 'Deposits', useCase: 'Retention rates can be applied to a cohort of S5 accounts based on account level (eg FUM size) or customer level metrics (eg customer is performing lots of transactions on their A1)', conviction: 'Moderate' },
+            { product: 'Deposits', useCase: 'Ability to create a cohort of A1 accounts where all fees, or a subset of fees, are not charged. Customers can be moved in and out of this cohort by coaches', conviction: 'Low' },
+            { product: 'Deposits', useCase: 'Ability to create a cohort of A1 accounts where all fees, or a subset of fees, are not charged. Customers can be moved in and out of this cohort using account level metrics or customer level metrics to find eligible / ineligible customers', conviction: 'Low' },
+            { product: 'Deposits', useCase: 'Incentives to be provided to customers that exhibit specific behaviour over long periods of time, eg deposit their salary into their A1 3 months in a row ', conviction: 'High' },
+            { product: 'Home Loan', useCase: 'Rate Discount based on Channel', conviction: 'Certain' },
+            { product: 'Home Loan', useCase: 'Rate Discount based on LVR', conviction: 'Certain' },
+            { product: 'Home Loan', useCase: 'Rate Discount based on TML', conviction: 'Certain' },
+            { product: 'Home Loan', useCase: 'Rate Discount based on LMI', conviction: 'Moderate' },
+            { product: 'Home Loan', useCase: 'Index Rate Discounting', conviction: 'High' },
+            { product: 'Home Loan', useCase: 'Rate Discount based on Customer Cohort', conviction: 'High' },
+            { product: 'Home Loan', useCase: 'Rate Discount based on Staff', conviction: 'Certain' },
+            { product: 'Credit Card', useCase: 'Fee free CC for x months', conviction: 'High' },
+            { product: 'Home Loan', useCase: 'Offset Fee Waiver', conviction: 'Certain' },
+            { product: 'Home Loan', useCase: 'OFI Cashback', conviction: 'Certain' },
+            { product: 'Home Loan', useCase: 'HL discount for next HL purchase', conviction: 'High' },
+            { product: 'Home Loan', useCase: 'Discretionary discount (GM or pricing desk)', conviction: 'Certain' },
+            { product: 'Home Loan', useCase: 'Suncorp fee waiver (matching existing)', conviction: 'High' },
+            { product: 'Home Loan', useCase: 'Offset fee waiver for Suncorp customers', conviction: 'High' },
+            { product: 'Home Loan', useCase: 'HL discount if customers meets certain loyalty criteria', conviction: 'High' },
+            { product: 'Credit Card', useCase: 'Installment Plans', conviction: 'High' },
+            { product: 'Credit Card', useCase: 'Promotional Plans eg Balance Transfers', conviction: 'High' },
+            { product: 'Credit Card', useCase: 'Balance Transfer New Card', conviction: 'High' },
+            { product: 'Credit Card', useCase: 'Balance Transfer Existing Card', conviction: 'High' },
+            { product: 'Credit Card', useCase: 'Cash Back', conviction: 'High' },
+            { product: 'Credit Card', useCase: 'Rewards', conviction: 'High' },
+            { product: 'Credit Card', useCase: 'Membership Fee Waiving', conviction: 'High' }
+        ];
+
+        function displayUseCases(filteredUseCases) {
+            const swimlanes = {
+                Certain: document.getElementById('Certain'),
+                High: document.getElementById('High'),
+                Moderate: document.getElementById('Moderate'),
+                Low: document.getElementById('Low')
+            };
+
+            // Clear existing use cases
+            for (const key in swimlanes) {
+                swimlanes[key].innerHTML = `<h2>${key}</h2>`;
+            }
+
+            // Add filtered use cases to swimlanes
+            filteredUseCases.forEach(useCase => {
+                const useCaseDiv = document.createElement('div');
+                useCaseDiv.className = `use-case ${useCase.conviction.replace(' ', '')} ${useCase.product.replace(' ', '')}`;
+                useCaseDiv.innerHTML = `<strong>${useCase.product}</strong>: ${useCase.useCase} `;
+                swimlanes[useCase.conviction.replace(' ', '')].appendChild(useCaseDiv);
+            });
+
+            // Make swimlanes sortable
+            for (const key in swimlanes) {
+                new Sortable(swimlanes[key], {
+                    group: 'useCases',
+                    animation: 150
+                });
+            }
+        }
+
+        function filterUseCases() {
+            const filter = Array.from(document.getElementById('productFilter').selectedOptions).map(option => option.value);
+            const filteredUseCases = filter.length === 0 ? useCases : useCases.filter(useCase => filter.includes(useCase.product));
+            displayUseCases(filteredUseCases);
+        }
+
+        // Initial display
+        filterUseCases();
+    </script>
+</body>
+</html>
