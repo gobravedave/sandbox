@@ -2,19 +2,16 @@
 {{#each product.feePlans.data}}
     {{#if products}}
       {{#each products}}
-      {{!log 'products' this}}
-      {{#if feePlanAssociation}}
-      {{> product-cohort-fees-template feePlanAssociation=feePlanAssociation feePlans=../feePlans}}
-      {{/if}}
-      {{/each}}
-    {{else if feePlans}}
+      {{#if feePlanAssociation.association.rows}}
+      {{> product-cohort-fees-template}}
+      {{else}}
       <div class="table_wrapper">
         <table>
           <tr>
             <th>FeePlan</th>
             <th>Fee Items</th>
           </tr>
-          {{#each feePlans}}
+          {{#each feePlanAssociation.association.feePlanDetails}}
             <tr>
               <td>
                 <table> <!-- Fee Plan -->
@@ -40,12 +37,39 @@
                         {{#if simpleTransactionalFeeAmount}}Simple{{/if}}
                         {{#if simpleTransactionalFeePercentage}}Simple{{/if}}
                         {{#if tieredTransactionalFee}}Tiered{{/if}}
+                        {{#if gridBasedFee}}Grid Based{{/if}}
                         </td></tr>
-                                                {{#if chargeType}}
+                        {{#if chargeType}}
                         <tr><th>Charge Type</th><td>{{chargeType}}</td></tr>
                         {{/if}}
                         {{#if chargingFeefrequency}}
                         <tr><th>Charge Fee Frequency</th><td>{{chargingFeefrequency}}</td></tr>
+                        {{/if}}
+                        {{#if feeCode.feeConfiguration}}
+                        {{#with feeCode.feeConfiguration}}
+                        <tr><th>Overlay Enabled</th><td>{{overlayEnabled}}</td></tr>
+                        <tr><th>Fee Level Indicator</th><td>{{feeLevelIndicator}}</td></tr>
+                        <tr><th>Fee Charge Narrative</th><td>{{feeChargeNarrative}}</td></tr>
+                        <tr><th>Fee Reverse Narrative</th><td>{{feeReverseNarrative}}</td></tr>
+                        <tr><th>Fee Rebate Narrative</th><td>{{feeRebateNarrative}}</td></tr>
+                        <tr><th>General Ledger Interim Account Key</th><td>{{generalLedgerInterimAccountKey.name}} ({{generalLedgerInterimAccountKey.code}})</td></tr>
+                        <tr><th>Revenue Account</th><td>{{revenueAccount.accountNumber}}</td></tr>                        
+                        {{/with}}
+                        {{/if}}
+                        {{#if feeCode.impactedSystems}}
+                          <tr><th colspan="3">Impacted Systems</th></tr>
+                          <tr>
+                            <th>System</th>
+                            <th>Fee Code</th>
+                            <th>Fee Description</th>
+                          </tr>
+                          {{#each feeCode.impactedSystems}}
+                            <tr>
+                              <td>{{name}} ({{code}})</td>
+                              <td>{{impactedSystemFeeCode}}</td>
+                              <td>{{impactedSystemFeeDescription}}</td>
+                            </tr>
+                          {{/each}}
                         {{/if}}
                         </table>
                       </td>
@@ -99,6 +123,11 @@
                               </td>
                             </tr>
                           {{/if}}
+                          {{#if gridBasedFee}}
+                            {{#with gridBasedFee }}
+                            {{> feegrid-template}}
+                            {{/with}}
+                          {{/if}}
                         </table> <!-- End of Fee Amount -->
                       </td>
                     </tr>
@@ -109,6 +138,8 @@
           {{/each}}
         </table> <!-- End of Fee Plan -->
       </div>
+      {{/if}}
+      {{/each}}
     {{else}}
       <b>No Fee Plans for this product</b>
     {{/if}}

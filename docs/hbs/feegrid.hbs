@@ -1,0 +1,45 @@
+{{!log 'feegrid-template' this}}
+<div class="table-responsive table_wrapper" style="overflow-x: auto;">
+<table id="{{uniqueTableId}}" class="table table-sm table-bordered"
+data-toggle="table"
+data-filter-control="false"
+data-search="false"
+data-show-columns="false"
+data-pagination="true"
+data-page-size="25"
+data-page-length="25"
+data-sortable="flase"
+data-show-loading="true"
+style="table-layout: fixed; width: 100%;">
+<thead class="thead-dark">
+    <tr>
+    {{#if feeGridDefinition.rows.[0].feeValue}}
+        <th data-field="feeValue"  style="width: 100px; max-width: 100px;" title="Fee Value">Fee Value</th>
+    {{/if}}
+    {{#each feeGridDefinition.rows.[0].columns}}
+        <th data-field="{{value}}" style="width: 100px; max-width: 100px;" title="{{name}} is {{operator}}">{{name}} is {{operator}}</th>
+    {{/each}}
+    </tr>
+</thead>
+<tbody>
+    {{#each feeGridDefinition.rows}}
+    <tr>
+    {{#if feeValue}}
+    <td style="width: 100px; max-width: 100px;" title="{{feeValue}}">
+        {{#ifEquals ../amountOrPercentage "AMOUNT"}}    
+            ${{feeValue}}
+        {{else}}
+            {{feeValue}}%
+        {{/ifEquals}}
+    </td>
+    {{/if}}
+
+    {{#each columns}}
+        <td style="width: 100px; max-width: 100px;" title="{{value}}">{{value}}</td>
+    {{/each}}
+    </tr>
+    {{/each}}
+</tbody>
+</table>
+</div>
+{{initializeTable}} <!-- Call the helper here -->
