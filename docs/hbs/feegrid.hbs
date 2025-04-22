@@ -17,7 +17,7 @@ style="table-layout: fixed; width: 100%;">
         <th data-field="feeValue"  style="width: 100px; max-width: 100px;" title="Fee Value">Fee Value</th>
     {{/if}}
     {{#each feeGridDefinition.rows.[0].columns}}
-        <th data-field="{{value}}" style="width: 100px; max-width: 100px;" title="{{name}} is {{operator}}">{{name}} is {{operator}}</th>
+        <th data-field="{{name}}" style="width: 100px; max-width: 100px;" title="{{name}} is {{operator}}">{{name}} is {{operator}}</th>
     {{/each}}
     </tr>
 </thead>
@@ -25,7 +25,7 @@ style="table-layout: fixed; width: 100%;">
     {{#each feeGridDefinition.rows}}
     <tr>
     {{#if feeValue}}
-    <td style="width: 100px; max-width: 100px;" title="{{feeValue}}">
+    <td>
         {{#ifEquals ../amountOrPercentage "AMOUNT"}}    
             ${{feeValue}}
         {{else}}
@@ -35,7 +35,7 @@ style="table-layout: fixed; width: 100%;">
     {{/if}}
 
     {{#each columns}}
-        <td style="width: 100px; max-width: 100px;" title="{{value}}">{{value}}</td>
+        <td>{{value}}</td>
     {{/each}}
     </tr>
     {{/each}}
