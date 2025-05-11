@@ -1,4 +1,4 @@
- {{!log 'product-cohort-fees.hbs' this}}
+ {{log 'product-cohort-fees.hbs' this}}
       {{#if feePlanAssociation}}
       <table>
         <tr>
@@ -12,105 +12,9 @@
           {{/each}}
           <td>
           {{#each feePlanDetails}}
+            {{log 'code' code '../feePlanCode' ../feePlanCode}}
             {{#ifEquals code ../feePlanCode}}
-          <table>
-          <tr>
-            <th>FeePlan</th>
-            <th>Fee Items</th>
-          </tr>
-          <tr>
-                <td>
-                <table> <!-- Fee Plan -->
-                  <tr><th>Name</th><td>{{this.feePlanName}} ({{this.code}})</td></tr>
-                </table>
-                </td>
-              <td>
-              <table> <!-- Fee Items -->
-                <tr>
-                  <th>Fee Item</th>
-                  <th>Fee Item Configuration</th>
-                  <th>Fee Amount</th>
-                </tr>
-                {{#each feeItems}}
-                  <tr>
-                    <td>{{this.feeItemName}} ({{this.code}})</td>
-                      <td>
-                        <table> <!-- Fee Item -->
-                        <tr><th>Type</th><td>{{this.feeItemType}}</td></tr>
-                        <tr><th>Fee Amount Type</th>
-                        <td>
-                        {{#if simpleFlatFee}}Simple{{/if}}
-                        {{#if simpleTransactionalFeeAmount}}Simple{{/if}}
-                        {{#if simpleTransactionalFeePercentage}}Simple{{/if}}
-                        {{#if tieredTransactionalFee}}Tiered{{/if}}
-                        </td>
-                        {{#if chargeType}}
-                        <tr><th>Charge Type</th><td>{{chargeType}}</td></tr>
-                        {{/if}}
-                        {{#if chargingFeefrequency}}
-                        <tr><th>Charge Fee Frequency</th><td>{{chargingFeefrequency}}</td></tr>
-                        {{/if}}
-                        </table>
-                      </td>
-                      <td>
-                      <table> <!-- Fee Amount --> 
-                        {{#if simpleFlatFee}}
-                          <tr><th>Amount</th><td>${{simpleFlatFee.amount}}</td></tr>
-                        {{/if}}
-                        {{#if simpleTransactionalFeeAmount}}
-                          <tr><th>Amount Or Percentage</th><td>{{simpleTransactionalFeeAmount.amountOrPercentage}}</td></tr>
-                          {{#if simpleTransactionalFeeAmount.amount}}
-                            <tr><th>Amount</th><td>${{simpleTransactionalFeeAmount.amount}}</td></tr>
-                          {{/if}}
-                          {{#if simpleTransactionalFeeAmount.percentage}}
-                            <tr><th>Percentage</th><td>{{simpleTransactionalFeeAmount.percentage}}%</td></tr>
-                          {{/if}}
-                        {{/if}}
-                        {{#if simpleTransactionalFeePercentage}}
-                          <tr><th>Amount Or Percentage</th><td>{{simpleTransactionalFeePercentage.amountOrPercentage}}</td></tr>
-                          <tr><th>Percentage</th><td>{{simpleTransactionalFeePercentage.percentage}}%</td></tr>
-                          <tr><th>Min Fee Applicable</th><td>{{simpleTransactionalFeePercentage.isMinimumFeeApplicable}}</td></tr>
-                          {{#if simpleTransactionalFeePercentage.minimumValue.amount}}
-                          <tr><th>Min Value</th><td>${{simpleTransactionalFeePercentage.minimumValue.amount}}</td></tr>
-                          {{/if}}
-                          <tr><th>Max Fee Applicable</th><td>{{simpleTransactionalFeePercentage.isMaximumFeeApplicable}}</td></tr>
-                          {{#if simpleTransactionalFeePercentage.maximumValue.amount}}
-                          <tr><th>Max Value</th><td>${{simpleTransactionalFeePercentage.maximumValue.amount}}</td></tr>
-                          {{/if}}
-                        {{/if}}
-                        {{#if tieredTransactionalFee}}
-                          <tr><th>Whole Or Progressive</th><td>{{tieredTransactionalFee.wholeOrProgressive}}</td></tr>
-                          <tr><th>Volume Or Value</th><td>{{tieredTransactionalFee.volumeOrValue}}</td></tr>
-                          <tr><th>Amount Or Percentage</th><td>{{tieredTransactionalFee.amountOrPercentage}}</td></tr>
-                          <tr><th>Tiers End Points Value</th><td>{{tieredTransactionalFee.tiersEndPointsValue}}</td></tr>
-                          <tr><th>Tiers</th>
-                            <td>
-                              <table> <!-- Tiers --> 
-                                <tr>
-                                  <th>Amount</th>
-                                  <th>From is {{fromOperator}}</th>
-                                  <th>To is {{toOperator}}</th>
-                                </tr>
-                                {{#each tieredTransactionalFee.valueTiers}}
-                                  <tr>
-                                    <td>${{amount.value}}</td>
-                                    <td>{{fromValue}}</td>
-                                    <td>{{toValueNumeric}}</td>
-                                  </tr>
-                                {{/each}}
-                              </table> <!-- End of Tiers -->
-                            </td>
-                          </tr>
-                        {{/if}}
-                      </table> <!-- End of Fee Amount --> 
-                    </td>
-                  </tr>
-                {{/each}}
-              </table> <!-- End of Fee Items --> 
-            </td>
-          </tr>
-        </table> <!-- End of Fee Plan --> 
-
+              {{> feeplan-template}}
             {{/ifEquals}}
           {{/each}}
           </td>

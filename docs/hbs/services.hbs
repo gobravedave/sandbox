@@ -44,10 +44,17 @@
 <tr><th>General Ledger Code</th><td>{{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.name}} ({{productConfiguration.offsetProductConfiguration.financialParameters.generalLedger.code}})</td></tr>
 </table>
 <br>
-<table>
+{{#if feePlans.data.[0].multiUseProducts}}
+{{log 'multiuse fee plans' this}}
+<table>    
 <tr><th>Fee Plan</th></tr>
-<tr><td>If subscription required, add logic to look up fees..</td></tr>
+{{#each feePlans.data.[0].multiUseProducts}}
+    {{#each feePlanAssociation.association.feePlanDetails}}
+        <tr><td>{{> feeplan-template}}</td></tr>
+    {{/each}}
+{{/each}}
 </table>
+{{/if}}
 </table>
 
 <h4>MultiUse Eligibility Rules</h3>
