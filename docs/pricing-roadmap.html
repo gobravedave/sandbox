@@ -43,18 +43,31 @@
         .productFilter:not(.show) {
             background-color: #ddd;
         }
+        .segmentFilter.show {
+            background-color: #007bff;
+            color: white;
+        }
+        .segmentFilter:not(.show) {
+            background-color: #ddd;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
 </head>
 <body>
     <h1>Product Pricing Use Cases by Conviction</h1>
     <div class="filter">
+        <h3>Segment</h3>
+        <button class="segmentFilter" data-segment="Retail" onclick="filterUseCases()">Retail</button>
+        <button class="segmentFilter" data-segment="Commercial" onclick="filterUseCases()">Commercial</button>
+        </br>
+        <h3>Product</h3>
         <button class="productFilter" data-product="Term Deposits" onclick="filterUseCases()">Term Deposits</button>
         <button class="productFilter" data-product="Deposits" onclick="filterUseCases()">Deposits</button>
         <button class="productFilter" data-product="Home Loan" onclick="filterUseCases()">Home Loan</button>
         <button class="productFilter" data-product="Credit Card" onclick="filterUseCases()">Credit Card</button>
         <script>
             document.querySelectorAll('.productFilter').forEach(b => b.classList.add('show'));
+            document.querySelectorAll('.segmentFilter').forEach(b => b.classList.add('show'));
         </script>
     </div>
     <div class="kanban-board">
@@ -74,38 +87,39 @@
 
     <script>
         const useCases = [
-            { product: 'Term Deposits', useCase: 'Personalised Pricing on both account level metrics (eg FUM size) and customer level metrics (eg NTB/ETB)', conviction: 'Certain' },
-            { product: 'Term Deposits', useCase: 'Test & Learn for retail negotiated curves in which TD price optimisation requires a nuanced understanding of underlying customer sensitivities to reduce probability of FUM attrition. This can be implemented based on states (e.g. VIC, NSW) and/or customer segments during a certain period of time. )', conviction: 'Certain' },
-            { product: 'Term Deposits', useCase: 'Ability to negotiate a price with a customer (ie customer seeks a better price than the initial price provided, and we can service this request)', conviction: 'High' },
-            { product: 'Term Deposits', useCase: 'Retention rates can be applied to cohorts of Classic ETB who are rolling off Classic TDs.)', conviction: 'Moderate' },
-            { product: 'Deposits', useCase: 'Welcome Rate (offering an improved margin, on top of the base rate, to a customer for a period of time when the account is opened based on account level metrics (eg S5 account has just been opened) or customer level metrics (eg customer has not opened an S5 or joint S5 in the last 5 years))', conviction: 'High' },
-            { product: 'Deposits', useCase: 'Retention rates can be individually applied to accounts by coaches at a customer request', conviction: 'Moderate' },
-            { product: 'Deposits', useCase: 'Retention rates can be applied to a cohort of S5 accounts based on account level (eg FUM size) or customer level metrics (eg customer is performing lots of transactions on their A1)', conviction: 'Moderate' },
-            { product: 'Deposits', useCase: 'Ability to create a cohort of A1 accounts where all fees, or a subset of fees, are not charged. Customers can be moved in and out of this cohort by coaches', conviction: 'Low' },
-            { product: 'Deposits', useCase: 'Ability to create a cohort of A1 accounts where all fees, or a subset of fees, are not charged. Customers can be moved in and out of this cohort using account level metrics or customer level metrics to find eligible / ineligible customers', conviction: 'Low' },
-            { product: 'Deposits', useCase: 'Incentives to be provided to customers that exhibit specific behaviour over long periods of time, eg deposit their salary into their A1 3 months in a row ', conviction: 'High' },
-            { product: 'Home Loan', useCase: 'Rate Discount based on Channel', conviction: 'Certain' },
-            { product: 'Home Loan', useCase: 'Rate Discount based on LVR', conviction: 'Certain' },
-            { product: 'Home Loan', useCase: 'Rate Discount based on TML', conviction: 'Certain' },
-            { product: 'Home Loan', useCase: 'Rate Discount based on LMI', conviction: 'Moderate' },
-            { product: 'Home Loan', useCase: 'Index Rate Discounting', conviction: 'High' },
-            { product: 'Home Loan', useCase: 'Rate Discount based on Customer Cohort', conviction: 'High' },
-            { product: 'Home Loan', useCase: 'Rate Discount based on Staff', conviction: 'Certain' },
-            { product: 'Credit Card', useCase: 'Fee free CC for x months', conviction: 'High' },
-            { product: 'Home Loan', useCase: 'Offset Fee Waiver', conviction: 'Certain' },
-            { product: 'Home Loan', useCase: 'OFI Cashback', conviction: 'Certain' },
-            { product: 'Home Loan', useCase: 'HL discount for next HL purchase', conviction: 'High' },
-            { product: 'Home Loan', useCase: 'Discretionary discount (GM or pricing desk)', conviction: 'Certain' },
-            { product: 'Home Loan', useCase: 'Suncorp fee waiver (matching existing)', conviction: 'High' },
-            { product: 'Home Loan', useCase: 'Offset fee waiver for Suncorp customers', conviction: 'High' },
-            { product: 'Home Loan', useCase: 'HL discount if customers meets certain loyalty criteria', conviction: 'High' },
-            { product: 'Credit Card', useCase: 'Installment Plans', conviction: 'High' },
-            { product: 'Credit Card', useCase: 'Promotional Plans eg Balance Transfers', conviction: 'High' },
-            { product: 'Credit Card', useCase: 'Balance Transfer New Card', conviction: 'High' },
-            { product: 'Credit Card', useCase: 'Balance Transfer Existing Card', conviction: 'High' },
-            { product: 'Credit Card', useCase: 'Cash Back', conviction: 'High' },
-            { product: 'Credit Card', useCase: 'Rewards', conviction: 'High' },
-            { product: 'Credit Card', useCase: 'Membership Fee Waiving', conviction: 'High' }
+            { product: 'Term Deposits', useCase: 'Personalised Pricing on both account level metrics (eg FUM size) and customer level metrics (eg NTB/ETB)', conviction: 'Certain', segment: 'Retail' },
+            { product: 'Term Deposits', useCase: 'Commcerial Personalised Pricing on both account level metrics (eg FUM size) and customer level metrics (eg NTB/ETB)', conviction: 'Certain', segment: 'Commercial' },
+            { product: 'Term Deposits', useCase: 'Test & Learn for retail negotiated curves in which TD price optimisation requires a nuanced understanding of underlying customer sensitivities to reduce probability of FUM attrition. This can be implemented based on states (e.g. VIC, NSW) and/or customer segments during a certain period of time. )', conviction: 'Certain', segment: 'Retail' },
+            { product: 'Term Deposits', useCase: 'Ability to negotiate a price with a customer (ie customer seeks a better price than the initial price provided, and we can service this request)', conviction: 'High', segment: 'Retail' },
+            { product: 'Term Deposits', useCase: 'Retention rates can be applied to cohorts of Classic ETB who are rolling off Classic TDs.)', conviction: 'Moderate', segment: 'Retail' },
+            { product: 'Deposits', useCase: 'Welcome Rate (offering an improved margin, on top of the base rate, to a customer for a period of time when the account is opened based on account level metrics (eg S5 account has just been opened) or customer level metrics (eg customer has not opened an S5 or joint S5 in the last 5 years))', conviction: 'High', segment: 'Retail' },
+            { product: 'Deposits', useCase: 'Retention rates can be individually applied to accounts by coaches at a customer request', conviction: 'Moderate', segment: 'Retail' },
+            { product: 'Deposits', useCase: 'Retention rates can be applied to a cohort of S5 accounts based on account level (eg FUM size) or customer level metrics (eg customer is performing lots of transactions on their A1)', conviction: 'Moderate', segment: 'Retail' },
+            { product: 'Deposits', useCase: 'Ability to create a cohort of A1 accounts where all fees, or a subset of fees, are not charged. Customers can be moved in and out of this cohort by coaches', conviction: 'Low', segment: 'Retail' },
+            { product: 'Deposits', useCase: 'Ability to create a cohort of A1 accounts where all fees, or a subset of fees, are not charged. Customers can be moved in and out of this cohort using account level metrics or customer level metrics to find eligible / ineligible customers', conviction: 'Low', segment: 'Retail' },
+            { product: 'Deposits', useCase: 'Incentives to be provided to customers that exhibit specific behaviour over long periods of time, eg deposit their salary into their A1 3 months in a row ', conviction: 'High', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'Rate Discount based on Channel', conviction: 'Certain', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'Rate Discount based on LVR', conviction: 'Certain', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'Rate Discount based on TML', conviction: 'Certain', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'Rate Discount based on LMI', conviction: 'Moderate', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'Index Rate Discounting', conviction: 'High', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'Rate Discount based on Customer Cohort', conviction: 'High', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'Rate Discount based on Staff', conviction: 'Certain', segment: 'Retail' },
+            { product: 'Credit Card', useCase: 'Fee free CC for x months', conviction: 'High', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'Offset Fee Waiver', conviction: 'Certain', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'OFI Cashback', conviction: 'Certain', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'HL discount for next HL purchase', conviction: 'High', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'Discretionary discount (GM or pricing desk)', conviction: 'Certain', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'Suncorp fee waiver (matching existing)', conviction: 'High', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'Offset fee waiver for Suncorp customers', conviction: 'High', segment: 'Retail' },
+            { product: 'Home Loan', useCase: 'HL discount if customers meets certain loyalty criteria', conviction: 'High', segment: 'Retail' },
+            { product: 'Credit Card', useCase: 'Installment Plans', conviction: 'High', segment: 'Retail' },
+            { product: 'Credit Card', useCase: 'Promotional Plans eg Balance Transfers', conviction: 'High', segment: 'Retail' },
+            { product: 'Credit Card', useCase: 'Balance Transfer New Card', conviction: 'High', segment: 'Retail' },
+            { product: 'Credit Card', useCase: 'Balance Transfer Existing Card', conviction: 'High', segment: 'Retail' },
+            { product: 'Credit Card', useCase: 'Cash Back', conviction: 'High', segment: 'Retail' },
+            { product: 'Credit Card', useCase: 'Rewards', conviction: 'High', segment: 'Retail' },
+            { product: 'Credit Card', useCase: 'Membership Fee Waiving', conviction: 'High', segment: 'Retail' }
         ];
 
         function displayUseCases(filteredUseCases) {
@@ -143,11 +157,18 @@
                 event.target.classList.toggle('show');
                 event.target.classList.toggle('hide');
                 filterUseCases();
+            } else if (event.target.classList.contains('segmentFilter')) {
+                event.target.classList.toggle('show');
+                event.target.classList.toggle('hide');
+                filterUseCases();
             }
         });
         function filterUseCases() {
             const products = Array.from(document.querySelectorAll('.productFilter')).filter(button => button.classList.contains('show')).map(button => button.dataset.product);
-            const filteredUseCases = products.length === 0 ? useCases : useCases.filter(useCase => products.includes(useCase.product));
+            const segments = Array.from(document.querySelectorAll('.segmentFilter')).filter(button => button.classList.contains('show')).map(button => button.dataset.segment);
+            const filteredUseCases = useCases.filter(useCase => {
+                return (!products.length || products.includes(useCase.product)) && (!segments.length || segments.includes(useCase.segment));
+            });
             displayUseCases(filteredUseCases);
         }
 
