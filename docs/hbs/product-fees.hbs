@@ -10,6 +10,10 @@
         {{/each}}
       {{/if}}
       {{/each}}
+    {{else if feePlans }}
+        {{#each feePlans}}
+        {{> feeplan-template}}
+        {{/each}}
     {{else}}
       <b>No Fee Plans for this product</b>
     {{/if}}
